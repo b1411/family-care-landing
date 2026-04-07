@@ -1,0 +1,306 @@
+<template>
+  <div>
+    <h2 class="auth-title">Регистрация</h2>
+    <p class="auth-subtitle">Создайте аккаунт для вашей семьи</p>
+
+    <form class="auth-form" @submit.prevent="handleRegister">
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="firstName">Имя</label>
+          <input
+            id="firstName"
+            v-model="form.firstName"
+            type="text"
+            class="form-input"
+            placeholder="Имя"
+            required
+          />
+          <span v-if="errors.firstName" class="form-error">{{ errors.firstName }}</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lastName">Фамилия</label>
+          <input
+            id="lastName"
+            v-model="form.lastName"
+            type="text"
+            class="form-input"
+            placeholder="Фамилия"
+            required
+          />
+          <span v-if="errors.lastName" class="form-error">{{ errors.lastName }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input
+          id="email"
+          v-model="form.email"
+          type="email"
+          class="form-input"
+          placeholder="example@email.com"
+          required
+          autocomplete="email"
+        />
+        <span v-if="errors.email" class="form-error">{{ errors.email }}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">Телефон <span class="form-optional">(необязательно)</span></label>
+        <input
+          id="phone"
+          v-model="form.phone"
+          type="tel"
+          class="form-input"
+          placeholder="+7XXXXXXXXXX"
+          autocomplete="tel"
+        />
+        <span v-if="errors.phone" class="form-error">{{ errors.phone }}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Пароль</label>
+        <input
+          id="password"
+          v-model="form.password"
+          type="password"
+          class="form-input"
+          placeholder="Минимум 8 символов"
+          required
+          autocomplete="new-password"
+        />
+        <span v-if="errors.password" class="form-error">{{ errors.password }}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Подтверждение пароля</label>
+        <input
+          id="confirmPassword"
+          v-model="form.confirmPassword"
+          type="password"
+          class="form-input"
+          placeholder="Повторите пароль"
+          required
+          autocomplete="new-password"
+        />
+        <span v-if="errors.confirmPassword" class="form-error">{{ errors.confirmPassword }}</span>
+      </div>
+
+      <button type="submit" class="btn-primary" :disabled="loading">
+        {{ loading ? 'Регистрация...' : 'Зарегистрироваться' }}
+      </button>
+
+      <p v-if="errorMessage" class="form-error-global">{{ errorMessage }}</p>
+    </form>
+
+    <p v-if="success" class="auth-success">
+      Проверьте почту — мы отправили ссылку для подтверждения.
+    </p>
+
+    <p class="auth-switch">
+      Уже есть аккаунт?
+      <NuxtLink to="/auth/login" class="form-link">Войти</NuxtLink>
+    </p>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { registerSchema } from '~/utils/validators'
+
+definePageMeta({
+  layout: 'auth',
+})
+
+const supabase = useSupabaseClient()
+
+const form = reactive({
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  password: '',
+  confirmPassword: '',
+})
+const errors = reactive<Record<string, string>>({})
+const errorMessage = ref('')
+const loading = ref(false)
+const success = ref(false)
+
+async function handleRegister() {
+  Object.keys(errors).forEach(k => delete errors[k])
+  errorMessage.value = ''
+
+  const result = registerSchema.safeParse(form)
+  if (!result.success) {
+    for (const issue of result.error.issues) {
+      errors[issue.path[0] as string] = issue.message
+    }
+    return
+  }
+
+  loading.value = true
+  try {
+    const { error } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: {
+        data: {
+          first_name: form.firstName,
+          last_name: form.lastName,
+          phone: form.phone || null,
+          role: 'mother', // Default role — can be changed by admin
+        },
+      },
+    })
+
+    if (error) {
+      errorMessage.value = error.message
+      return
+    }
+
+    success.value = true
+  }
+  finally {
+    loading.value = false
+  }
+}
+</script>
+
+<style scoped>
+.auth-title {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.form-optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.form-input {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(139, 126, 200, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-error {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+}
+
+.form-error-global {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-danger);
+  padding: 8px;
+  background: rgba(212, 114, 124, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+.form-link {
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+
+.btn-primary {
+  padding: 12px;
+  background: var(--gradient-cta);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.auth-success {
+  text-align: center;
+  color: var(--color-success);
+  font-size: 0.9rem;
+  padding: 12px;
+  background: rgba(124, 184, 212, 0.1);
+  border-radius: var(--radius-sm);
+  margin-top: 16px;
+}
+
+@media (max-width: 480px) {
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
