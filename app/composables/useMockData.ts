@@ -14,7 +14,7 @@ function randomFloat(min: number, max: number, decimals = 1) {
 }
 
 function randomItem<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)]
+  return arr[Math.floor(Math.random() * arr.length)]!
 }
 
 function generateSparkline(length: number, base: number, variance: number): number[] {
@@ -141,9 +141,9 @@ export function useMockData() {
   }
 
   const journeyEvents: MockJourneyEvent[] = [
-    { id: '1', title: 'УЗИ 2 триместра', description: 'Ультразвуковое исследование 18–21 неделя', type: 'ultrasound', status: 'completed', due_date: pastDays(14)[0], is_mandatory: true },
-    { id: '2', title: 'Общий анализ крови', description: 'ОАК + биохимия', type: 'analysis', status: 'completed', due_date: pastDays(10)[0], is_mandatory: true },
-    { id: '3', title: 'Консультация генетика', description: 'Скрининг 2 триместра', type: 'screening', status: 'overdue', due_date: pastDays(3)[0], is_mandatory: true },
+    { id: '1', title: 'УЗИ 2 триместра', description: 'Ультразвуковое исследование 18–21 неделя', type: 'ultrasound', status: 'completed', due_date: pastDays(14)[0]!, is_mandatory: true },
+    { id: '2', title: 'Общий анализ крови', description: 'ОАК + биохимия', type: 'analysis', status: 'completed', due_date: pastDays(10)[0]!, is_mandatory: true },
+    { id: '3', title: 'Консультация генетика', description: 'Скрининг 2 триместра', type: 'screening', status: 'overdue', due_date: pastDays(3)[0]!, is_mandatory: true },
     { id: '4', title: 'Приём гинеколога', description: 'Плановый осмотр, 22 неделя', type: 'checkup', status: 'due', due_date: new Date().toISOString().slice(0, 10), is_mandatory: true },
     { id: '5', title: 'Тест на глюкозу (ОГТТ)', description: 'Глюкозотолерантный тест 24–28 неделя', type: 'analysis', status: 'upcoming', due_date: pastDays(-7)[0] || '2026-04-16', is_mandatory: true },
     { id: '6', title: 'Вакцинация от гриппа', description: 'Рекомендовано во 2 триместре', type: 'vaccination', status: 'upcoming', due_date: '2026-04-20', is_mandatory: false },
