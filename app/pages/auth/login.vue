@@ -71,10 +71,23 @@ async function handleLogin() {
     }
 
     if (data.user) {
+      // Wait for @nuxtjs/supabase to update useSupabaseUser() via onAuthStateChange
+      const user = useSupabaseUser()
+      if (!user.value) {
+        await new Promise<void>((resolve) => {
+          const stop = watch(user, (v) => {
+            if (v) { stop(); resolve() }
+          }, { immediate: true })
+          // Safety timeout — don't wait forever
+          setTimeout(() => { stop(); resolve() }, 3000)
+        })
+      }
+
       const authStore = useAuthStore()
+      authStore.$patch({ initialized: false })
       await authStore.initialize()
       const role = authStore.role
-      navigateTo(ROLE_HOME_MAP[role] || '/family')
+      navigateTo(ROLE_HOME_MAP[role] || '/family', { replace: true })
     }
   }
   finally {
