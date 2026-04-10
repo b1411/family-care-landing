@@ -208,6 +208,12 @@ export default defineNuxtConfig({
     redirect: false, // We handle auth redirects in middleware
   },
 
+  image: {
+    sharp: {
+      // Disable bundling sharp binaries — Vercel provides sharp natively
+    },
+  },
+
   nitro: {
     preset: 'vercel',
     prerender: {

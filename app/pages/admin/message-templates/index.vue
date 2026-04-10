@@ -29,7 +29,7 @@
       <p v-if="t.subject" class="tpl-subject">Тема: {{ t.subject }}</p>
       <pre class="tpl-body">{{ t.body }}</pre>
       <div v-if="t.variables?.length" class="tpl-vars">
-        <span v-for="v in t.variables" :key="v" class="var-chip">{{ '{{' + v + '}}' }}</span>
+        <span v-for="v in t.variables" :key="v" class="var-chip">&#123;&#123;{{ v }}&#125;&#125;</span>
       </div>
       <span class="tpl-date">{{ fmtDate(t.created_at) }}</span>
     </div>
@@ -54,7 +54,7 @@
             <label class="fl">Текст сообщения</label>
             <textarea v-model="form.body" class="fi" rows="5" placeholder="Здравствуйте, {{mother_name}}! ..." />
           </div>
-          <p class="hint">Переменные: <code v-for="v in availableVars" :key="v">{{ '{{' + v + '}}' }}</code></p>
+          <p class="hint">Переменные: <code v-for="v in availableVars" :key="v">&#123;&#123;{{ v }}&#125;&#125;</code></p>
           <div class="modal-actions">
             <button class="btn-cancel" @click="showCreate = false">Отмена</button>
             <button class="btn-submit" :disabled="!form.name || !form.body || saving" @click="save">

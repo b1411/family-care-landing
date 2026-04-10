@@ -53,6 +53,9 @@
     "supabase": "^2.85.0",
     "vitest": "^4.1.2"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "pnpm": {
     "overrides": {
       "cookie": "1.0.2"
