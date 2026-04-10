@@ -56,7 +56,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const { data: mock } = useMockData()
+const mock = useAppData()
 
 const link2gis = ref('https://2gis.kz/almaty/firm/family-care')
 const linkGoogle = ref('https://g.page/family-care-almaty')

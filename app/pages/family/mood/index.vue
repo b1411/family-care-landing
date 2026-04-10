@@ -81,7 +81,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const selectedMood = ref(0)
 const notes = ref('')
 

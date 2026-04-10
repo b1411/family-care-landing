@@ -197,6 +197,9 @@
         <span>{{ tab.label }}</span>
       </NuxtLink>
     </nav>
+
+    <!-- Onboarding wizard for new users -->
+    <AppOnboardingWizard v-if="showOnboarding" @complete="showOnboarding = false" />
   </div>
 </template>
 
@@ -224,6 +227,7 @@ const authStore = useAuthStore()
 const sidebarCollapsed = ref(false)
 const mobileMenuOpen = ref(false)
 const bellOpen = ref(false)
+const showOnboarding = ref(false)
 
 // Greeting based on time of day
 const greeting = computed(() => {
@@ -433,11 +437,18 @@ function onClickOutside(e: MouseEvent) {
   }
 }
 
+const appData = useAppData()
+
 onMounted(async () => {
   await authStore.initialize()
+  // Fetch all role-specific data in one call
+  await appData.fetchAll()
   if (isFamily.value) {
-    await notifStore.fetchNotifications()
     notifStore.subscribeToNotifications()
+  }
+  // Show onboarding for new users
+  if (authStore.profile && !authStore.profile.onboarding_completed) {
+    showOnboarding.value = true
   }
   document.addEventListener('click', onClickOutside)
 })

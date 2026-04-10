@@ -58,7 +58,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const active = ref('Месяц')
 const periods = ['Неделя', 'Месяц', 'Квартал']
 

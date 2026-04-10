@@ -109,7 +109,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const kpiCards = [
   { label: 'Активных семей', value: mock.coordinatorKpi.activeFamilies.value, trend: mock.coordinatorKpi.activeFamilies.trend, trendDir: 'up', icon: 'lucide:users', color: 'var(--color-primary)', sparkline: mock.coordinatorKpi.activeFamilies.sparkline },

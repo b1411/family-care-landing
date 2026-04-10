@@ -66,7 +66,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const selectedIdx = ref(0)
 const showAdd = ref(false)
 const newSlot = reactive({ start: '09:00', end: '09:30' })

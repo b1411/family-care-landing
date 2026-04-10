@@ -61,7 +61,7 @@ definePageMeta({ layout: 'app' })
 
 const journeyStore = useJourneyStore()
 const authStore = useAuthStore()
-const mock = useMockData()
+const mock = useAppData()
 
 const completedCount = computed(() => mock.journeyEvents.filter(e => e.status === 'completed').length)
 const overdueCount = computed(() => mock.journeyEvents.filter(e => e.status === 'overdue').length)

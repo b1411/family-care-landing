@@ -69,7 +69,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const showAdd = ref(false)
 
 const passport = reactive({ blood_type: mock.children[0].blood_type, allergies: 1, chronic: 0 })

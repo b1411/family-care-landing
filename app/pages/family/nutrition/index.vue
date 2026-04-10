@@ -54,7 +54,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 function typeEmoji(t: string) {
   const m: Record<string, string> = { breast: '🤱', bottle: '🍼', formula: '🥛', solid: '🥣' }

@@ -59,7 +59,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const ringColor = computed(() => {
   if (mock.complianceOverall >= 80) return 'var(--color-success)'

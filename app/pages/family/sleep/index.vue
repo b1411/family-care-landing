@@ -60,7 +60,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const avgTotal = computed(() => {
   const w = mock.sleepWeek

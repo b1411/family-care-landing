@@ -1,7 +1,14 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import { createClient } from '@supabase/supabase-js'
+import { serverSupabaseUser } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
+  // Require authenticated user
+  const user = await serverSupabaseUser(event)
+  if (!user) {
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  }
+
   const config = useRuntimeConfig()
   const query = getQuery(event)
   const childId = query.child_id as string

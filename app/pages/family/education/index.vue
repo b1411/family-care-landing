@@ -53,7 +53,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const activeCat = ref('all')
 
 const categories = [

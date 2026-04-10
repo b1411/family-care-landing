@@ -56,7 +56,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 
 const upcoming = computed(() => mock.appointments.filter(a => a.status !== 'completed' && a.status !== 'cancelled'))

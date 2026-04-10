@@ -325,7 +325,7 @@ const journeyStore = useJourneyStore()
 const prescriptionsStore = usePrescriptionStore()
 const appointmentsStore = useAppointmentStore()
 const authStore = useAuthStore()
-const mock = useMockData()
+const mock = useAppData()
 
 const stageTitle = computed(() => {
   const journey = journeyStore.activeJourneys[0]
@@ -364,16 +364,6 @@ function shortMonth(iso: string): string {
   const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
   return months[new Date(iso).getMonth()]
 }
-
-onMounted(async () => {
-  if (authStore.familyId) {
-    await Promise.all([
-      journeyStore.fetchJourneys(authStore.familyId),
-      prescriptionsStore.fetchPrescriptions(authStore.familyId),
-      appointmentsStore.fetchAppointments(authStore.familyId),
-    ])
-  }
-})
 
 function handleComplete(eventId: string) {
   journeyStore.completeEvent(eventId)

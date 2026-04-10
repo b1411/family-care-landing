@@ -7,6 +7,9 @@
 
 import { createClient } from '@supabase/supabase-js'
 
+// ── Security: block production access ──
+const isDev = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'staging'
+
 // ─── Constants ───────────────────────────────────────────────────────────────
 const SLUG = 'demo-mat-i-ditya'
 const PWD = 'DemoPass123!'

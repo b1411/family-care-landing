@@ -74,7 +74,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const kpis = [
   { label: 'Конверсия маршрутов', value: '74%', desc: 'Завершённых от общего числа' },

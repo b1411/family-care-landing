@@ -58,7 +58,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const g = mock.growthData
 const latestWeight = g.weight[g.weight.length - 1]

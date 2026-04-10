@@ -156,9 +156,15 @@ async function sendMessage(text?: string) {
 
     let aiContent: string
     try {
+      // Build conversation history for context
+      const conversationHistory = messages.value.slice(-10).map(m => ({
+        role: m.role,
+        content: m.content,
+      }))
+
       const data = await $fetch('/api/ai/chat', {
         method: 'POST',
-        body: { message: msg, child_context: childContext },
+        body: { message: msg, conversation_history: conversationHistory, child_context: childContext },
       })
       aiContent = data?.response || 'Не удалось получить ответ.'
     }

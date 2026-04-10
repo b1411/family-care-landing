@@ -79,7 +79,7 @@ definePageMeta({ layout: 'app' })
 
 const prescriptionsStore = usePrescriptionStore()
 const authStore = useAuthStore()
-const mock = useMockData()
+const mock = useAppData()
 
 const overallAdherence = computed(() => {
   const arr = mock.prescriptions.map(r => r.adherencePercent)

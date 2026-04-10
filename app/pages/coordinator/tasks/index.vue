@@ -41,7 +41,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const filter = ref('all')
 
 const filterOptions = [

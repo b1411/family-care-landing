@@ -43,7 +43,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const search = ref('')
 
 const filtered = computed(() => {

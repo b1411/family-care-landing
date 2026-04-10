@@ -2,6 +2,7 @@ import OpenAI from 'openai'
 
 interface ChatBody {
   message: string
+  conversation_history?: { role: 'user' | 'assistant'; content: string }[]
   child_context?: {
     name?: string
     age_months?: number
@@ -34,7 +35,15 @@ function buildChildContext(child?: ChatBody['child_context']): string {
   return parts.length ? `\n\nКонтекст ребёнка:\n${parts.join('\n')}` : ''
 }
 
+import { serverSupabaseUser } from '#supabase/server'
+
 export default defineEventHandler(async (event) => {
+  // Require authenticated user
+  const user = await serverSupabaseUser(event)
+  if (!user) {
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  }
+
   const config = useRuntimeConfig()
   const apiKey = config.openaiApiKey
 
@@ -57,12 +66,21 @@ export default defineEventHandler(async (event) => {
 
   const openai = new OpenAI({ apiKey })
 
+  // Build message array with conversation history (last 10 messages max)
+  const history = Array.isArray(body.conversation_history)
+    ? body.conversation_history
+        .slice(-10)
+        .filter(m => m.role && m.content && typeof m.content === 'string')
+        .map(m => ({ role: m.role as 'user' | 'assistant', content: m.content.slice(0, 2000) }))
+    : []
+
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     max_tokens: 800,
     temperature: 0.7,
     messages: [
       { role: 'system', content: SYSTEM_PROMPT + childContext },
+      ...history,
       { role: 'user', content: trimmed },
     ],
   })

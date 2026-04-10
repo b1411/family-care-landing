@@ -43,7 +43,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const kpis = computed(() => [
   { label: 'Пользователей', value: mock.adminKpi.totalUsers.value, trend: mock.adminKpi.totalUsers.trend, sparkline: mock.adminKpi.totalUsers.sparkline },

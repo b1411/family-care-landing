@@ -194,6 +194,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     openaiApiKey: process.env.OPENAI_API_KEY || '',
     supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+    resendApiKey: process.env.RESEND_API_KEY || '',
     public: {
       sentryDsn: process.env.SENTRY_DSN || '',
       posthogKey: process.env.POSTHOG_KEY || '',
@@ -210,6 +211,26 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ['/', '/for-clinics', '/for-families'],
+    },
+    routeRules: {
+      '/api/**': {
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'DENY',
+          'X-XSS-Protection': '1; mode=block',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+        },
+      },
+      '/**': {
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'SAMEORIGIN',
+          'X-XSS-Protection': '1; mode=block',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self)',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+        },
+      },
     },
   },
 

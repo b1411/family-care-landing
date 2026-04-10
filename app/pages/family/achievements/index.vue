@@ -55,7 +55,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 const unlockedCount = computed(() => mock.achievements.filter(a => a.unlocked).length)
 
 const streakList = [

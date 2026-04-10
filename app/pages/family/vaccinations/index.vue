@@ -61,7 +61,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useMockData()
+const mock = useAppData()
 
 const completedVax = computed(() => mock.vaccinations.filter(v => v.status === 'completed'))
 const upcomingVax = computed(() => mock.vaccinations.filter(v => v.status === 'upcoming'))
