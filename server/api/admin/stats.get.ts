@@ -9,9 +9,9 @@ export default defineEventHandler(async (event) => {
 
   // Verify admin role
   const { data: profile } = await supabase
-    .from('user_profiles')
+    .from('users')
     .select('role, clinic_id')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
   if (!profile || !['admin', 'clinic_admin', 'platform_admin', 'superadmin'].includes(profile.role)) {
@@ -19,13 +19,14 @@ export default defineEventHandler(async (event) => {
   }
 
   // Parallel fetch counts
+  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10)
   const [usersResult, familiesResult, doctorsResult, appointmentsResult] = await Promise.all([
-    supabase.from('user_profiles').select('id', { count: 'exact', head: true }),
+    supabase.from('users').select('id', { count: 'exact', head: true }),
     supabase.from('families').select('id', { count: 'exact', head: true }),
-    supabase.from('doctor_profiles').select('id', { count: 'exact', head: true }),
+    supabase.from('doctors').select('id', { count: 'exact', head: true }),
     supabase.from('appointments')
       .select('id', { count: 'exact', head: true })
-      .gte('scheduled_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()),
+      .gte('appointment_date', firstOfMonth),
   ])
 
   return {

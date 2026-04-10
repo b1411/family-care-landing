@@ -6,9 +6,6 @@ const schema = z.object({
   first_name: z.string().min(1).max(100).optional(),
   last_name: z.string().min(1).max(100).optional(),
   phone: z.string().max(20).optional(),
-  birth_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  blood_type: z.string().max(10).optional(),
-  language: z.enum(['ru', 'kk', 'en']).optional(),
   avatar_url: z.string().url().max(500).optional(),
 }).refine(obj => Object.keys(obj).length > 0, { message: 'At least one field is required' })
 
@@ -20,9 +17,9 @@ export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event)
 
   const { data, error } = await supabase
-    .from('user_profiles')
+    .from('users')
     .update(body)
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .select()
     .single()
 

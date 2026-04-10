@@ -2,25 +2,25 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock Pinia stores
 const mockJourneyStore = {
-  events: [],
+  events: [] as any[],
   progressPercent: 0,
   completedCount: 0,
-  upcomingEvents: [],
+  upcomingEvents: [] as any[],
   loading: false,
   fetchJourneys: vi.fn(),
 }
 
 const mockPrescriptionsStore = {
-  prescriptions: [],
-  activePrescriptions: [],
-  todayDoses: [],
+  prescriptions: [] as any[],
+  activePrescriptions: [] as any[],
+  todayDoses: [] as any[],
   adherencePercent: 0,
   loading: false,
   fetchPrescriptions: vi.fn(),
 }
 
 const mockAppointmentsStore = {
-  appointments: [],
+  appointments: [] as any[],
   loading: false,
   fetchAppointments: vi.fn(),
 }
@@ -32,10 +32,10 @@ const mockNotifStore = {
 
 const mockCoordinatorStore = {
   stats: { total_families: 0, today_appointments: 0 },
-  criticalTasks: [],
-  pendingTasks: [],
-  tasks: [],
-  families: [],
+  criticalTasks: [] as any[],
+  pendingTasks: [] as any[],
+  tasks: [] as any[],
+  families: [] as any[],
   fetchTasks: vi.fn(),
   fetchFamilies: vi.fn(),
   fetchStats: vi.fn(),
@@ -45,7 +45,7 @@ const mockAuthStore = {
   familyId: null as string | null,
   clinicId: null as string | null,
   role: 'mother',
-  children: [],
+  children: [] as any[],
   profile: null,
 }
 
@@ -72,7 +72,7 @@ describe('useAppData', () => {
 
   describe('familyKpi', () => {
     it('returns mock values when stores are empty', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       const kpi = data.familyKpi.value
@@ -90,7 +90,7 @@ describe('useAppData', () => {
       mockJourneyStore.progressPercent = 50
       mockJourneyStore.completedCount = 1
 
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       const kpi = data.familyKpi.value
@@ -103,7 +103,7 @@ describe('useAppData', () => {
       mockPrescriptionsStore.prescriptions = [{ id: 'rx1' }] as any[]
       mockPrescriptionsStore.adherencePercent = 87
 
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.familyKpi.value.adherence.value).toBe(87)
@@ -112,7 +112,7 @@ describe('useAppData', () => {
 
   describe('journeyEvents', () => {
     it('returns fallback mock events when store is empty', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.journeyEvents.value.length).toBe(5)
@@ -124,7 +124,7 @@ describe('useAppData', () => {
         { id: 'e1', title: 'Тест', description: 'Описание', type: 'checkup', status: 'due', due_date: '2026-04-10', is_mandatory: true },
       ] as any[]
 
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.journeyEvents.value.length).toBe(1)
@@ -134,7 +134,7 @@ describe('useAppData', () => {
 
   describe('prescriptions', () => {
     it('returns default prescriptions when empty', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.prescriptions.value.length).toBe(4)
@@ -144,7 +144,7 @@ describe('useAppData', () => {
 
   describe('appointments', () => {
     it('returns default appointments when empty', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.appointments.value.length).toBe(3)
@@ -153,7 +153,7 @@ describe('useAppData', () => {
 
   describe('coordinator data', () => {
     it('returns mock coordinator KPI when stats empty', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.coordinatorKpi.value.activeFamilies.value).toBe(47)
@@ -165,7 +165,7 @@ describe('useAppData', () => {
       mockCoordinatorStore.criticalTasks = [{ id: '1' }, { id: '2' }] as any[]
       mockCoordinatorStore.pendingTasks = [{ id: '1' }, { id: '2' }, { id: '3' }] as any[]
 
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       expect(data.coordinatorKpi.value.activeFamilies.value).toBe(55)
@@ -179,7 +179,7 @@ describe('useAppData', () => {
       mockAuthStore.familyId = 'fam-123'
       mockAuthStore.role = 'mother'
 
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       await data.fetchAll()
@@ -193,7 +193,7 @@ describe('useAppData', () => {
       mockAuthStore.clinicId = 'clinic-1'
       mockAuthStore.role = 'coordinator'
 
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
 
       await data.fetchAll()
@@ -205,32 +205,32 @@ describe('useAppData', () => {
 
   describe('static data', () => {
     it('has vaccinations', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
       expect(data.vaccinations.value.length).toBeGreaterThan(0)
     })
 
     it('has growth data', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
       expect(data.growthData.months.length).toBe(7)
       expect(data.growthData.weight.length).toBe(7)
     })
 
     it('has milestones', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
       expect(data.milestones.length).toBe(8)
     })
 
     it('has achievements', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
       expect(data.achievements.length).toBe(6)
     })
 
     it('has education articles', async () => {
-      const { useAppData } = await import('~/composables/useAppData')
+      const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
       expect(data.educationArticles.length).toBe(6)
     })

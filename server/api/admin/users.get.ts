@@ -9,9 +9,9 @@ export default defineEventHandler(async (event) => {
 
   // Verify admin role
   const { data: profile } = await supabase
-    .from('user_profiles')
+    .from('users')
     .select('role, clinic_id')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
   if (!profile || !['admin', 'clinic_admin', 'platform_admin', 'superadmin'].includes(profile.role)) {
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   const search = query.search as string
 
   let q = supabase
-    .from('user_profiles')
+    .from('users')
     .select('*', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range((page - 1) * perPage, page * perPage - 1)

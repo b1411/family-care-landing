@@ -19,9 +19,9 @@ export default defineEventHandler(async (event) => {
 
   // Get user's clinic
   const { data: profile } = await supabase
-    .from('user_profiles')
+    .from('users')
     .select('clinic_id, role')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
   if (!profile?.clinic_id) {
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
       type: body.type,
       priority: body.priority,
       title: body.title,
-      description: body.description || null,
+      notes: body.description || null,
       status: 'pending',
     })
     .select()

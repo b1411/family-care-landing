@@ -181,7 +181,7 @@ export function useAppData() {
           todayDoses: doses.map((d: DoseLog) => ({
             id: d.id,
             time: new Date(d.scheduled_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-            status: d.status === 'scheduled' ? 'pending' as const : d.status as 'confirmed' | 'pending' | 'missed',
+            status: d.status === 'pending' ? 'pending' as const : d.status as 'confirmed' | 'pending' | 'missed',
           })),
         }
       })

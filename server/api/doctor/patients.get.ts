@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   // Get doctor profile
   const { data: doctorProfile } = await supabase
-    .from('doctor_profiles')
+    .from('doctors')
     .select('id')
     .eq('user_id', user.id)
     .single()
@@ -25,14 +25,13 @@ export default defineEventHandler(async (event) => {
       family_id,
       families!inner(
         id,
-        parent_user_id,
-        user_profiles!inner(first_name, last_name, phone),
-        child_profiles(id, first_name, birth_date, gender),
+        primary_parent_id,
+        child_profiles(id, name, dob, gender),
         journeys(type, status, started_at)
       )
     `)
     .eq('doctor_id', doctorProfile.id)
-    .order('scheduled_at', { ascending: false })
+    .order('appointment_date', { ascending: false })
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
 

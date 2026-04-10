@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     .order('created_at', { ascending: false })
     .limit(limit)
 
-  if (unreadOnly) q = q.eq('is_read', false)
+  if (unreadOnly) q = q.is('read_at', null)
 
   const { data, error } = await q
 

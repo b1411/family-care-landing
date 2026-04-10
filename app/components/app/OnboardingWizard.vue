@@ -40,7 +40,7 @@
                 :key="opt.value"
                 class="journey-btn"
                 :class="{ active: form.journeyType === opt.value }"
-                @click="form.journeyType = opt.value"
+                @click="form.journeyType = opt.value as typeof form.journeyType"
               >
                 <Icon :name="opt.icon" size="24" />
                 <span>{{ opt.label }}</span>
@@ -169,23 +169,20 @@ async function handleNext() {
   try {
     // Update profile
     if (user.value) {
-      await supabase.from('user_profiles').update({
-        first_name: form.firstName.trim(),
-        last_name: form.lastName.trim(),
-        phone: form.phone.trim() || null,
-        onboarding_completed: true,
-      }).eq('user_id', user.value.id)
-    }
+        await supabase.from('users').update({
+          first_name: form.firstName.trim(),
+          last_name: form.lastName.trim(),
+          phone: form.phone.trim() || null,
+        }).eq('id', user.value.id)
+      }
 
     // Add child if not pregnancy
     if (form.journeyType !== 'pregnancy' && form.childName && authStore.familyId) {
       await supabase.from('child_profiles').insert({
         family_id: authStore.familyId,
-        first_name: form.childName.trim(),
-        birth_date: form.childBirthDate || null,
-        gender: form.childGender || 'female',
-      })
-    }
+        name: form.childName.trim(),
+        dob: form.childBirthDate || null,        gender: form.childGender || 'female',
+      })    }
 
     // Refresh auth store
     await authStore.initialize()
@@ -200,9 +197,6 @@ async function handleNext() {
 }
 
 function handleSkip() {
-  if (user.value) {
-    supabase.from('user_profiles').update({ onboarding_completed: true }).eq('user_id', user.value.id)
-  }
   emit('complete')
 }
 </script>

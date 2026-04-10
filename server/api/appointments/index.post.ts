@@ -4,9 +4,11 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 const schema = z.object({
   doctor_id: z.string().uuid(),
-  scheduled_at: z.string().datetime(),
+  appointment_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  start_time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/),
+  end_time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/).optional(),
   notes: z.string().max(500).optional(),
-  appointment_type: z.enum(['checkup', 'screening', 'vaccination', 'consultation', 'emergency']).default('checkup'),
+  visit_type: z.enum(['checkup', 'screening', 'vaccination', 'consultation', 'emergency']).default('checkup'),
 })
 
 export default defineEventHandler(async (event) => {
@@ -16,29 +18,26 @@ export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, schema.parse)
   const supabase = await serverSupabaseClient(event)
 
-  // Get user's family_id
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('family_id')
-    .eq('user_id', user.id)
+  // Get user's family_id from families table
+  const { data: family } = await supabase
+    .from('families')
+    .select('id')
+    .or(`primary_parent_id.eq.${user.id},secondary_parent_id.eq.${user.id}`)
+    .limit(1)
     .single()
 
-  if (!profile?.family_id) {
+  if (!family) {
     throw createError({ statusCode: 400, statusMessage: 'No family associated with user' })
   }
 
-  // Check for scheduling conflicts (same doctor, same time ± 30 min)
-  const scheduledTime = new Date(body.scheduled_at)
-  const windowStart = new Date(scheduledTime.getTime() - 30 * 60_000).toISOString()
-  const windowEnd = new Date(scheduledTime.getTime() + 30 * 60_000).toISOString()
-
+  // Check for scheduling conflicts (same doctor, same date, overlapping time)
   const { data: conflicts } = await supabase
     .from('appointments')
     .select('id')
     .eq('doctor_id', body.doctor_id)
+    .eq('appointment_date', body.appointment_date)
     .in('status', ['confirmed', 'requested'])
-    .gte('scheduled_at', windowStart)
-    .lte('scheduled_at', windowEnd)
+    .eq('start_time', body.start_time)
     .limit(1)
 
   if (conflicts && conflicts.length > 0) {
@@ -48,11 +47,13 @@ export default defineEventHandler(async (event) => {
   const { data, error } = await supabase
     .from('appointments')
     .insert({
-      family_id: profile.family_id,
+      family_id: family.id,
       doctor_id: body.doctor_id,
-      scheduled_at: body.scheduled_at,
+      appointment_date: body.appointment_date,
+      start_time: body.start_time,
+      end_time: body.end_time || null,
       notes: body.notes || null,
-      appointment_type: body.appointment_type,
+      visit_type: body.visit_type,
       status: 'requested',
     })
     .select()

@@ -23,9 +23,9 @@ export default defineEventHandler(async (event) => {
 
   // Verify user has doctor/coordinator/admin role
   const { data: profile } = await supabase
-    .from('user_profiles')
+    .from('users')
     .select('role')
-    .eq('user_id', user.id)
+    .eq('id', user.id)
     .single()
 
   if (!profile || !['doctor', 'gynecologist', 'pediatrician', 'coordinator', 'admin', 'clinic_admin'].includes(profile.role)) {

@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   // Get doctor profile
   const { data: doctorProfile } = await supabase
-    .from('doctor_profiles')
+    .from('doctors')
     .select('id, user_id')
     .eq('user_id', user.id)
     .single()
@@ -22,20 +22,16 @@ export default defineEventHandler(async (event) => {
   }
 
   // Fetch appointments for this doctor on this date
-  const dayStart = `${date}T00:00:00`
-  const dayEnd = `${date}T23:59:59`
-
   const { data: appointments, error } = await supabase
     .from('appointments')
     .select(`
-      id, scheduled_at, status, notes, appointment_type,
-      families!inner(id, parent_user_id),
-      child_profiles(id, first_name, last_name, birth_date)
+      id, appointment_date, start_time, end_time, status, notes, visit_type,
+      families!inner(id, primary_parent_id),
+      child_profiles(id, name, dob)
     `)
     .eq('doctor_id', doctorProfile.id)
-    .gte('scheduled_at', dayStart)
-    .lte('scheduled_at', dayEnd)
-    .order('scheduled_at', { ascending: true })
+    .eq('appointment_date', date)
+    .order('start_time', { ascending: true })
 
   if (error) throw createError({ statusCode: 500, statusMessage: error.message })
 

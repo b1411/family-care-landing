@@ -5,7 +5,7 @@ import { serverSupabaseUser } from '#supabase/server'
 const schema = z.object({
   template: z.enum(['appointment_confirmation', 'reminder', 'welcome']),
   to: z.string().email(),
-  data: z.record(z.string()),
+  data: z.record(z.string(), z.string()),
 })
 
 export default defineEventHandler(async (event) => {
