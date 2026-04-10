@@ -3,11 +3,11 @@
     <div class="doc-hero">
       <NuxtLink to="/admin/analytics" class="back-link"><Icon name="lucide:chevron-left" size="16" /> Аналитика</NuxtLink>
       <h1 class="doc-hero-title">Производительность врачей</h1>
-      <p class="doc-hero-sub">{{ mock.doctorPerformance.length }} специалистов</p>
+      <p class="doc-hero-sub">{{ appData.doctorPerformance.length }} специалистов</p>
     </div>
 
     <div class="doc-grid">
-      <div v-for="d in mock.doctorPerformance" :key="d.name" class="doc-card">
+      <div v-for="d in appData.doctorPerformance" :key="d.name" class="doc-card">
         <div class="dc-top">
           <div class="dc-avatar">{{ d.name.slice(4, 5) }}</div>
           <div class="dc-info">
@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
-const mock = useAppData()
+const appData = useAppData()
 </script>
 
 <style scoped>

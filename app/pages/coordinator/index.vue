@@ -1,10 +1,18 @@
 <template>
   <div class="coord-page">
+    <!-- Loading skeleton -->
+    <template v-if="loading">
+      <div class="skel skel-hero" />
+      <div class="kpi-grid"><div v-for="i in 4" :key="i" class="skel skel-kpi" /></div>
+      <div class="skel skel-card" /><div class="skel skel-card" />
+    </template>
+
+    <template v-else>
     <!-- Hero -->
     <div class="coord-hero">
       <div>
         <h1 class="coord-hero-title">Панель координатора</h1>
-        <p class="coord-hero-sub">Доброе утро! У вас {{ criticalTasks.length }} срочных задач сегодня</p>
+        <p class="coord-hero-sub">{{ greetingLine }}. {{ criticalTasks.length > 0 ? `${criticalTasks.length} срочных задач` : 'Нет срочных задач' }}</p>
       </div>
     </div>
 
@@ -13,13 +21,9 @@
       <div v-for="k in kpiCards" :key="k.label" class="kpi-card">
         <div class="kpi-top">
           <Icon :name="k.icon" size="16" :style="{ color: k.color }" />
-          <span class="kpi-trend" :class="k.trendDir">{{ k.trendDir === 'up' ? '+' : '' }}{{ k.trend }}%</span>
         </div>
         <span class="kpi-val">{{ k.value }}</span>
         <span class="kpi-label">{{ k.label }}</span>
-        <svg class="kpi-spark" viewBox="0 0 60 20" preserveAspectRatio="none">
-          <polyline :points="sparkline(k.sparkline)" fill="none" :stroke="k.color" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
       </div>
     </div>
 
@@ -34,9 +38,11 @@
           <div class="task-dot task-dot--critical" />
           <div class="task-body">
             <span class="task-title">{{ t.title }}</span>
-            <span class="task-meta">{{ t.family_name }} · {{ timeAgo(t.created_at) }}</span>
+            <span class="task-meta">{{ (t as any).family_name }} · {{ timeAgo(t.created_at!) }}</span>
           </div>
-          <button class="btn-sm btn-sm--done">Готово</button>
+          <button class="btn-sm btn-sm--done" :disabled="completing === t.id" @click="handleComplete(t.id)">
+            {{ completing === t.id ? '...' : 'Готово' }}
+          </button>
         </div>
       </div>
     </div>
@@ -47,31 +53,32 @@
         <h2 class="card-title"><Icon name="lucide:clipboard-list" size="16" /> Задачи</h2>
         <NuxtLink to="/coordinator/tasks" class="link-more">Все задачи →</NuxtLink>
       </div>
-      <div class="task-list">
-        <div v-for="t in pendingTasks" :key="t.id" class="task-row">
+      <div v-if="pendingTasks.length" class="task-list">
+        <div v-for="t in pendingTasks.slice(0, 10)" :key="t.id" class="task-row">
           <div class="task-dot" :class="`task-dot--${t.priority}`" />
           <div class="task-body">
             <span class="task-title">{{ t.title }}</span>
-            <span class="task-meta">{{ t.family_name }} · {{ taskTypeLabel(t.type) }}</span>
+            <span class="task-meta">{{ (t as any).family_name }} · {{ taskTypeLabel(t.type) }}</span>
           </div>
-          <button class="btn-sm btn-sm--done">✓</button>
+          <button class="btn-sm btn-sm--done" :disabled="completing === t.id" @click="handleComplete(t.id)">✓</button>
         </div>
+      </div>
+      <div v-else class="card-empty">
+        <Icon name="lucide:check-circle" size="28" style="color: var(--color-success); opacity: 0.5" />
+        <span>Все задачи выполнены</span>
       </div>
     </div>
 
     <!-- Two column layout -->
     <div class="coord-columns">
-      <!-- Left: tasks + chart -->
+      <!-- Left: tasks chart + quick links -->
       <div class="coord-left">
-        <!-- Task distribution chart -->
         <div class="card">
           <div class="card-header">
             <h2 class="card-title"><Icon name="lucide:bar-chart-3" size="16" /> Распределение задач</h2>
           </div>
           <AppSharedEChart :option="taskPieOption" height="220px" />
         </div>
-
-        <!-- Quick links -->
         <div class="quick-grid">
           <NuxtLink to="/coordinator/families" class="quick-card">
             <Icon name="lucide:users" size="20" style="color:var(--color-primary)" />
@@ -94,7 +101,6 @@
           </div>
           <AppCoordinatorDayTimeline :schedule="daySchedule" />
         </div>
-
         <div class="card">
           <div class="card-header">
             <h2 class="card-title"><Icon name="lucide:activity" size="16" /> Последние события</h2>
@@ -103,6 +109,15 @@
         </div>
       </div>
     </div>
+    </template>
+
+    <!-- Toast -->
+    <Transition name="toast">
+      <div v-if="toast" class="toast" :class="`toast--${toast.type}`">
+        <Icon :name="toast.type === 'success' ? 'lucide:check-circle' : 'lucide:alert-circle'" size="16" />
+        {{ toast.message }}
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -110,21 +125,77 @@
 import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const coordStore = useCoordinatorStore()
+const authStore = useAuthStore()
+const appData = useAppData()
 
-const kpiCards = [
-  { label: 'Активных семей', value: mock.coordinatorKpi.activeFamilies.value, trend: mock.coordinatorKpi.activeFamilies.trend, trendDir: 'up', icon: 'lucide:users', color: 'var(--color-primary)', sparkline: mock.coordinatorKpi.activeFamilies.sparkline },
-  { label: 'Срочных', value: mock.coordinatorKpi.criticalTasks.value, trend: mock.coordinatorKpi.criticalTasks.trend, trendDir: 'down', icon: 'lucide:alert-triangle', color: 'var(--color-danger)', sparkline: mock.coordinatorKpi.criticalTasks.sparkline },
-  { label: 'В работе', value: mock.coordinatorKpi.pendingTasks.value, trend: mock.coordinatorKpi.pendingTasks.trend, trendDir: 'up', icon: 'lucide:clipboard-list', color: 'var(--color-warning)', sparkline: mock.coordinatorKpi.pendingTasks.sparkline },
-  { label: 'Записей сегодня', value: mock.coordinatorKpi.todayAppointments.value, trend: mock.coordinatorKpi.todayAppointments.trend, trendDir: 'up', icon: 'lucide:calendar', color: 'var(--color-accent-sky)', sparkline: mock.coordinatorKpi.todayAppointments.sparkline },
-]
+const completing = ref<string | null>(null)
+const toast = ref<{ type: 'success' | 'error'; message: string } | null>(null)
 
-const criticalTasks = computed(() => mock.coordinatorTasks.filter(t => t.priority === 'critical' && t.status === 'pending'))
-const pendingTasks = computed(() => mock.coordinatorTasks.filter(t => t.priority !== 'critical' && t.status === 'pending'))
+// ── Fetch real data on mount ──
+const clinicId = computed(() => authStore.clinicId)
 
-function sparkline(pts: number[]) {
-  const max = Math.max(...pts, 1)
-  return pts.map((v, i) => `${(i / (pts.length - 1)) * 60},${20 - (v / max) * 18}`).join(' ')
+onMounted(async () => {
+  if (clinicId.value) {
+    await Promise.all([
+      coordStore.fetchTasks(clinicId.value),
+      coordStore.fetchStats(clinicId.value),
+    ])
+  }
+})
+
+const loading = computed(() => coordStore.loading && coordStore.tasks.length === 0)
+
+// ── Greeting ──
+const greetingLine = computed(() => {
+  const name = authStore.profile?.first_name || 'Координатор'
+  const h = new Date().getHours()
+  const greet = h < 6 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'
+  return `${greet}, ${name}`
+})
+
+// ── Tasks from store (fallback to appData) ──
+const hasRealTasks = computed(() => coordStore.tasks.length > 0)
+const criticalTasks = computed(() =>
+  hasRealTasks.value
+    ? coordStore.criticalTasks
+    : appData.coordinatorTasks.filter(t => t.priority === 'critical' && t.status === 'pending'),
+)
+const pendingTasks = computed(() =>
+  hasRealTasks.value
+    ? coordStore.pendingTasks.filter(t => t.priority !== 'critical')
+    : appData.coordinatorTasks.filter(t => t.priority !== 'critical' && t.status === 'pending'),
+)
+
+// ── KPI cards from real stats ──
+const kpiCards = computed(() => {
+  const s = coordStore.stats
+  const hasReal = s.total_families > 0 || coordStore.tasks.length > 0
+  return [
+    { label: 'Активных семей', value: hasReal ? s.total_families : appData.coordinatorKpi.activeFamilies.value, icon: 'lucide:users', color: 'var(--color-primary)' },
+    { label: 'Срочных', value: hasReal ? criticalTasks.value.length : appData.coordinatorKpi.criticalTasks.value, icon: 'lucide:alert-triangle', color: 'var(--color-danger)' },
+    { label: 'В работе', value: hasReal ? pendingTasks.value.length : appData.coordinatorKpi.pendingTasks.value, icon: 'lucide:clipboard-list', color: 'var(--color-warning)' },
+    { label: 'Записей сегодня', value: hasReal ? s.today_appointments : appData.coordinatorKpi.todayAppointments.value, icon: 'lucide:calendar', color: 'var(--color-accent-sky)' },
+  ]
+})
+
+// ── Actions ──
+async function handleComplete(taskId: string) {
+  completing.value = taskId
+  try {
+    const { error } = await coordStore.completeTask(taskId)
+    if (error) showToast('error', 'Не удалось завершить задачу')
+    else showToast('success', 'Задача завершена!')
+  } catch {
+    showToast('error', 'Ошибка сети')
+  } finally {
+    completing.value = null
+  }
+}
+
+function showToast(type: 'success' | 'error', message: string) {
+  toast.value = { type, message }
+  setTimeout(() => { toast.value = null }, 3000)
 }
 
 function taskTypeLabel(type: string) {
@@ -135,14 +206,40 @@ function taskTypeLabel(type: string) {
 function timeAgo(iso: string) {
   const diff = Date.now() - new Date(iso).getTime()
   const h = Math.floor(diff / 3600000)
+  if (h < 1) return 'только что'
   if (h < 24) return `${h}ч назад`
   return `${Math.floor(h / 24)}д назад`
 }
 
+// ── Task type distribution from real data ──
+const palette = ['#8B7EC8', '#E8A0BF', '#F2C4A0', '#A8C8E8', '#E9C46A', '#D4727C']
+const taskPieOption = computed<EChartsOption>(() => {
+  let pieData: { name: string; value: number }[]
+  if (hasRealTasks.value) {
+    const typeCount = new Map<string, number>()
+    for (const t of coordStore.tasks) {
+      const label = taskTypeLabel(t.type)
+      typeCount.set(label, (typeCount.get(label) || 0) + 1)
+    }
+    pieData = Array.from(typeCount).map(([name, value]) => ({ name, value }))
+  } else {
+    pieData = appData.tasksByType
+  }
+  return {
+    tooltip: { trigger: 'item' as const },
+    series: [{
+      type: 'pie' as const, radius: ['45%', '72%'], padAngle: 3, itemStyle: { borderRadius: 6 },
+      label: { show: false }, emphasis: { scale: true, scaleSize: 6 },
+      data: pieData.map((t, i) => ({ name: t.name, value: t.value, itemStyle: { color: palette[i % palette.length] } })),
+    }],
+  }
+})
+
+// ── Day schedule (placeholder until schedule API) ──
 const daySchedule = [
   { time: '09:00', event: 'Звонок — Каримова А.', detail: 'УЗИ просрочено', active: true },
   { time: '10:00', event: 'Подключение — Жумабаева К.', detail: 'Новая семья', active: false },
-  { time: '11:30', event: 'Напоминание — Нурланова С.', detail: 'Автоматическое', active: false, past: false },
+  { time: '11:30', event: 'Напоминание — Нурланова С.', detail: 'Автоматическое', active: false },
   { time: '14:00', event: 'Проверка adherence — 5 семей', detail: null, active: false },
   { time: '16:00', event: 'Отчёт для руководителя', detail: null, active: false },
 ]
@@ -154,16 +251,6 @@ const activityItems = [
   { id: 4, text: 'Нурланова С. отметила приём витамина D3', time: '2 часа назад' },
   { id: 5, text: 'Сулейменова М. загрузила результат ОАК', time: '3 часа назад' },
 ]
-
-const palette = ['#8B7EC8', '#E8A0BF', '#F2C4A0', '#A8C8E8', '#E9C46A', '#D4727C']
-const taskPieOption = computed<EChartsOption>(() => ({
-  tooltip: { trigger: 'item' as const },
-  series: [{
-    type: 'pie' as const, radius: ['45%', '72%'], padAngle: 3, itemStyle: { borderRadius: 6 },
-    label: { show: false }, emphasis: { scale: true, scaleSize: 6 },
-    data: mock.tasksByType.map((t, i) => ({ name: t.name, value: t.value, itemStyle: { color: palette[i % palette.length] } })),
-  }],
-}))
 </script>
 
 <style scoped>
@@ -219,4 +306,21 @@ const taskPieOption = computed<EChartsOption>(() => ({
 .coord-columns { display: grid; grid-template-columns: 3fr 2fr; gap: 18px; }
 .coord-left, .coord-right { display: flex; flex-direction: column; gap: 18px; }
 @media (max-width: 768px) { .coord-columns { grid-template-columns: 1fr; } }
+
+/* ─── Skeleton ─── */
+.skel { background: linear-gradient(90deg, rgba(139,126,200,0.06) 0%, rgba(139,126,200,0.12) 50%, rgba(139,126,200,0.06) 100%); background-size: 200% 100%; animation: shimmer 1.4s ease infinite; border-radius: 14px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skel-hero { height: 80px; border-radius: 16px; }
+.skel-kpi { height: 100px; }
+.skel-card { height: 200px; margin-bottom: 16px; }
+.card-empty { padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--color-text-muted); }
+
+/* ─── Toast ─── */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.toast--success { background: #e8f8ee; color: #1a7a3e; border: 1px solid #c3ecd0; }
+.toast--error { background: #fdecea; color: #a63232; border: 1px solid #f5c6c6; }
+.toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+
+.btn-sm:disabled { opacity: 0.5; cursor: default; }
 </style>

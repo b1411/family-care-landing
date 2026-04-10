@@ -6,25 +6,25 @@
         <h1 class="ref-hero-title">Реферальная программа</h1>
         <p class="ref-hero-sub">Приглашайте друзей — получайте бонусы</p>
       </div>
-      <div class="tier-chip" :class="mock.referral.tier.toLowerCase()">{{ mock.referral.tier }}</div>
+      <div class="tier-chip" :class="appData.referral.tier.toLowerCase()">{{ appData.referral.tier }}</div>
     </div>
 
     <!-- Stats strip -->
     <div class="stats-strip">
       <div class="stat-item">
-        <span class="stat-val">{{ mock.referral.invited }}</span>
+        <span class="stat-val">{{ appData.referral.invited }}</span>
         <span class="stat-lbl">Приглашено</span>
       </div>
       <div class="stat-item">
-        <span class="stat-val">{{ mock.referral.registered }}</span>
+        <span class="stat-val">{{ appData.referral.registered }}</span>
         <span class="stat-lbl">Зареистрировались</span>
       </div>
       <div class="stat-item">
-        <span class="stat-val">{{ mock.referral.bonus }}</span>
+        <span class="stat-val">{{ appData.referral.bonus }}</span>
         <span class="stat-lbl">Заработано</span>
       </div>
       <div class="stat-item">
-        <span class="stat-val">{{ mock.referral.points }}</span>
+        <span class="stat-val">{{ appData.referral.points }}</span>
         <span class="stat-lbl">Баллов</span>
       </div>
     </div>
@@ -34,7 +34,7 @@
       <div class="code-card-inner">
         <span class="code-label">Ваш реферальный код</span>
         <div class="code-row">
-          <span class="code-value">{{ mock.referral.code }}</span>
+          <span class="code-value">{{ appData.referral.code }}</span>
           <button class="btn-icon" @click="copyCode">
             <Icon :name="copied ? 'lucide:check' : 'lucide:copy'" size="16" />
           </button>
@@ -57,14 +57,14 @@
       </div>
       <div class="loyalty-row">
         <div>
-          <span class="loyalty-balance">{{ mock.referral.bonus }}</span>
+          <span class="loyalty-balance">{{ appData.referral.bonus }}</span>
           <span class="loyalty-sub">Доступно</span>
         </div>
         <div class="loyalty-progress">
           <div class="tier-bar">
-            <div class="tier-bar-fill" :style="{ width: `${Math.min(100, mock.referral.points / 50)}%` }" />
+            <div class="tier-bar-fill" :style="{ width: `${Math.min(100, appData.referral.points / 50)}%` }" />
           </div>
-          <span class="tier-text">{{ mock.referral.points }}/5000 до Золота</span>
+          <span class="tier-text">{{ appData.referral.points }}/5000 до Золота</span>
         </div>
       </div>
     </div>
@@ -93,7 +93,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const copied = ref(false)
 
 const bonusHistory = [
@@ -104,17 +104,17 @@ const bonusHistory = [
 ]
 
 function copyCode() {
-  navigator.clipboard.writeText(mock.referral.code)
+  navigator.clipboard.writeText(appData.referral.code)
   copied.value = true
   setTimeout(() => { copied.value = false }, 2000)
 }
 
 function copyLink() {
-  navigator.clipboard.writeText(`${window.location.origin}/auth/invite/${mock.referral.code}`)
+  navigator.clipboard.writeText(`${window.location.origin}/auth/invite/${appData.referral.code}`)
 }
 
 function shareWhatsApp() {
-  const url = `${window.location.origin}/auth/invite/${mock.referral.code}`
+  const url = `${window.location.origin}/auth/invite/${appData.referral.code}`
   window.open(`https://wa.me/?text=${encodeURIComponent(`Присоединяйтесь к Family Care OS! ${url}`)}`, '_blank')
 }
 </script>

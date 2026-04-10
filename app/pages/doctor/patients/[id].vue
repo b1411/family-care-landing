@@ -1,23 +1,24 @@
 <template>
   <div class="pd-page">
+    <!-- Loading -->
+    <div v-if="loading" class="pd-loading">
+      <Icon name="lucide:loader-2" size="24" class="spin" /> Загрузка…
+    </div>
+
     <!-- Hero -->
-    <div class="pd-hero">
+    <div v-else class="pd-hero">
       <NuxtLink to="/doctor/patients" class="back-link"><Icon name="lucide:chevron-left" size="16" /> Пациенты</NuxtLink>
       <div class="hero-row">
-        <div class="hero-avatar">АН</div>
+        <div class="hero-avatar">{{ patientName.split(' ').map(w => w[0]).join('').slice(0, 2) }}</div>
         <div>
-          <h1 class="hero-title">Айгуль Нурланова</h1>
-          <p class="hero-sub">+7 (707) 312-45-67 · Группа крови: II+ · ПДР: 15 июня 2026</p>
+          <h1 class="hero-title">{{ patientName }}</h1>
+          <p class="hero-sub">{{ patientMeta }}</p>
         </div>
-      </div>
-      <div class="tag-row">
-        <span class="tag tag-warn">Аллергия: Пенициллин</span>
-        <span class="tag tag-danger">Гест. диабет</span>
       </div>
     </div>
 
     <!-- Children -->
-    <div class="card">
+    <div v-if="!loading" class="card">
       <h2 class="card-title"><Icon name="lucide:baby" size="16" /> Дети</h2>
       <div v-for="c in children" :key="c.id" class="child-card">
         <div class="child-top">
@@ -33,7 +34,7 @@
     </div>
 
     <!-- Journeys + Events -->
-    <div class="card">
+    <div v-if="!loading" class="card">
       <h2 class="card-title"><Icon name="lucide:route" size="16" /> Маршруты</h2>
       <div v-for="j in journeys" :key="j.id" class="journey-block">
         <div class="j-head">
@@ -66,7 +67,7 @@
     </div>
 
     <!-- Prescriptions -->
-    <div class="card">
+    <div v-if="!loading" class="card">
       <div class="card-head-row">
         <h2 class="card-title"><Icon name="lucide:pill" size="16" /> Назначения</h2>
         <button class="btn-add" @click="showRx = true"><Icon name="lucide:plus" size="14" /> Новое</button>
@@ -82,7 +83,7 @@
     </div>
 
     <!-- Vaccinations -->
-    <div class="card">
+    <div v-if="!loading" class="card">
       <h2 class="card-title"><Icon name="lucide:shield-check" size="16" /> Прививки</h2>
       <div v-for="v in vaccinations" :key="v.id" class="vax-row" :class="v.status">
         <span class="vax-name">{{ v.name }}</span>
@@ -93,7 +94,7 @@
     </div>
 
     <!-- Documents -->
-    <div class="card">
+    <div v-if="!loading" class="card">
       <h2 class="card-title"><Icon name="lucide:folder" size="16" /> Документы</h2>
       <div v-for="d in docs" :key="d.id" class="doc-row">
         <Icon :name="d.icon" size="14" class="doc-ic" />
@@ -138,28 +139,21 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
+const route = useRoute()
+const sb = useSupabaseClient()
 const showRx = ref(false)
 const rxForm = reactive({ medication: '', dosage: '', frequency: '', times: [] as string[], startDate: '', endDate: '', instructions: '' })
 const activeTab = ref('all')
+const loading = ref(true)
+const patientName = ref('Пациент')
+const patientMeta = ref('')
 
-const children = [
-  { id: 1, name: 'Адиль', age: '2 г 3 мес', weight: '12.4', height: '88', blood: 'I+' },
-  { id: 2, name: 'Амина', age: '4 мес', weight: '6.1', height: '62', blood: '' },
-]
-
-const journeys = [
-  { id: 'j1', type: 'postpartum', label: 'Послеродовой', status: 'active' },
-  { id: 'j2', type: 'infant', label: 'Младенец', status: 'active' },
-]
-
-const allEvents = reactive([
-  { id: 1, journeyId: 'j1', title: 'Осмотр гинеколога', type: 'consultation', status: 'completed', dueDate: '5 мая' },
-  { id: 2, journeyId: 'j1', title: 'Общий анализ крови', type: 'analysis', status: 'overdue', dueDate: '8 мая' },
-  { id: 3, journeyId: 'j1', title: 'УЗИ (контроль)', type: 'ultrasound', status: 'upcoming', dueDate: '18 мая' },
-  { id: 4, journeyId: 'j2', title: 'Осмотр педиатра', type: 'checkup', status: 'due', dueDate: '12 мая' },
-  { id: 5, journeyId: 'j2', title: 'Вакцинация БЦЖ', type: 'vaccination', status: 'upcoming', dueDate: '20 мая' },
-  { id: 6, journeyId: 'j2', title: 'Скрининг слуха', type: 'screening', status: 'completed', dueDate: '1 мая' },
-])
+const children = ref<any[]>([])
+const journeys = ref<any[]>([])
+const allEvents = reactive<any[]>([])
+const prescriptions = ref<any[]>([])
+const vaccinations = ref<any[]>([])
+const docs = ref<any[]>([])
 
 const eventTabs = computed(() => {
   const ov = allEvents.filter(e => e.status === 'overdue').length
@@ -189,26 +183,74 @@ function evLabel(status: string) {
 function vaxLabel(status: string) {
   return ({ scheduled: 'Запланировано', completed: 'Сделано', skipped: 'Пропущено' } as Record<string, string>)[status] || status
 }
+function formatDate(d: string) { return new Date(d).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) }
 
-const prescriptions = [
-  { id: 1, medication: 'Элевит Пронаталь', dosage: '1 табл.', frequency: '1 раз/день', startDate: '15 янв', endDate: '15 июн', active: true },
-  { id: 2, medication: 'Витамин D3', dosage: '1000 МЕ', frequency: '1 раз/день', startDate: '1 мар', endDate: '', active: true },
-  { id: 3, medication: 'Ферретаб', dosage: '1 капс.', frequency: '2 раза/день', startDate: '10 янв', endDate: '10 апр', active: false },
-]
+onMounted(async () => {
+  const familyId = route.params.id as string
 
-const vaccinations = [
-  { id: 1, name: 'БЦЖ', dose: 1, date: '20 мая', status: 'scheduled' },
-  { id: 2, name: 'Гепатит B', dose: 1, date: '16 янв', status: 'completed' },
-  { id: 3, name: 'Полиомиелит', dose: 1, date: '1 июн', status: 'scheduled' },
-  { id: 4, name: 'АКДС', dose: 3, date: '5 апр', status: 'completed' },
-]
+  // Fetch family with parent + children
+  const { data: family } = await sb
+    .from('families')
+    .select('id, primary_parent:users!families_primary_parent_id_fkey(first_name, last_name, phone), mother_profiles(blood_type, edd_date)')
+    .eq('id', familyId)
+    .single()
 
-const docs = [
-  { id: 1, title: 'УЗИ — Амина (3 мес)', date: '28 апр', icon: 'lucide:monitor' },
-  { id: 2, title: 'Выписка из роддома', date: '15 янв', icon: 'lucide:file-output' },
-  { id: 3, title: 'Общий анализ крови', date: '10 янв', icon: 'lucide:test-tubes' },
-  { id: 4, title: 'Скрининг новорождённого', date: '18 янв', icon: 'lucide:scan' },
-]
+  if (family) {
+    const parent = family.primary_parent as any
+    patientName.value = `${parent?.first_name || ''} ${parent?.last_name || ''}`.trim()
+    const mp = Array.isArray(family.mother_profiles) ? family.mother_profiles[0] : family.mother_profiles
+    const parts = []
+    if (parent?.phone) parts.push(parent.phone)
+    if (mp?.blood_type) parts.push(`Группа крови: ${mp.blood_type}`)
+    if (mp?.edd_date) parts.push(`ПДР: ${formatDate(mp.edd_date)}`)
+    patientMeta.value = parts.join(' · ')
+  }
+
+  // Children
+  const { data: childData } = await sb.from('child_profiles').select('*').eq('family_id', familyId)
+  children.value = (childData || []).map(c => {
+    const ageDays = c.dob ? Math.floor((Date.now() - new Date(c.dob).getTime()) / 86400000) : 0
+    const ageLabel = ageDays < 30 ? `${ageDays} дн` : ageDays < 365 ? `${Math.floor(ageDays / 30)} мес` : `${Math.floor(ageDays / 365)} г ${Math.floor((ageDays % 365) / 30)} мес`
+    return { id: c.id, name: c.name, age: ageLabel, weight: c.birth_weight, height: c.birth_height, blood: c.blood_type || '' }
+  })
+
+  // Journeys + events
+  const { data: jData } = await sb.from('journeys').select('id, type, status').eq('family_id', familyId).in('status', ['active', 'paused'])
+  const typeLabels: Record<string, string> = { pregnancy: 'Беременность', postpartum: 'Послеродовой', infant: 'Младенец', toddler: 'Тоддлер' }
+  journeys.value = (jData || []).map(j => ({ id: j.id, type: j.type, label: typeLabels[j.type] || j.type, status: j.status }))
+
+  if (jData?.length) {
+    const jIds = jData.map(j => j.id)
+    const { data: evData } = await sb.from('journey_events').select('id, journey_id, title, type, status, due_date').in('journey_id', jIds).order('due_date')
+    for (const ev of evData || []) {
+      allEvents.push({ id: ev.id, journeyId: ev.journey_id, title: ev.title, type: ev.type, status: ev.status, dueDate: ev.due_date ? formatDate(ev.due_date) : '' })
+    }
+  }
+
+  // Prescriptions
+  const { data: rxData } = await sb.from('prescriptions').select('id, medication, dosage, frequency, start_date, end_date, is_active').eq('family_id', familyId)
+  prescriptions.value = (rxData || []).map(r => ({
+    id: r.id, medication: r.medication, dosage: r.dosage, frequency: r.frequency,
+    startDate: r.start_date ? formatDate(r.start_date) : '', endDate: r.end_date ? formatDate(r.end_date) : '', active: r.is_active !== false,
+  }))
+
+  // Vaccinations (for first child)
+  if (childData?.length) {
+    const { data: vaxData } = await sb.from('vaccinations').select('id, vaccine_name, dose_number, scheduled_date, status').eq('child_id', childData[0]!.id).order('scheduled_date')
+    vaccinations.value = (vaxData || []).map(v => ({
+      id: v.id, name: v.vaccine_name, dose: v.dose_number, date: v.scheduled_date ? formatDate(v.scheduled_date) : '', status: v.status,
+    }))
+  }
+
+  // Documents
+  const { data: docData } = await sb.from('documents').select('id, title, created_at, type').eq('family_id', familyId).order('created_at', { ascending: false }).limit(10)
+  const docIcons: Record<string, string> = { analysis: 'lucide:test-tubes', ultrasound: 'lucide:monitor', screening: 'lucide:scan', prescription: 'lucide:pill', discharge: 'lucide:file-output', photo: 'lucide:image' }
+  docs.value = (docData || []).map(d => ({
+    id: d.id, title: d.title, date: d.created_at ? formatDate(d.created_at) : '', icon: docIcons[d.type] || 'lucide:file',
+  }))
+
+  loading.value = false
+})
 </script>
 
 <style scoped>

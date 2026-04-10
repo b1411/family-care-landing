@@ -4,9 +4,9 @@
     <div class="ach-hero">
       <div>
         <h1 class="ach-hero-title">Достижения</h1>
-        <p class="ach-hero-sub">{{ unlockedCount }}/{{ mock.achievements.length }} разблокировано</p>
+        <p class="ach-hero-sub">{{ unlockedCount }}/{{ appData.achievements.length }} разблокировано</p>
       </div>
-      <AppSharedProgressRing :value="Math.round(unlockedCount / mock.achievements.length * 100)" :size="64" :strokeWidth="5" variant="primary" />
+      <AppSharedProgressRing :value="Math.round(unlockedCount / appData.achievements.length * 100)" :size="64" :strokeWidth="5" variant="primary" />
     </div>
 
     <!-- Streaks -->
@@ -25,7 +25,7 @@
         <h2 class="card-title"><Icon name="lucide:trophy" size="16" /> Все достижения</h2>
       </div>
       <div class="ach-grid">
-        <div v-for="a in mock.achievements" :key="a.id" class="ach-item" :class="{ 'ach-item--locked': !a.unlocked }">
+        <div v-for="a in appData.achievements" :key="a.id" class="ach-item" :class="{ 'ach-item--locked': !a.unlocked }">
           <div class="ach-icon-wrap" :class="{ 'ach-icon-wrap--unlocked': a.unlocked }">
             <Icon :name="a.icon" size="22" />
           </div>
@@ -55,14 +55,14 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
-const unlockedCount = computed(() => mock.achievements.filter(a => a.unlocked).length)
+const appData = useAppData()
+const unlockedCount = computed(() => appData.achievements.filter(a => a.unlocked).length)
 
 const streakList = [
-  { key: 'doses', emoji: '💊', label: 'Лекарства', ...mock.streaks.doses },
-  { key: 'mood', emoji: '😊', label: 'Настроение', ...mock.streaks.mood },
-  { key: 'sleep', emoji: '🌙', label: 'Сон', ...mock.streaks.sleep },
-  { key: 'feeding', emoji: '🍼', label: 'Кормление', ...mock.streaks.feeding },
+  { key: 'doses', emoji: '💊', label: 'Лекарства', ...appData.streaks.doses },
+  { key: 'mood', emoji: '😊', label: 'Настроение', ...appData.streaks.mood },
+  { key: 'sleep', emoji: '🌙', label: 'Сон', ...appData.streaks.sleep },
+  { key: 'feeding', emoji: '🍼', label: 'Кормление', ...appData.streaks.feeding },
 ]
 
 const leaderboard = [

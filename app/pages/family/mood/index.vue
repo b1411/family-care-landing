@@ -40,13 +40,13 @@
         <NuxtLink to="/family/mood/epds" class="card-link">Пройти тест →</NuxtLink>
       </div>
       <div class="epds-row">
-        <div class="epds-circle" :class="`epds-circle--${mock.lastEpds.risk}`">
-          <span class="epds-val">{{ mock.lastEpds.score }}</span>
+        <div class="epds-circle" :class="`epds-circle--${appData.lastEpds.risk}`">
+          <span class="epds-val">{{ appData.lastEpds.score }}</span>
           <span class="epds-of">/30</span>
         </div>
         <div class="epds-info">
-          <span class="epds-risk" :class="`epds-risk--${mock.lastEpds.risk}`">{{ riskLabel(mock.lastEpds.risk) }}</span>
-          <span class="epds-date">{{ mock.lastEpds.date }}</span>
+          <span class="epds-risk" :class="`epds-risk--${appData.lastEpds.risk}`">{{ riskLabel(appData.lastEpds.risk) }}</span>
+          <span class="epds-date">{{ appData.lastEpds.date }}</span>
         </div>
       </div>
     </div>
@@ -60,12 +60,12 @@
     </div>
 
     <!-- History -->
-    <div class="card" v-if="mock.moodHistory.length">
+    <div class="card" v-if="appData.moodHistory.length">
       <div class="card-header">
         <h2 class="card-title"><Icon name="lucide:history" size="16" /> История</h2>
       </div>
       <div class="mood-hist">
-        <div v-for="e in mock.moodHistory.slice(0, 10)" :key="e.date" class="mood-hist-row">
+        <div v-for="e in appData.moodHistory.slice(0, 10)" :key="e.date" class="mood-hist-row">
           <span class="mood-hist-emoji">{{ scoreEmoji(e.score) }}</span>
           <span class="mood-hist-date">{{ formatDate(e.date) }}</span>
           <div class="mood-hist-bar-wrap">
@@ -81,7 +81,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const selectedMood = ref(0)
 const notes = ref('')
 
@@ -94,7 +94,7 @@ const moods = [
 ]
 
 const avgScore = computed(() => {
-  const h = mock.moodHistory
+  const h = appData.moodHistory
   return h.reduce((s, e) => s + e.score, 0) / h.length
 })
 const avgEmoji = computed(() => scoreEmoji(Math.round(avgScore.value)))
@@ -123,10 +123,10 @@ import type { EChartsOption } from 'echarts'
 
 const moodChartOption = computed<EChartsOption>(() => ({
   grid: { top: 16, right: 8, bottom: 24, left: 32 },
-  xAxis: { type: 'category' as const, data: mock.moodHistory.map(e => formatDate(e.date)), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 10, rotate: 45 } },
+  xAxis: { type: 'category' as const, data: appData.moodHistory.map(e => formatDate(e.date)), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 10, rotate: 45 } },
   yAxis: { type: 'value' as const, min: 1, max: 5, interval: 1, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
   series: [{
-    type: 'line' as const, data: mock.moodHistory.map(e => e.score), smooth: true,
+    type: 'line' as const, data: appData.moodHistory.map(e => e.score), smooth: true,
     lineStyle: { color: '#E8A0BF', width: 3 }, symbol: 'circle', symbolSize: 7,
     itemStyle: { color: '#E8A0BF', borderColor: '#fff', borderWidth: 2 },
     areaStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(232,160,191,0.2)' }, { offset: 1, color: 'rgba(232,160,191,0)' }] } },

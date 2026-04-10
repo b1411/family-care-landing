@@ -12,11 +12,11 @@
         <svg viewBox="0 0 120 120" class="ring-svg">
           <circle cx="60" cy="60" r="52" fill="none" stroke="var(--color-border-light)" stroke-width="8" />
           <circle cx="60" cy="60" r="52" fill="none" :stroke="ringColor" stroke-width="8"
-            stroke-linecap="round" :stroke-dasharray="`${mock.complianceOverall * 3.27} 327`"
+            stroke-linecap="round" :stroke-dasharray="`${appData.complianceOverall * 3.27} 327`"
             transform="rotate(-90 60 60)" />
         </svg>
         <div class="ring-label">
-          <span class="ring-value">{{ mock.complianceOverall }}%</span>
+          <span class="ring-value">{{ appData.complianceOverall }}%</span>
           <span class="ring-text">выполнение</span>
         </div>
       </div>
@@ -46,7 +46,7 @@
     <div class="card">
       <h2 class="card-title"><Icon name="lucide:shield-check" size="16" /> Мероприятия</h2>
       <div class="proto-list">
-        <div v-for="p in mock.complianceProtocols" :key="p.name" class="proto-row">
+        <div v-for="p in appData.complianceProtocols" :key="p.name" class="proto-row">
           <span class="proto-name">{{ p.name }}</span>
           <div class="proto-track"><div class="proto-fill" :class="barClass(p.completion)" :style="{ width: `${p.completion}%` }" /></div>
           <span class="proto-pct">{{ p.completion }}%</span>
@@ -59,11 +59,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 
 const ringColor = computed(() => {
-  if (mock.complianceOverall >= 80) return 'var(--color-success)'
-  if (mock.complianceOverall >= 60) return 'var(--color-warning)'
+  if (appData.complianceOverall >= 80) return 'var(--color-success)'
+  if (appData.complianceOverall >= 60) return 'var(--color-warning)'
   return 'var(--color-danger)'
 })
 

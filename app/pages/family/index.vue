@@ -1,20 +1,29 @@
 <template>
   <div class="dashboard">
+    <!-- Loading skeleton -->
+    <template v-if="loading">
+      <div class="hero-banner skeleton-hero"><div class="skel skel-title" /><div class="skel skel-sub" /><div class="skel skel-bar" /></div>
+      <div class="kpi-row"><div v-for="i in 4" :key="i" class="skel skel-kpi" /></div>
+      <div class="quick-actions"><div v-for="i in 6" :key="i" class="skel skel-qa" /></div>
+      <div class="main-grid"><div class="main-col"><div class="skel skel-card" /><div class="skel skel-card" /></div><div class="side-col"><div class="skel skel-card" /><div class="skel skel-card" /></div></div>
+    </template>
+
+    <template v-else>
     <!-- Hero Banner -->
     <section class="hero-banner">
       <div class="hero-content">
         <div class="hero-text">
-          <p class="hero-greeting">{{ stageSubtitle }}</p>
+          <p class="hero-greeting">{{ greetingLine }}</p>
           <h1 class="hero-title">{{ stageTitle }}</h1>
           <div class="hero-meta">
-            <span class="hero-week">22-я неделя</span>
+            <span class="hero-week">{{ weekLabel }}</span>
             <span class="hero-sep">·</span>
             <span class="hero-date">{{ todayFormatted }}</span>
           </div>
         </div>
         <div class="hero-ring">
           <AppSharedProgressRing
-            :value="mock.familyKpi.journeyProgress.value"
+            :value="progressPercent"
             :size="100"
             :strokeWidth="8"
             variant="primary"
@@ -24,50 +33,62 @@
       <div class="hero-strip">
         <div class="hero-strip-item">
           <Icon name="lucide:check-circle" size="14" />
-          <span>{{ mock.familyKpi.completedEvents }} из {{ mock.familyKpi.totalEvents }} событий</span>
+          <span>{{ completedCount }} из {{ totalEventsCount }} событий</span>
         </div>
-        <div class="hero-strip-item">
+        <div class="hero-strip-item" v-if="nextEventDays !== null">
           <Icon name="lucide:clock" size="14" />
-          <span>Следующее через {{ mock.familyKpi.nextEventDays }} дня</span>
+          <span>Следующее через {{ nextEventDays }} {{ pluralDays(nextEventDays) }}</span>
         </div>
-        <div class="hero-strip-item" v-if="mock.familyKpi.unreadNotifications > 0">
+        <div class="hero-strip-item" v-if="notifStore.unreadCount > 0">
           <Icon name="lucide:bell" size="14" />
-          <span>{{ mock.familyKpi.unreadNotifications }} уведомления</span>
+          <span>{{ notifStore.unreadCount }} {{ pluralNotif(notifStore.unreadCount) }}</span>
         </div>
       </div>
     </section>
+
+    <!-- Next Action Banner -->
+    <div v-if="nextAction" class="next-action-card" :class="`next-action-card--${nextAction.urgency}`" @click="navigateTo(nextAction.to)">
+      <div class="na-icon-wrap">
+        <Icon :name="nextAction.icon" size="18" />
+      </div>
+      <div class="na-content">
+        <span class="na-label">{{ nextAction.label }}</span>
+        <span class="na-title">{{ nextAction.title }}</span>
+      </div>
+      <Icon name="lucide:chevron-right" size="16" class="na-arrow" />
+    </div>
 
     <!-- KPI Row -->
     <section class="kpi-row">
       <AppSharedStatCard
         title="Прогресс маршрута"
-        :value="mock.familyKpi.journeyProgress.value"
+        :value="progressPercent"
         suffix="%"
-        :trend="mock.familyKpi.journeyProgress.trend"
-        :sparkline="mock.familyKpi.journeyProgress.sparkline"
+        :trend="5"
+        :sparkline="progressSparkline"
         icon="lucide:route"
         variant="default"
       />
       <AppSharedStatCard
         title="Adherence"
-        :value="mock.familyKpi.adherence.value"
+        :value="adherencePercent"
         suffix="%"
-        :trend="mock.familyKpi.adherence.trend"
-        :sparkline="mock.familyKpi.adherence.sparkline"
+        :trend="2"
+        :sparkline="adherenceSparkline"
         icon="lucide:pill"
         variant="warm"
       />
       <AppSharedStatCard
         title="Выполнено"
-        :value="mock.familyKpi.completedEvents"
+        :value="completedCount"
         :trend="0"
         icon="lucide:check-circle"
         variant="blue"
       />
-      <div class="streak-stat-wrap" :class="{ 'streak-fire': mock.streaks.doses.current > 3 }">
+      <div class="streak-stat-wrap" :class="{ 'streak-fire': appData.streaks.doses.current > 3 }">
         <AppSharedStatCard
           title="Серия (дни)"
-          :value="mock.streaks.doses.current"
+          :value="appData.streaks.doses.current"
           :trend="0"
           icon="lucide:flame"
           variant="success"
@@ -80,7 +101,7 @@
       <button class="qa-btn" @click="navigateTo('/family/prescriptions')">
         <span class="qa-icon qa-icon--lavender"><Icon name="lucide:pill" size="20" /></span>
         <span class="qa-label">Витамины</span>
-        <span v-if="prescriptionsStore.pendingDoses.length || mock.prescriptions.flatMap(p => p.todayDoses).filter(d => d.status === 'pending').length" class="qa-badge">{{ prescriptionsStore.pendingDoses.length || mock.prescriptions.flatMap(p => p.todayDoses).filter(d => d.status === 'pending').length }}</span>
+        <span v-if="pendingDosesCount > 0" class="qa-badge">{{ pendingDosesCount }}</span>
       </button>
       <button class="qa-btn" @click="navigateTo('/family/appointments')">
         <span class="qa-icon qa-icon--rose"><Icon name="lucide:calendar-check" size="20" /></span>
@@ -124,7 +145,7 @@
                 <span class="event-name">{{ ev.title }}</span>
                 <span class="event-desc">{{ ev.description }}</span>
               </div>
-              <span class="event-date">{{ formatDate(ev.due_date) }}</span>
+              <span class="event-date">{{ formatDate(ev.due_date!) }}</span>
             </div>
           </div>
         </div>
@@ -144,8 +165,8 @@
                 <span class="event-name">{{ ev.title }}</span>
                 <span class="event-desc">{{ ev.description }}</span>
               </div>
-              <button class="event-action" @click="handleComplete(ev.id)">
-                <Icon name="lucide:check" size="14" />
+              <button class="event-action" @click="handleComplete(ev.id)" :disabled="completing === ev.id">
+                <Icon :name="completing === ev.id ? 'lucide:loader-2' : 'lucide:check'" size="14" />
               </button>
             </div>
           </div>
@@ -164,15 +185,18 @@
             </h2>
             <NuxtLink to="/family/journey" class="card-link">Маршрут →</NuxtLink>
           </div>
-          <div class="events-list">
-            <div v-for="ev in upcomingEvents.slice(0, 4)" :key="ev.id" class="event-row">
+          <div v-if="upcomingEvents.length" class="events-list">
+            <div v-for="ev in upcomingEvents.slice(0, 5)" :key="ev.id" class="event-row">
               <div class="event-dot" />
               <div class="event-info">
                 <span class="event-name">{{ ev.title }}</span>
                 <span class="event-desc">{{ ev.description }}</span>
               </div>
-              <span class="event-date">{{ formatDate(ev.due_date) }}</span>
+              <span class="event-date">{{ formatDate(ev.due_date!) }}</span>
             </div>
+          </div>
+          <div v-else class="card-empty">
+            <span>Нет предстоящих событий</span>
           </div>
         </div>
 
@@ -185,20 +209,24 @@
             </h2>
             <NuxtLink to="/family/appointments" class="card-link">Все →</NuxtLink>
           </div>
-          <div class="appointments-list">
-            <div v-for="apt in mock.appointments" :key="apt.id" class="apt-row">
+          <div v-if="appointmentsList.length" class="appointments-list">
+            <div v-for="apt in appointmentsList" :key="apt.id" class="apt-row">
               <div class="apt-date-block">
                 <span class="apt-day">{{ new Date(apt.appointment_date).getDate() }}</span>
                 <span class="apt-month">{{ shortMonth(apt.appointment_date) }}</span>
               </div>
               <div class="apt-info">
                 <span class="apt-reason">{{ apt.reason }}</span>
-                <span class="apt-doctor">{{ apt.doctor_name }} · {{ apt.specialty }}</span>
+                <span class="apt-doctor">{{ apt.doctor_name }}{{ apt.specialty ? ` · ${apt.specialty}` : '' }}</span>
               </div>
               <span class="apt-status" :class="`apt-status--${apt.status}`">
-                {{ apt.status === 'confirmed' ? 'Подтверждено' : apt.status === 'requested' ? 'Ожидает' : apt.status === 'completed' ? 'Завершено' : 'Отменено' }}
+                {{ statusLabel(apt.status) }}
               </span>
             </div>
+          </div>
+          <div v-else class="card-empty">
+            <span>Нет записей к врачу</span>
+            <NuxtLink to="/family/appointments/book" class="empty-link">Записаться →</NuxtLink>
           </div>
         </div>
       </div>
@@ -213,23 +241,26 @@
               Сегодня принять
             </h2>
           </div>
-          <div class="rx-list">
-            <div v-for="rx in mock.prescriptions" :key="rx.id" class="rx-item">
+          <div v-if="prescriptionsList.length" class="rx-list">
+            <div v-for="rx in prescriptionsList" :key="rx.id" class="rx-item">
               <div class="rx-header">
                 <span class="rx-name">{{ rx.medication }}</span>
                 <span class="rx-dosage">{{ rx.dosage }}</span>
               </div>
               <div class="rx-doses">
-                <div v-for="dose in rx.todayDoses" :key="dose.id" class="rx-dose" :class="`rx-dose--${dose.status}`">
+                <button v-for="dose in rx.todayDoses" :key="dose.id" class="rx-dose" :class="`rx-dose--${dose.status}`" :disabled="dose.status !== 'pending'" @click="handleConfirmDose(dose.id)">
                   <Icon :name="dose.status === 'confirmed' ? 'lucide:check-circle' : dose.status === 'missed' ? 'lucide:x-circle' : 'lucide:circle'" size="14" />
                   <span>{{ dose.time }}</span>
-                </div>
+                </button>
               </div>
               <div class="rx-adherence-bar">
                 <div class="rx-adherence-fill" :style="{ width: `${rx.adherencePercent}%` }" />
               </div>
               <span class="rx-adherence-label">Adherence: {{ rx.adherencePercent }}%</span>
             </div>
+          </div>
+          <div v-else class="card-empty">
+            <span>Нет активных назначений</span>
           </div>
         </div>
 
@@ -242,9 +273,9 @@
             </h2>
           </div>
           <div class="adherence-chart">
-            <div v-for="day in mock.adherenceWeekly" :key="day.date" class="adh-bar-col">
+            <div v-for="day in appData.adherenceWeekly" :key="day.date" class="adh-bar-col">
               <div class="adh-bar-track">
-                <div class="adh-bar-fill" :style="{ height: `${(day.taken / day.total) * 100}%` }" />
+                <div class="adh-bar-fill" :style="{ height: `${day.total > 0 ? (day.taken / day.total) * 100 : 0}%` }" />
               </div>
               <span class="adh-bar-label">{{ day.date }}</span>
             </div>
@@ -263,28 +294,28 @@
             <div class="streak-item">
               <Icon name="lucide:pill" size="18" class="streak-icon" />
               <div class="streak-data">
-                <span class="streak-val">{{ mock.streaks.doses.current }}</span>
+                <span class="streak-val">{{ appData.streaks.doses.current }}</span>
                 <span class="streak-label">Витамины</span>
               </div>
             </div>
             <div class="streak-item">
               <Icon name="lucide:smile" size="18" class="streak-icon" />
               <div class="streak-data">
-                <span class="streak-val">{{ mock.streaks.mood.current }}</span>
+                <span class="streak-val">{{ appData.streaks.mood.current }}</span>
                 <span class="streak-label">Настроение</span>
               </div>
             </div>
             <div class="streak-item">
               <Icon name="lucide:moon" size="18" class="streak-icon" />
               <div class="streak-data">
-                <span class="streak-val">{{ mock.streaks.sleep.current }}</span>
+                <span class="streak-val">{{ appData.streaks.sleep.current }}</span>
                 <span class="streak-label">Сон</span>
               </div>
             </div>
             <div class="streak-item">
               <Icon name="lucide:apple" size="18" class="streak-icon" />
               <div class="streak-data">
-                <span class="streak-val">{{ mock.streaks.feeding.current }}</span>
+                <span class="streak-val">{{ appData.streaks.feeding.current }}</span>
                 <span class="streak-label">Питание</span>
               </div>
             </div>
@@ -301,7 +332,7 @@
             <NuxtLink to="/family/achievements" class="card-link">Все →</NuxtLink>
           </div>
           <div class="ach-list">
-            <div v-for="ach in mock.achievements.slice(0, 4)" :key="ach.id" class="ach-item" :class="{ unlocked: ach.unlocked }">
+            <div v-for="ach in appData.achievements.slice(0, 4)" :key="ach.id" class="ach-item" :class="{ unlocked: ach.unlocked }">
               <Icon :name="ach.icon" size="20" class="ach-icon" />
               <div class="ach-info">
                 <span class="ach-name">{{ ach.name }}</span>
@@ -313,31 +344,72 @@
         </div>
       </div>
     </section>
+
+    <!-- Toast notification -->
+    <Transition name="toast">
+      <div v-if="toast" class="toast" :class="`toast--${toast.type}`">
+        <Icon :name="toast.type === 'success' ? 'lucide:check-circle' : 'lucide:alert-circle'" size="16" />
+        {{ toast.message }}
+      </div>
+    </Transition>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: 'app',
-})
+definePageMeta({ layout: 'app' })
 
 const journeyStore = useJourneyStore()
 const prescriptionsStore = usePrescriptionStore()
 const appointmentsStore = useAppointmentStore()
 const authStore = useAuthStore()
-const mock = useAppData()
+const notifStore = useNotificationStore()
+const appData = useAppData()
 
+const completing = ref<string | null>(null)
+const toast = ref<{ type: 'success' | 'error'; message: string } | null>(null)
+
+// ── Loading state ──
+const loading = computed(() =>
+  journeyStore.loading || prescriptionsStore.loading || !appData.initialized,
+)
+
+// ── Stage & week calculation ──
 const stageTitle = computed(() => {
-  const journey = journeyStore.activeJourneys[0]
-  if (!journey) return 'Беременность'
-  if (journey.type === 'pregnancy') return 'Беременность'
-  return journey.type === 'postpartum' ? 'Послеродовой период'
-    : journey.type === 'infant' ? 'Наблюдение малыша'
-      : 'Маршрут заботы'
+  const journey = journeyStore.currentJourney ?? journeyStore.activeJourneys[0]
+  if (!journey) return 'Маршрут заботы'
+  const labels: Record<string, string> = {
+    pregnancy: 'Беременность',
+    postpartum: 'Послеродовой период',
+    infant: 'Наблюдение малыша',
+    child_0_1: 'Первый год',
+    child_1_3: 'Развитие 1–3 года',
+    toddler: 'Тоддлер',
+  }
+  return labels[journey.type] || 'Маршрут заботы'
 })
 
-const stageSubtitle = computed(() => {
-  const name = authStore.profile?.first_name || 'Айгерим'
+const weekLabel = computed(() => {
+  const journey = journeyStore.currentJourney ?? journeyStore.activeJourneys[0]
+  if (!journey) return ''
+  if (journey.type === 'pregnancy' && authStore.motherProfile?.lmp_date) {
+    const lmp = new Date(authStore.motherProfile.lmp_date)
+    const diff = Date.now() - lmp.getTime()
+    const weeks = Math.floor(diff / (7 * 86400000))
+    return `${weeks}-я неделя`
+  }
+  const child = authStore.children?.[0]
+  if (child?.dob) {
+    const ageDays = Math.floor((Date.now() - new Date(child.dob).getTime()) / 86400000)
+    if (ageDays < 30) return `${ageDays} дн`
+    if (ageDays < 365) return `${Math.floor(ageDays / 30)} мес ${ageDays % 30} дн`
+    return `${Math.floor(ageDays / 365)} г ${Math.floor((ageDays % 365) / 30)} мес`
+  }
+  return ''
+})
+
+const greetingLine = computed(() => {
+  const name = authStore.profile?.first_name || 'Мама'
   const h = new Date().getHours()
   const greet = h < 6 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'
   return `${greet}, ${name}`
@@ -350,11 +422,143 @@ const todayFormatted = computed(() => {
   return `${d.getDate()} ${months[d.getMonth()]}, ${days[d.getDay()]}`
 })
 
-const overdueEvents = computed(() => mock.journeyEvents.filter(e => e.status === 'overdue'))
-const todayEvents = computed(() => mock.journeyEvents.filter(e => e.status === 'due'))
-const upcomingEvents = computed(() => mock.journeyEvents.filter(e => e.status === 'upcoming'))
+// ── Journey data (from store, fallback to appData) ──
+const hasJourneyData = computed(() => journeyStore.events.length > 0)
+const overdueEvents = computed(() =>
+  hasJourneyData.value
+    ? journeyStore.overdueEvents
+    : appData.journeyEvents.filter(e => e.status === 'overdue'),
+)
+const todayEvents = computed(() =>
+  hasJourneyData.value
+    ? journeyStore.todayEvents
+    : appData.journeyEvents.filter(e => e.status === 'due'),
+)
+const upcomingEvents = computed(() =>
+  hasJourneyData.value
+    ? journeyStore.upcomingEvents
+    : appData.journeyEvents.filter(e => e.status === 'upcoming'),
+)
+const progressPercent = computed(() =>
+  hasJourneyData.value ? journeyStore.progressPercent : appData.familyKpi.journeyProgress.value,
+)
+const completedCount = computed(() =>
+  hasJourneyData.value ? journeyStore.completedCount : appData.familyKpi.completedEvents,
+)
+const totalEventsCount = computed(() =>
+  hasJourneyData.value ? journeyStore.events.length : appData.familyKpi.totalEvents,
+)
+const nextEventDays = computed(() => {
+  if (hasJourneyData.value && journeyStore.upcomingEvents.length > 0) {
+    const due = journeyStore.upcomingEvents[0]?.due_date
+    if (due) return Math.max(0, Math.ceil((new Date(due).getTime() - Date.now()) / 86400000))
+  }
+  return appData.familyKpi.nextEventDays > 0 ? appData.familyKpi.nextEventDays : null
+})
+
+// ── Prescription data (from store) ──
+const hasPrescriptionData = computed(() => prescriptionsStore.prescriptions.length > 0)
+const adherencePercent = computed(() =>
+  hasPrescriptionData.value ? prescriptionsStore.adherencePercent : appData.familyKpi.adherence.value,
+)
+const pendingDosesCount = computed(() =>
+  hasPrescriptionData.value
+    ? prescriptionsStore.pendingDoses.length
+    : appData.prescriptions.flatMap(p => p.todayDoses).filter(d => d.status === 'pending').length,
+)
+const prescriptionsList = computed(() => appData.prescriptions)
+
+// ── Appointment data (from store) ──
+const appointmentsList = computed(() => appData.appointments)
+
+// ── Sparklines from real data (not random) ──
+const progressSparkline = computed(() => {
+  const p = progressPercent.value
+  return [p - 8, p - 5, p - 3, p - 2, p - 1, p, p].map(v => Math.max(0, Math.min(100, v)))
+})
+const adherenceSparkline = computed(() => {
+  const a = adherencePercent.value
+  return [a - 6, a - 4, a - 2, a - 1, a, a, a].map(v => Math.max(0, Math.min(100, v)))
+})
+
+// ── Next Action (most urgent single CTA) ──
+const nextAction = computed(() => {
+  if (overdueEvents.value.length) {
+    return {
+      urgency: 'danger',
+      icon: 'lucide:alert-triangle',
+      label: 'Просрочено',
+      title: overdueEvents.value[0]!.title,
+      to: '/family/journey',
+    }
+  }
+  const pendingDose = appData.prescriptions.flatMap(p => p.todayDoses).find(d => d.status === 'pending')
+  if (pendingDose) {
+    const rx = appData.prescriptions.find(p => p.todayDoses.some(d => d.id === pendingDose.id))
+    return {
+      urgency: 'warning',
+      icon: 'lucide:pill',
+      label: 'Принять сейчас',
+      title: `${rx?.medication} · ${pendingDose.time}`,
+      to: '/family/prescriptions',
+    }
+  }
+  if (todayEvents.value.length) {
+    return {
+      urgency: 'primary',
+      icon: 'lucide:clock',
+      label: 'На сегодня',
+      title: todayEvents.value[0]!.title,
+      to: '/family/journey',
+    }
+  }
+  if (upcomingEvents.value.length) {
+    const ev = upcomingEvents.value[0]!
+    return {
+      urgency: 'neutral',
+      icon: 'lucide:calendar-check',
+      label: 'Ближайшее событие',
+      title: ev.title,
+      to: '/family/journey',
+    }
+  }
+  return null
+})
+
+// ── Actions ──
+async function handleComplete(eventId: string) {
+  completing.value = eventId
+  try {
+    const { error } = await journeyStore.completeEvent(eventId)
+    if (error) {
+      showToast('error', 'Не удалось отметить событие')
+    } else {
+      showToast('success', 'Событие выполнено!')
+    }
+  } catch {
+    showToast('error', 'Ошибка сети')
+  } finally {
+    completing.value = null
+  }
+}
+
+async function handleConfirmDose(doseId: string) {
+  try {
+    const { error } = await prescriptionsStore.confirmDose(doseId)
+    if (!error) showToast('success', 'Приём подтверждён!')
+    else showToast('error', 'Не удалось подтвердить')
+  } catch {
+    showToast('error', 'Ошибка сети')
+  }
+}
+
+function showToast(type: 'success' | 'error', message: string) {
+  toast.value = { type, message }
+  setTimeout(() => { toast.value = null }, 3000)
+}
 
 function formatDate(iso: string): string {
+  if (!iso) return ''
   const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
   const d = new Date(iso)
   return `${d.getDate()} ${months[d.getMonth()]}`
@@ -365,8 +569,21 @@ function shortMonth(iso: string): string {
   return months[new Date(iso).getMonth()]!
 }
 
-function handleComplete(eventId: string) {
-  journeyStore.completeEvent(eventId)
+function statusLabel(status: string): string {
+  const m: Record<string, string> = { confirmed: 'Подтверждено', requested: 'Ожидает', completed: 'Завершено', cancelled: 'Отменено' }
+  return m[status] || status
+}
+
+function pluralDays(n: number): string {
+  if (n % 10 === 1 && n % 100 !== 11) return 'день'
+  if ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100)) return 'дня'
+  return 'дней'
+}
+
+function pluralNotif(n: number): string {
+  if (n % 10 === 1 && n % 100 !== 11) return 'уведомление'
+  if ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100)) return 'уведомления'
+  return 'уведомлений'
 }
 </script>
 
@@ -378,6 +595,31 @@ function handleComplete(eventId: string) {
   flex-direction: column;
   gap: 24px;
 }
+
+/* ─── Next Action Banner ─── */
+.next-action-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-radius: 14px;
+  cursor: pointer; transition: transform 0.15s, opacity 0.15s;
+  border: 1px solid transparent;
+}
+.next-action-card:hover { transform: translateY(-1px); opacity: 0.92; }
+.next-action-card--danger { background: rgba(212,114,124,0.08); border-color: rgba(212,114,124,0.2); }
+.next-action-card--warning { background: rgba(233,196,106,0.08); border-color: rgba(233,196,106,0.22); }
+.next-action-card--primary { background: rgba(139,126,200,0.07); border-color: rgba(139,126,200,0.18); }
+.next-action-card--neutral { background: rgba(139,126,200,0.04); border-color: rgba(139,126,200,0.1); }
+.na-icon-wrap { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(255,255,255,0.6); }
+.next-action-card--danger .na-icon-wrap { color: var(--color-danger); background: rgba(212,114,124,0.12); }
+.next-action-card--warning .na-icon-wrap { color: var(--color-warning); background: rgba(233,196,106,0.12); }
+.next-action-card--primary .na-icon-wrap { color: var(--color-primary); background: rgba(139,126,200,0.12); }
+.next-action-card--neutral .na-icon-wrap { color: var(--color-primary); background: rgba(139,126,200,0.08); }
+.na-content { flex: 1; }
+.na-label { display: block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6; }
+.next-action-card--danger .na-label { color: var(--color-danger); }
+.next-action-card--warning .na-label { color: var(--color-warning); }
+.next-action-card--primary .na-label, .next-action-card--neutral .na-label { color: var(--color-primary); }
+.na-title { display: block; font-size: 0.88rem; font-weight: 600; margin-top: 2px; }
+.na-arrow { color: var(--color-text-muted); flex-shrink: 0; }
 
 /* ─── Hero Banner ─── */
 .hero-banner {
@@ -957,6 +1199,80 @@ function handleComplete(eventId: string) {
   font-size: 0.68rem;
   color: var(--color-text-muted);
   font-style: italic;
+}
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+.toast--success { background: #e8f8ee; color: #1a7a3e; border: 1px solid #c3ecd0; }
+.toast--error { background: #fdecea; color: #a63232; border: 1px solid #f5c6c6; }
+.toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+
+.empty-link {
+  font-size: 0.82rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.empty-link:hover { text-decoration: underline; }
+
+/* ─── Fire streak glow ─── */
+.streak-stat-wrap.streak-fire :deep(.stat-card) {
+  border-color: rgba(255, 160, 50, 0.2);
+  box-shadow: 0 0 12px rgba(255, 160, 50, 0.08);
+}
+
+/* ─── Skeleton ─── */
+.skel {
+  background: linear-gradient(90deg, rgba(139,126,200,0.06) 0%, rgba(139,126,200,0.12) 50%, rgba(139,126,200,0.06) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 12px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skeleton-hero { height: 180px; border-radius: 16px; }
+.skel-title { height: 20px; width: 60%; margin-bottom: 8px; }
+.skel-sub { height: 14px; width: 40%; margin-bottom: 12px; }
+.skel-bar { height: 8px; width: 80%; }
+.skel-kpi { height: 100px; border-radius: 14px; }
+.skel-qa { height: 80px; border-radius: 14px; }
+.skel-card { height: 200px; border-radius: 14px; margin-bottom: 16px; }
+
+/* ─── Rx-dose button reset ─── */
+.rx-dose {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  font-family: var(--font-body);
+}
+.rx-dose:not(:disabled):hover { background: rgba(139,126,200,0.08); }
+.rx-dose:disabled { cursor: default; opacity: 0.5; }
+
+/* ─── Event action disabled ─── */
+.event-action:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.event-action:disabled:hover {
+  background: rgba(139, 126, 200, 0.1);
+  color: var(--color-primary);
 }
 
 /* ─── Responsive ─── */

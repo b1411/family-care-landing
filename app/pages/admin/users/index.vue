@@ -71,6 +71,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
+const appData = useAppData()
 const search = ref('')
 const roleFilter = ref('all')
 const showModal = ref(false)
@@ -84,37 +85,45 @@ const roleFilters = [
   { label: 'Админы', value: 'clinic_admin' },
 ]
 
-const rawUsers = reactive([
-  { id: 1, first: 'Айгерим', last: 'Касымова', email: 'aigerim@familycare.kz', role: 'coordinator', active: true },
-  { id: 2, first: 'Марат', last: 'Ибрагимов', email: 'marat@familycare.kz', role: 'gynecologist', active: true },
-  { id: 3, first: 'Динара', last: 'Нуртаева', email: 'dinara@familycare.kz', role: 'pediatrician', active: true },
-  { id: 4, first: 'Алия', last: 'Жумабаева', email: 'aliya@familycare.kz', role: 'coordinator', active: true },
-  { id: 5, first: 'Ержан', last: 'Темiрбеков', email: 'erzhan@familycare.kz', role: 'clinic_admin', active: true },
-  { id: 6, first: 'Сауле', last: 'Бектурганова', email: 'saule@familycare.kz', role: 'gynecologist', active: false },
-  { id: 7, first: 'Бакыт', last: 'Оспанов', email: 'bakyt@familycare.kz', role: 'pediatrician', active: true },
-])
+// Fetch users when filters change
+watch([roleFilter], () => {
+  appData.fetchAdminUsers({
+    role: roleFilter.value !== 'all' ? roleFilter.value : undefined,
+    search: search.value || undefined,
+  })
+})
+
+// Debounced search
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
+watch(search, (q) => {
+  if (searchTimeout) clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    appData.fetchAdminUsers({
+      role: roleFilter.value !== 'all' ? roleFilter.value : undefined,
+      search: q || undefined,
+    })
+  }, 300)
+})
 
 function roleLabel(r: string) {
-  return { coordinator: 'Координатор', gynecologist: 'Гинеколог', pediatrician: 'Педиатр', clinic_admin: 'Админ' }[r] || r
+  return { coordinator: 'Координатор', gynecologist: 'Гинеколог', pediatrician: 'Педиатр', clinic_admin: 'Админ', mother: 'Мать', father: 'Отец', nurse: 'Медсестра', doctor: 'Врач', platform_admin: 'Платформа' }[r] || r
 }
 function badgeClass(r: string) {
   if (r === 'coordinator') return 'coordinator'
-  if (['gynecologist', 'pediatrician'].includes(r)) return 'doctor'
+  if (['gynecologist', 'pediatrician', 'doctor', 'nurse'].includes(r)) return 'doctor'
+  if (['mother', 'father'].includes(r)) return 'family'
   return 'admin'
 }
 
 const filteredUsers = computed(() => {
-  let result = rawUsers.map(u => ({
+  return (appData.adminUsers || []).map((u: any) => ({
     ...u,
-    name: `${u.first} ${u.last}`,
-    initials: `${u.first[0]}${u.last[0]}`,
+    name: `${u.first_name || ''} ${u.last_name || ''}`.trim(),
+    initials: `${(u.first_name || '?')[0]}${(u.last_name || '?')[0]}`,
     roleLabel: roleLabel(u.role),
     badgeClass: badgeClass(u.role),
+    active: u.is_active !== false,
   }))
-  if (roleFilter.value !== 'all') result = result.filter(u => u.role === roleFilter.value)
-  const q = search.value.toLowerCase()
-  if (q) result = result.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q))
-  return result
 })
 
 function openCreate() {
@@ -155,6 +164,7 @@ function openCreate() {
 .role-badge.coordinator { background: rgba(139,126,200,0.12); color: var(--color-primary); }
 .role-badge.doctor { background: rgba(124,184,212,0.12); color: var(--color-success); }
 .role-badge.admin { background: rgba(233,196,106,0.12); color: var(--color-warning); }
+.role-badge.family { background: rgba(232,160,191,0.12); color: var(--color-accent-rose); }
 
 .user-status { font-size: 0.72rem; color: var(--color-text-muted); flex-shrink: 0; }
 .user-status.active { color: var(--color-success); }

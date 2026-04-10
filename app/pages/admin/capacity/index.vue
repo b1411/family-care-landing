@@ -21,7 +21,7 @@
         <div v-for="(day, di) in heatDays" :key="di" class="hm-row">
           <span class="hm-day">{{ day }}</span>
           <div class="hm-cells">
-            <div v-for="h in 9" :key="h" class="hm-cell" :class="heatClass(di * 9 + h - 1)" :title="`${day} ${8 + h}:00 — ${mock.capacityHeatmap[di * 9 + h - 1]?.value || 0} записей`" />
+            <div v-for="h in 9" :key="h" class="hm-cell" :class="heatClass(di * 9 + h - 1)" :title="`${day} ${8 + h}:00 — ${appData.capacityHeatmap[di * 9 + h - 1]?.value || 0} записей`" />
           </div>
         </div>
         <div class="hm-hours">
@@ -53,11 +53,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const heatDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
 function heatClass(idx: number) {
-  const v = mock.capacityHeatmap[idx]?.value || 0
+  const v = appData.capacityHeatmap[idx]?.value || 0
   if (v >= 8) return 'l3'
   if (v >= 4) return 'l2'
   if (v >= 1) return 'l1'

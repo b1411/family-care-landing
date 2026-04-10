@@ -56,11 +56,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 
-const upcoming = computed(() => mock.appointments.filter(a => a.status !== 'completed' && a.status !== 'cancelled'))
-const past = computed(() => mock.appointments.filter(a => a.status === 'completed'))
+const upcoming = computed(() => appData.appointments.filter(a => a.status !== 'completed' && a.status !== 'cancelled'))
+const past = computed(() => appData.appointments.filter(a => a.status === 'completed'))
 
 function dayOf(iso: string) { return new Date(iso).getDate() }
 function monthOf(iso: string) { return months[new Date(iso).getMonth()] }

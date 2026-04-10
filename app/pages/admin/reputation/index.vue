@@ -12,18 +12,18 @@
         <svg viewBox="0 0 120 120" class="nps-svg">
           <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(139,126,200,0.1)" stroke-width="10" />
           <circle cx="60" cy="60" r="52" fill="none" stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round"
-            :stroke-dasharray="`${(mock.npsScore / 100) * 327} 327`" transform="rotate(-90 60 60)" />
+            :stroke-dasharray="`${(appData.npsScore / 100) * 327} 327`" transform="rotate(-90 60 60)" />
         </svg>
         <div class="nps-center">
-          <span class="nps-num">{{ mock.npsScore }}</span>
+          <span class="nps-num">{{ appData.npsScore }}</span>
           <span class="nps-label">NPS</span>
         </div>
       </div>
 
       <div class="nps-bars">
-        <div class="nb"><span class="nb-label">Промоутеры</span><div class="nb-track"><div class="nb-fill promo" :style="{ width: mock.npsSplit.promoters + '%' }" /></div><span class="nb-pct">{{ mock.npsSplit.promoters }}%</span></div>
-        <div class="nb"><span class="nb-label">Нейтральные</span><div class="nb-track"><div class="nb-fill passive" :style="{ width: mock.npsSplit.passives + '%' }" /></div><span class="nb-pct">{{ mock.npsSplit.passives }}%</span></div>
-        <div class="nb"><span class="nb-label">Критики</span><div class="nb-track"><div class="nb-fill detract" :style="{ width: mock.npsSplit.detractors + '%' }" /></div><span class="nb-pct">{{ mock.npsSplit.detractors }}%</span></div>
+        <div class="nb"><span class="nb-label">Промоутеры</span><div class="nb-track"><div class="nb-fill promo" :style="{ width: appData.npsSplit.promoters + '%' }" /></div><span class="nb-pct">{{ appData.npsSplit.promoters }}%</span></div>
+        <div class="nb"><span class="nb-label">Нейтральные</span><div class="nb-track"><div class="nb-fill passive" :style="{ width: appData.npsSplit.passives + '%' }" /></div><span class="nb-pct">{{ appData.npsSplit.passives }}%</span></div>
+        <div class="nb"><span class="nb-label">Критики</span><div class="nb-track"><div class="nb-fill detract" :style="{ width: appData.npsSplit.detractors + '%' }" /></div><span class="nb-pct">{{ appData.npsSplit.detractors }}%</span></div>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 
 const link2gis = ref('https://2gis.kz/almaty/firm/family-care')
 const linkGoogle = ref('https://g.page/family-care-almaty')

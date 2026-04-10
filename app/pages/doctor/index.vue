@@ -1,13 +1,21 @@
 <template>
   <div class="doc-page">
+    <!-- Loading skeleton -->
+    <template v-if="loading">
+      <div class="skel skel-hero" />
+      <div class="kpi-grid"><div v-for="i in 4" :key="i" class="skel skel-kpi" /></div>
+      <div class="skel skel-card" /><div class="skel skel-card" />
+    </template>
+
+    <template v-else>
     <!-- Hero -->
     <div class="doc-hero">
       <div>
         <h1 class="doc-hero-title">Панель врача</h1>
-        <p class="doc-hero-sub">Сегодня {{ mock.doctorKpi.todayAppointments }} записей, {{ mock.doctorKpi.freeSlots }} свободных слотов</p>
+        <p class="doc-hero-sub">{{ greetingLine }}. Сегодня {{ kpi.todayAppointments }} записей, {{ kpi.freeSlots }} свободных слотов</p>
       </div>
       <div class="rating-chip">
-        <Icon name="lucide:star" size="14" /> {{ mock.doctorKpi.avgRating }}
+        <Icon name="lucide:star" size="14" /> {{ kpi.avgRating }}
       </div>
     </div>
 
@@ -15,22 +23,22 @@
     <div class="kpi-grid">
       <div class="kpi-card">
         <Icon name="lucide:calendar" size="16" style="color:var(--color-primary)" />
-        <span class="kpi-val">{{ mock.doctorKpi.todayAppointments }}</span>
+        <span class="kpi-val">{{ kpi.todayAppointments }}</span>
         <span class="kpi-label">Записей</span>
       </div>
       <div class="kpi-card">
         <Icon name="lucide:users" size="16" style="color:var(--color-accent-rose)" />
-        <span class="kpi-val">{{ mock.doctorKpi.totalPatients }}</span>
+        <span class="kpi-val">{{ kpi.totalPatients }}</span>
         <span class="kpi-label">Пациентов</span>
       </div>
       <div class="kpi-card">
         <Icon name="lucide:clock" size="16" style="color:var(--color-accent-sky)" />
-        <span class="kpi-val">{{ mock.doctorKpi.freeSlots }}</span>
+        <span class="kpi-val">{{ kpi.freeSlots }}</span>
         <span class="kpi-label">Свободно</span>
       </div>
       <div class="kpi-card">
         <Icon name="lucide:star" size="16" style="color:var(--color-warning)" />
-        <span class="kpi-val">{{ mock.doctorKpi.avgRating }}</span>
+        <span class="kpi-val">{{ kpi.avgRating }}</span>
         <span class="kpi-label">Рейтинг</span>
       </div>
     </div>
@@ -40,8 +48,8 @@
       <div class="card-header">
         <h2 class="card-title"><Icon name="lucide:calendar" size="16" /> Расписание на сегодня</h2>
       </div>
-      <div class="schedule-list">
-        <div v-for="s in mock.todaySchedule" :key="s.id" class="slot-row" :class="{ 'slot-row--free': !s.is_booked }">
+      <div v-if="schedule.length" class="schedule-list">
+        <div v-for="s in schedule" :key="s.id" class="slot-row" :class="{ 'slot-row--free': !s.is_booked }">
           <span class="slot-time">{{ s.start_time }}</span>
           <template v-if="s.is_booked">
             <div class="slot-patient">
@@ -51,6 +59,9 @@
           </template>
           <span v-else class="slot-free-label">Свободно</span>
         </div>
+      </div>
+      <div v-else class="card-empty">
+        <span>Нет записей на сегодня</span>
       </div>
     </div>
 
@@ -75,6 +86,7 @@
         <Icon name="lucide:chevron-right" size="14" class="quick-arrow" />
       </NuxtLink>
     </div>
+    </template>
   </div>
 </template>
 
@@ -82,16 +94,48 @@
 import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const authStore = useAuthStore()
+const appData = useAppData()
+
+const loading = ref(true)
+const realKpi = ref<{ todayAppointments: number; totalPatients: number; freeSlots: number; avgRating: number } | null>(null)
+const realSchedule = ref<any[] | null>(null)
+const realWeeklyLoad = ref<any[] | null>(null)
+
+// ── Fetch real doctor data ──
+onMounted(async () => {
+  try {
+    const [kpiRes, scheduleRes, loadRes] = await Promise.allSettled([
+      $fetch('/api/doctor/kpi'),
+      $fetch('/api/doctor/schedule'),
+      $fetch('/api/doctor/weekly-load'),
+    ])
+    if (kpiRes.status === 'fulfilled') realKpi.value = kpiRes.value as any
+    if (scheduleRes.status === 'fulfilled') realSchedule.value = scheduleRes.value as any
+    if (loadRes.status === 'fulfilled') realWeeklyLoad.value = loadRes.value as any
+  } catch { /* use appData fallback */ }
+  finally { loading.value = false }
+})
+
+const greetingLine = computed(() => {
+  const name = authStore.profile?.first_name || 'Доктор'
+  const h = new Date().getHours()
+  const greet = h < 6 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'
+  return `${greet}, ${name}`
+})
+
+const kpi = computed(() => realKpi.value || appData.doctorKpi)
+const schedule = computed(() => realSchedule.value || appData.todaySchedule)
+const weeklyLoad = computed(() => realWeeklyLoad.value || appData.weeklyLoad)
 
 const weeklyLoadOption = computed<EChartsOption>(() => ({
   tooltip: { trigger: 'axis' },
-  xAxis: { type: 'category' as const, data: mock.weeklyLoad.map(d => d.day), axisLabel: { fontSize: 11 } },
+  xAxis: { type: 'category' as const, data: weeklyLoad.value.map((d: any) => d.day), axisLabel: { fontSize: 11 } },
   yAxis: { type: 'value' as const, max: 12, axisLabel: { fontSize: 10 } },
   grid: { top: 10, right: 10, bottom: 24, left: 36 },
   series: [
-    { type: 'bar' as const, data: mock.weeklyLoad.map(d => d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#8B7EC8' }, name: 'Занято' },
-    { type: 'bar' as const, data: mock.weeklyLoad.map(d => d.total - d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#E8E8ED' }, name: 'Свободно', stack: 'load' },
+    { type: 'bar' as const, data: weeklyLoad.value.map((d: any) => d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#8B7EC8' }, name: 'Занято' },
+    { type: 'bar' as const, data: weeklyLoad.value.map((d: any) => d.total - d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#E8E8ED' }, name: 'Свободно', stack: 'load' },
   ],
 }))
 </script>
@@ -133,4 +177,12 @@ const weeklyLoadOption = computed<EChartsOption>(() => ({
 .quick-card:hover { border-color: rgba(139,126,200,0.2); transform: translateY(-1px); }
 .quick-card span { flex: 1; font-size: 0.85rem; font-weight: 500; }
 .quick-arrow { color: var(--color-text-muted); }
+
+/* ─── Skeleton ─── */
+.skel { background: linear-gradient(90deg, rgba(139,126,200,0.06) 0%, rgba(139,126,200,0.12) 50%, rgba(139,126,200,0.06) 100%); background-size: 200% 100%; animation: shimmer 1.4s ease infinite; border-radius: 14px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skel-hero { height: 80px; border-radius: 16px; }
+.skel-kpi { height: 90px; }
+.skel-card { height: 200px; margin-bottom: 16px; }
+.card-empty { padding: 24px; text-align: center; font-size: 0.85rem; color: var(--color-text-muted); }
 </style>

@@ -304,6 +304,7 @@ const navGroups = computed<NavGroup[]>(() => {
           { to: '/family/appointments', label: 'Записи', icon: 'lucide:calendar-check' },
           { to: '/family/vaccinations', label: 'Прививки', icon: 'lucide:shield-check' },
           { to: '/family/health-passport', label: 'Паспорт', icon: 'lucide:file-text' },
+          { to: '/family/lab-results', label: 'Анализы', icon: 'lucide:test-tube' },
         ],
       },
       {
@@ -320,8 +321,10 @@ const navGroups = computed<NavGroup[]>(() => {
         items: [
           { to: '/family/documents', label: 'Документы', icon: 'lucide:folder' },
           { to: '/family/achievements', label: 'Достижения', icon: 'lucide:trophy' },
+          { to: '/family/referral', label: 'Программа', icon: 'lucide:gem' },
           { to: '/family/education', label: 'Обучение', icon: 'lucide:book-open' },
           { to: '/family/ai-assistant', label: 'AI Помощник', icon: 'lucide:sparkles' },
+          { to: '/family/sos', label: 'SOS', icon: 'lucide:siren' },
           { to: '/family/settings', label: 'Настройки', icon: 'lucide:settings' },
         ],
       },
@@ -357,6 +360,7 @@ const navGroups = computed<NavGroup[]>(() => {
     ]
   }
   if (role === 'doctor' || role === 'gynecologist' || role === 'pediatrician' || role === 'nurse') {
+
     return [
       {
         items: [
@@ -377,6 +381,19 @@ const navGroups = computed<NavGroup[]>(() => {
         { to: '/admin/families', label: 'Семьи', icon: 'lucide:users' },
         { to: '/admin/coordinators', label: 'Координаторы', icon: 'lucide:headphones' },
         { to: '/admin/doctors', label: 'Врачи', icon: 'lucide:stethoscope' },
+      ],
+    },
+    {
+      label: 'CRM',
+      items: [
+        { to: '/admin/leads', label: 'Лиды', icon: 'lucide:user-plus' },
+        { to: '/admin/deals', label: 'Сделки', icon: 'lucide:handshake' },
+        { to: '/admin/campaigns', label: 'Кампании', icon: 'lucide:megaphone' },
+        { to: '/admin/segments', label: 'Сегменты', icon: 'lucide:layers' },
+        { to: '/admin/message-templates', label: 'Шаблоны', icon: 'lucide:mail' },
+        { to: '/admin/calls', label: 'Звонки', icon: 'lucide:phone' },
+        { to: '/admin/funnel', label: 'Воронка CRM', icon: 'lucide:funnel' },
+        { to: '/admin/coordinators/performance', label: 'SLA', icon: 'lucide:gauge' },
       ],
     },
     {

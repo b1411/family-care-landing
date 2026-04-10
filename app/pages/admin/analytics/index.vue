@@ -30,7 +30,7 @@
     <div class="card">
       <h2 class="card-title"><Icon name="lucide:stethoscope" size="16" /> Результативность врачей</h2>
       <div class="perf-list">
-        <div v-for="d in mock.doctorPerformance" :key="d.name" class="perf-row">
+        <div v-for="d in appData.doctorPerformance" :key="d.name" class="perf-row">
           <div class="perf-avatar">{{ d.name.charAt(0) }}</div>
           <div class="perf-info">
             <span class="perf-name">{{ d.name }}</span>
@@ -59,7 +59,7 @@
           <span class="cohort-cell head">M2</span>
           <span class="cohort-cell head">M3</span>
         </div>
-        <div v-for="c in mock.retentionCohort" :key="c.cohort" class="cohort-row">
+        <div v-for="c in appData.retentionCohort" :key="c.cohort" class="cohort-row">
           <span class="cohort-cell label">{{ c.cohort }}</span>
           <span class="cohort-cell" :style="cohortStyle(c.m0)">{{ c.m0 }}%</span>
           <span class="cohort-cell" :style="cohortStyle(c.m1)">{{ c.m1 != null ? `${c.m1}%` : '—' }}</span>
@@ -75,23 +75,23 @@
 import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 
 const kpis = [
   { label: 'Конверсия маршрутов', value: '74%', desc: 'Завершённых от общего числа' },
   { label: 'Ср. адгеренс', value: '91%', desc: 'Соблюдение назначений' },
-  { label: 'NPS', value: String(mock.npsScore), desc: 'Net Promoter Score' },
-  { label: 'Активных семей', value: String(mock.adminKpi.activeFamilies.value), desc: 'За последние 30 дней' },
+  { label: 'NPS', value: String(appData.npsScore), desc: 'Net Promoter Score' },
+  { label: 'Активных семей', value: String(appData.adminKpi.activeFamilies.value), desc: 'За последние 30 дней' },
   { label: 'ARPU', value: '28 500 ₸', desc: 'Доход на семью' },
   { label: 'Retention', value: '89%', desc: 'Возврат семей' },
 ]
 
 const adherenceChart = computed<EChartsOption>(() => ({
   grid: { top: 10, right: 16, bottom: 24, left: 36 },
-  xAxis: { type: 'category' as const, data: mock.adherenceTrend.map((_, i) => `${i + 1}`), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
+  xAxis: { type: 'category' as const, data: appData.adherenceTrend.map((_, i) => `${i + 1}`), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
   yAxis: { type: 'value' as const, min: 80, max: 100, axisLabel: { fontSize: 10, color: '#999', formatter: '{value}%' }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
   series: [{
-    type: 'line' as const, data: mock.adherenceTrend.map(d => d.value), smooth: true,
+    type: 'line' as const, data: appData.adherenceTrend.map(d => d.value), smooth: true,
     lineStyle: { color: '#8B7EC8', width: 2 },
     areaStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139,126,200,0.15)' }, { offset: 1, color: 'rgba(139,126,200,0)' }] } },
     symbol: 'none',

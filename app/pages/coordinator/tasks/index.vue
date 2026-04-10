@@ -1,48 +1,92 @@
 <template>
   <div class="tasks-page">
-    <!-- Hero -->
-    <div class="tasks-hero">
-      <NuxtLink to="/coordinator" class="back-link"><Icon name="lucide:chevron-left" size="16" /> Назад</NuxtLink>
-      <h1 class="tasks-hero-title">Все задачи</h1>
-      <p class="tasks-hero-sub">{{ activeTasks.length }} активных задач</p>
-    </div>
+    <!-- Loading skeleton -->
+    <template v-if="loading">
+      <div class="tasks-hero"><div class="skel skel-title" /><div class="skel skel-sub" /></div>
+      <div class="filter-scroll"><div v-for="i in 5" :key="i" class="skel skel-chip" /></div>
+      <div class="task-list"><div v-for="i in 5" :key="i" class="skel skel-card" /></div>
+    </template>
 
-    <!-- Filter chips -->
-    <div class="filter-scroll">
-      <button v-for="f in filterOptions" :key="f.value" class="filter-chip"
-        :class="{ 'filter-chip--active': filter === f.value }" @click="filter = f.value">
-        {{ f.label }}
-      </button>
-    </div>
+    <template v-else>
+      <!-- Hero -->
+      <div class="tasks-hero">
+        <NuxtLink to="/coordinator" class="back-link"><Icon name="lucide:chevron-left" size="16" /> Назад</NuxtLink>
+        <h1 class="tasks-hero-title">Все задачи</h1>
+        <p class="tasks-hero-sub">{{ activeTasks.length }} активных задач</p>
+      </div>
 
-    <!-- Task list -->
-    <div v-if="filteredTasks.length" class="task-list">
-      <div v-for="t in filteredTasks" :key="t.id" class="task-card" :class="{ 'task-card--critical': t.priority === 'critical' }">
-        <div class="task-priority-dot" :class="`dot--${t.priority}`" />
-        <div class="task-body">
-          <span class="task-title">{{ t.title }}</span>
-          <span class="task-meta">{{ t.family_name }} · {{ taskTypeLabel(t.type) }} · {{ timeAgo(t.created_at) }}</span>
-        </div>
-        <div class="task-actions">
-          <button class="btn-action btn-action--done">Выполнено</button>
-          <button class="btn-action btn-action--dismiss">Отклонить</button>
+      <!-- Filter chips -->
+      <div class="filter-scroll">
+        <button v-for="f in filterOptions" :key="f.value" class="filter-chip"
+          :class="{ 'filter-chip--active': filter === f.value }" @click="filter = f.value">
+          {{ f.label }}
+        </button>
+      </div>
+
+      <!-- Task list -->
+      <div v-if="filteredTasks.length" class="task-list">
+        <div v-for="t in filteredTasks" :key="t.id" class="task-card" :class="{ 'task-card--critical': t.priority === 'critical' }">
+          <div class="task-priority-dot" :class="`dot--${t.priority}`" />
+          <div class="task-body">
+            <span class="task-title">{{ t.title }}</span>
+            <span class="task-meta">{{ (t as any).family_name }} · {{ taskTypeLabel(t.type) }} · {{ timeAgo(t.created_at!) }}</span>
+          </div>
+          <div class="task-actions">
+            <button class="btn-action btn-action--done" :disabled="processingId === t.id" @click="completeTask(t.id)">
+              {{ processingId === t.id ? '...' : 'Выполнено' }}
+            </button>
+            <button class="btn-action btn-action--dismiss" :disabled="processingId === t.id" @click="dismissTask(t.id)">Отклонить</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Empty state -->
-    <div v-else class="empty-card">
-      <Icon name="lucide:check-circle" size="36" style="color:var(--color-success); opacity:0.4;" />
-      <p class="empty-text">Все задачи выполнены</p>
-    </div>
+      <!-- Empty state -->
+      <div v-else class="empty-card">
+        <Icon name="lucide:check-circle" size="36" style="color:var(--color-success); opacity:0.4;" />
+        <p class="empty-text">Все задачи выполнены</p>
+      </div>
+    </template>
+
+    <!-- Toast -->
+    <Transition name="toast">
+      <div v-if="toast" class="toast" :class="`toast--${toast.type}`">
+        <Icon :name="toast.type === 'success' ? 'lucide:check-circle' : 'lucide:alert-circle'" size="16" />
+        {{ toast.message }}
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const authStore = useAuthStore()
+const coordStore = useCoordinatorStore()
+const appData = useAppData()
 const filter = ref('all')
+const loading = ref(true)
+const processingId = ref<string | null>(null)
+const toast = ref<{ type: 'success' | 'error'; message: string } | null>(null)
+
+function showToast(type: 'success' | 'error', message: string) {
+  toast.value = { type, message }
+  setTimeout(() => { toast.value = null }, 3000)
+}
+
+onMounted(async () => {
+  const cid = authStore.clinicId
+  if (cid && coordStore.tasks.length === 0) {
+    await coordStore.fetchTasks(cid)
+  }
+  loading.value = false
+})
+
+const hasReal = computed(() => coordStore.pendingTasks.length > 0)
+
+const activeTasks = computed(() => {
+  if (hasReal.value) return coordStore.pendingTasks
+  return appData.coordinatorTasks.filter((t: any) => t.status === 'pending')
+})
 
 const filterOptions = [
   { label: 'Все', value: 'all' },
@@ -52,11 +96,9 @@ const filterOptions = [
   { label: 'Низкие', value: 'low' },
 ]
 
-const activeTasks = computed(() => mock.coordinatorTasks.filter(t => t.status === 'pending'))
-
 const filteredTasks = computed(() => {
   if (filter.value === 'all') return activeTasks.value
-  return activeTasks.value.filter(t => t.priority === filter.value)
+  return activeTasks.value.filter((t: any) => t.priority === filter.value)
 })
 
 function taskTypeLabel(type: string) {
@@ -69,6 +111,28 @@ function timeAgo(iso: string) {
   const h = Math.floor(diff / 3600000)
   if (h < 24) return `${h}ч назад`
   return `${Math.floor(h / 24)}д назад`
+}
+
+async function completeTask(id: string) {
+  processingId.value = id
+  try {
+    const { error } = await coordStore.completeTask(id)
+    if (error) throw error
+    showToast('success', 'Задача выполнена')
+  }
+  catch { showToast('error', 'Не удалось завершить задачу') }
+  finally { processingId.value = null }
+}
+
+async function dismissTask(id: string) {
+  processingId.value = id
+  try {
+    const { error } = await coordStore.dismissTask(id)
+    if (error) throw error
+    showToast('success', 'Задача отклонена')
+  }
+  catch { showToast('error', 'Не удалось отклонить задачу') }
+  finally { processingId.value = null }
 }
 </script>
 
@@ -120,4 +184,21 @@ function timeAgo(iso: string) {
 
 .empty-card { text-align: center; padding: 48px; background: white; border: 1px solid var(--color-border-light); border-radius: 14px; }
 .empty-text { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 8px; }
+
+/* Skeleton */
+.skel { background: linear-gradient(90deg, rgba(139,126,200,0.06) 25%, rgba(139,126,200,0.12) 50%, rgba(139,126,200,0.06) 75%); background-size: 200% 100%; animation: shimmer 1.4s ease infinite; border-radius: 10px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skel-title { height: 24px; width: 200px; }
+.skel-sub { height: 14px; width: 140px; margin-top: 8px; }
+.skel-chip { height: 36px; width: 80px; border-radius: 20px; flex-shrink: 0; }
+.skel-card { height: 64px; }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 12px 20px; border-radius: 12px; font-size: 0.82rem; font-weight: 500; display: flex; align-items: center; gap: 8px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.toast--success { background: #e8f8ee; color: #1a7a3e; border: 1px solid #c3ecd0; }
+.toast--error { background: #fdecea; color: #a63232; border: 1px solid #f5c6c6; }
+.toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+
+.btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

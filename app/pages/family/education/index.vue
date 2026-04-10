@@ -53,7 +53,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const activeCat = ref('all')
 
 const categories = [
@@ -67,8 +67,8 @@ const categories = [
 ]
 
 const filtered = computed(() => {
-  if (activeCat.value === 'all') return mock.educationArticles
-  return mock.educationArticles.filter(a => a.category === activeCat.value)
+  if (activeCat.value === 'all') return appData.educationArticles
+  return appData.educationArticles.filter(a => a.category === activeCat.value)
 })
 
 function catIcon(cat: string) {

@@ -32,7 +32,7 @@
           <span class="dt-cell">Рейтинг</span>
           <span class="dt-cell">Загрузка</span>
         </div>
-        <div v-for="d in mock.doctorPerformance" :key="d.name" class="dt-row">
+        <div v-for="d in appData.doctorPerformance" :key="d.name" class="dt-row">
           <span class="dt-cell name">{{ d.name }}</span>
           <span class="dt-cell mono">{{ d.visits }}</span>
           <span class="dt-cell mono">{{ d.rating }} ★</span>
@@ -59,7 +59,7 @@
 import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const active = ref('Месяц')
 const periods = ['Неделя', 'Месяц', 'Квартал']
 
@@ -71,12 +71,12 @@ const forecasts = [
 
 const revenueChart = computed<EChartsOption>(() => ({
   grid: { top: 10, right: 16, bottom: 24, left: 50 },
-  xAxis: { type: 'category', data: mock.revenueMonthly.map(r => r.month), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
+  xAxis: { type: 'category', data: appData.revenueMonthly.map(r => r.month), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
   yAxis: { type: 'value', axisLabel: { fontSize: 10, color: '#999', formatter: (v: number) => `${(v / 1000000).toFixed(1)}M` }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
   series: [
-    { type: 'bar' as const, name: 'Консультации', data: mock.revenueMonthly.map(r => r.consultations), stack: 'rev', itemStyle: { color: '#8B7EC8', borderRadius: [0, 0, 0, 0] } },
-    { type: 'bar' as const, name: 'Пакеты', data: mock.revenueMonthly.map(r => r.packages), stack: 'rev', itemStyle: { color: '#E8A0BF' } },
-    { type: 'bar' as const, name: 'Лаборатория', data: mock.revenueMonthly.map(r => r.lab), stack: 'rev', itemStyle: { color: '#A8C8E8', borderRadius: [4, 4, 0, 0] } },
+    { type: 'bar' as const, name: 'Консультации', data: appData.revenueMonthly.map(r => r.consultations), stack: 'rev', itemStyle: { color: '#8B7EC8', borderRadius: [0, 0, 0, 0] } },
+    { type: 'bar' as const, name: 'Пакеты', data: appData.revenueMonthly.map(r => r.packages), stack: 'rev', itemStyle: { color: '#E8A0BF' } },
+    { type: 'bar' as const, name: 'Лаборатория', data: appData.revenueMonthly.map(r => r.lab), stack: 'rev', itemStyle: { color: '#A8C8E8', borderRadius: [4, 4, 0, 0] } },
   ],
   tooltip: { trigger: 'axis' },
   legend: { show: false },

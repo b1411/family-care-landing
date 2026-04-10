@@ -1,10 +1,17 @@
 <template>
   <div class="rx-page">
+    <!-- Loading skeleton -->
+    <template v-if="loading">
+      <div class="skel skel-hero" />
+      <div class="skel skel-card" /><div class="skel skel-card" />
+    </template>
+
+    <template v-else>
     <!-- Header with overall adherence ring -->
     <div class="rx-hero">
       <div>
         <h1 class="rx-hero-title">Назначения</h1>
-        <p class="rx-hero-sub">{{ mock.prescriptions.length }} препаратов · {{ pendingCount }} ожидают приёма</p>
+        <p class="rx-hero-sub">{{ prescriptions.length }} препаратов · {{ pendingCount }} ожидают приёма</p>
       </div>
       <div class="rx-hero-ring">
         <AppSharedProgressRing :value="overallAdherence" :size="72" :strokeWidth="6" variant="primary" />
@@ -17,9 +24,9 @@
         <h2 class="card-title"><Icon name="lucide:bar-chart-3" size="16" /> Приём за неделю</h2>
       </div>
       <div class="adh-chart">
-        <div v-for="day in mock.adherenceWeekly" :key="day.date" class="adh-col">
+        <div v-for="day in appData.adherenceWeekly" :key="day.date" class="adh-col">
           <div class="adh-track">
-            <div class="adh-fill" :style="{ height: `${(day.taken / day.total) * 100}%` }" />
+            <div class="adh-fill" :style="{ height: `${day.total > 0 ? (day.taken / day.total) * 100 : 0}%` }" />
           </div>
           <span class="adh-label">{{ day.date }}</span>
           <span class="adh-val">{{ day.taken }}/{{ day.total }}</span>
@@ -32,8 +39,8 @@
       <div class="card-header">
         <h2 class="card-title"><Icon name="lucide:clock" size="16" /> Сегодня</h2>
       </div>
-      <div class="rx-list">
-        <div v-for="rx in mock.prescriptions" :key="rx.id" class="rx-block">
+      <div v-if="prescriptions.length" class="rx-list">
+        <div v-for="rx in prescriptions" :key="rx.id" class="rx-block">
           <div class="rx-block-header">
             <div class="rx-block-icon"><Icon name="lucide:pill" size="16" /></div>
             <div class="rx-block-info">
@@ -49,10 +56,16 @@
             <div v-for="dose in rx.todayDoses" :key="dose.id" class="rx-dose-chip" :class="`rx-dose-chip--${dose.status}`">
               <Icon :name="dose.status === 'confirmed' ? 'lucide:check-circle' : dose.status === 'missed' ? 'lucide:x-circle' : 'lucide:circle'" size="14" />
               <span>{{ dose.time }}</span>
-              <button v-if="dose.status === 'pending'" class="rx-dose-action" @click="handleConfirm(dose.id)">Принять</button>
+              <button v-if="dose.status === 'pending'" class="rx-dose-action" :disabled="confirming === dose.id" @click="handleConfirm(dose.id)">
+                {{ confirming === dose.id ? '...' : 'Принять' }}
+              </button>
             </div>
           </div>
         </div>
+      </div>
+      <div v-else class="card-empty">
+        <Icon name="lucide:pill" size="28" style="opacity: 0.3" />
+        <span>Нет активных назначений</span>
       </div>
     </div>
 
@@ -63,14 +76,23 @@
       </div>
       <div class="streak-row">
         <div class="streak-big">
-          <span class="streak-big-val">{{ mock.streaks.doses.current }}</span>
+          <span class="streak-big-val">{{ appData.streaks.doses.current }}</span>
           <span class="streak-big-label">дней подряд</span>
         </div>
         <div class="streak-record">
-          Рекорд: <strong>{{ mock.streaks.doses.longest }}</strong> дней
+          Рекорд: <strong>{{ appData.streaks.doses.longest }}</strong> дней
         </div>
       </div>
     </div>
+    </template>
+
+    <!-- Toast -->
+    <Transition name="toast">
+      <div v-if="toast" class="toast" :class="`toast--${toast.type}`">
+        <Icon :name="toast.type === 'success' ? 'lucide:check-circle' : 'lucide:alert-circle'" size="16" />
+        {{ toast.message }}
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -79,24 +101,52 @@ definePageMeta({ layout: 'app' })
 
 const prescriptionsStore = usePrescriptionStore()
 const authStore = useAuthStore()
-const mock = useAppData()
+const appData = useAppData()
 
-const overallAdherence = computed(() => {
-  const arr = mock.prescriptions.map(r => r.adherencePercent)
-  return Math.round(arr.reduce((a, b) => a + b, 0) / arr.length)
-})
-
-const pendingCount = computed(() =>
-  mock.prescriptions.flatMap(p => p.todayDoses).filter(d => d.status === 'pending').length
-)
-
-function handleConfirm(doseId: string) {
-  prescriptionsStore.confirmDose(doseId)
-}
+const confirming = ref<string | null>(null)
+const toast = ref<{ type: 'success' | 'error'; message: string } | null>(null)
+const loading = ref(true)
 
 onMounted(async () => {
-  if (authStore.familyId) await prescriptionsStore.fetchPrescriptions(authStore.familyId)
+  try {
+    if (authStore.familyId) await prescriptionsStore.fetchPrescriptions(authStore.familyId)
+  } finally {
+    loading.value = false
+  }
 })
+
+const prescriptions = computed(() => appData.prescriptions)
+
+const overallAdherence = computed(() => {
+  const hasReal = prescriptionsStore.prescriptions.length > 0
+  if (hasReal) return prescriptionsStore.adherencePercent
+  const arr = appData.prescriptions.map(r => r.adherencePercent)
+  return arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0
+})
+
+const pendingCount = computed(() => {
+  const hasReal = prescriptionsStore.pendingDoses.length > 0
+  if (hasReal) return prescriptionsStore.pendingDoses.length
+  return appData.prescriptions.flatMap(p => p.todayDoses).filter(d => d.status === 'pending').length
+})
+
+async function handleConfirm(doseId: string) {
+  confirming.value = doseId
+  try {
+    const { error } = await prescriptionsStore.confirmDose(doseId)
+    if (!error) showToast('success', 'Приём подтверждён!')
+    else showToast('error', 'Не удалось подтвердить')
+  } catch {
+    showToast('error', 'Ошибка сети')
+  } finally {
+    confirming.value = null
+  }
+}
+
+function showToast(type: 'success' | 'error', message: string) {
+  toast.value = { type, message }
+  setTimeout(() => { toast.value = null }, 3000)
+}
 </script>
 
 <style scoped>
@@ -165,4 +215,17 @@ onMounted(async () => {
 .streak-big-val { font-size: 2rem; font-weight: 700; color: var(--color-text-primary); line-height: 1; }
 .streak-big-label { font-size: 0.72rem; color: var(--color-text-muted); }
 .streak-record { font-size: 0.82rem; color: var(--color-text-secondary); }
+
+/* Skeleton & Toast & Empty */
+.skel { background: linear-gradient(90deg, rgba(139,126,200,0.06) 0%, rgba(139,126,200,0.12) 50%, rgba(139,126,200,0.06) 100%); background-size: 200% 100%; animation: shimmer 1.4s ease infinite; border-radius: 14px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skel-hero { height: 80px; border-radius: 16px; margin-bottom: 18px; }
+.skel-card { height: 180px; margin-bottom: 16px; }
+.card-empty { padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--color-text-muted); }
+.rx-dose-action:disabled { opacity: 0.5; cursor: default; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.toast--success { background: #e8f8ee; color: #1a7a3e; border: 1px solid #c3ecd0; }
+.toast--error { background: #fdecea; color: #a63232; border: 1px solid #f5c6c6; }
+.toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(20px); }
 </style>

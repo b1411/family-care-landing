@@ -4,7 +4,7 @@
     <div class="vax-hero">
       <div>
         <h1 class="vax-hero-title">Прививки</h1>
-        <p class="vax-hero-sub">{{ mock.children[0]!.first_name }} · Национальный календарь</p>
+        <p class="vax-hero-sub">{{ appData.children[0]!.first_name }} · Национальный календарь</p>
       </div>
       <AppSharedProgressRing :value="completionPercent" :size="72" :strokeWidth="6" variant="success" />
     </div>
@@ -61,11 +61,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 
-const completedVax = computed(() => mock.vaccinations.filter(v => v.status === 'completed'))
-const upcomingVax = computed(() => mock.vaccinations.filter(v => v.status === 'upcoming'))
-const completionPercent = computed(() => Math.round((completedVax.value.length / mock.vaccinations.length) * 100))
+const completedVax = computed(() => appData.vaccinations.filter(v => v.status === 'completed'))
+const upcomingVax = computed(() => appData.vaccinations.filter(v => v.status === 'upcoming'))
+const completionPercent = computed(() => Math.round((completedVax.value.length / appData.vaccinations.length) * 100))
 
 function formatDate(iso: string) {
   const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']

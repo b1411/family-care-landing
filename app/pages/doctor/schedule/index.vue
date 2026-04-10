@@ -4,7 +4,7 @@
     <div class="sched-hero">
       <NuxtLink to="/doctor" class="back-link"><Icon name="lucide:chevron-left" size="16" /> Назад</NuxtLink>
       <h1 class="sched-hero-title">Управление расписанием</h1>
-      <p class="sched-hero-sub">{{ bookedCount }}/{{ mock.todaySchedule.length }} слотов занято сегодня</p>
+      <p class="sched-hero-sub">{{ bookedCount }}/{{ appData.todaySchedule.length }} слотов занято сегодня</p>
     </div>
 
     <!-- Date picker -->
@@ -24,7 +24,7 @@
         <button class="btn-add" @click="showAdd = true"><Icon name="lucide:plus" size="14" /> Добавить слот</button>
       </div>
       <div class="slot-list">
-        <div v-for="s in mock.todaySchedule" :key="s.id" class="slot-row" :class="{ 'slot-row--free': !s.is_booked }">
+        <div v-for="s in appData.todaySchedule" :key="s.id" class="slot-row" :class="{ 'slot-row--free': !s.is_booked }">
           <span class="slot-time">{{ s.start_time }} — {{ s.end_time }}</span>
           <template v-if="s.is_booked">
             <span class="slot-name">{{ s.patient_name }}</span>
@@ -66,12 +66,12 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
 
-const mock = useAppData()
+const appData = useAppData()
 const selectedIdx = ref(0)
 const showAdd = ref(false)
 const newSlot = reactive({ start: '09:00', end: '09:30' })
 
-const bookedCount = computed(() => mock.todaySchedule.filter(s => s.is_booked).length)
+const bookedCount = computed(() => appData.todaySchedule.filter(s => s.is_booked).length)
 
 const weekDates = computed(() => {
   const days: Array<{ iso: string; day: number; dayName: string }> = []
@@ -83,6 +83,13 @@ const weekDates = computed(() => {
     days.push({ iso: d.toISOString().slice(0, 10), day: d.getDate(), dayName: dayNames[d.getDay()]! })
   }
   return days
+})
+
+watch(selectedIdx, (idx) => {
+  const iso = weekDates.value[idx]?.iso
+  if (iso && appData.fetchDoctorSchedule) {
+    appData.fetchDoctorSchedule(iso)
+  }
 })
 </script>
 
