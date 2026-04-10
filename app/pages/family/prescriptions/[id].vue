@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <p v-if="rx.notes" class="rx-notes">{{ rx.notes }}</p>
+      <p v-if="rx.instructions" class="rx-notes">{{ rx.instructions }}</p>
     </div>
 
     <!-- Dose history -->

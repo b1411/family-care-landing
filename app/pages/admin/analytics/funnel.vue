@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const stages = [
@@ -39,10 +40,10 @@ const stages = [
   { name: 'Тоддлер 12-24 мес', count: 52, pct: 52, color: '#E9C46A', drop: 6 },
 ]
 
-const funnelOption = {
+const funnelOption: EChartsOption = {
   tooltip: { trigger: 'item' as const },
   series: [{
-    type: 'funnel',
+    type: 'funnel' as const,
     left: '10%',
     right: '10%',
     top: 20,

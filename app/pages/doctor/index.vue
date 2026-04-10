@@ -79,18 +79,19 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
 
-const weeklyLoadOption = computed(() => ({
+const weeklyLoadOption = computed<EChartsOption>(() => ({
   tooltip: { trigger: 'axis' },
-  xAxis: { type: 'category', data: mock.weeklyLoad.map(d => d.day), axisLabel: { fontSize: 11 } },
-  yAxis: { type: 'value', max: 12, axisLabel: { fontSize: 10 } },
+  xAxis: { type: 'category' as const, data: mock.weeklyLoad.map(d => d.day), axisLabel: { fontSize: 11 } },
+  yAxis: { type: 'value' as const, max: 12, axisLabel: { fontSize: 10 } },
   grid: { top: 10, right: 10, bottom: 24, left: 36 },
   series: [
-    { type: 'bar', data: mock.weeklyLoad.map(d => d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#8B7EC8' }, name: 'Занято' },
-    { type: 'bar', data: mock.weeklyLoad.map(d => d.total - d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#E8E8ED' }, name: 'Свободно', stack: 'load' },
+    { type: 'bar' as const, data: mock.weeklyLoad.map(d => d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#8B7EC8' }, name: 'Занято' },
+    { type: 'bar' as const, data: mock.weeklyLoad.map(d => d.total - d.booked), barWidth: 20, itemStyle: { borderRadius: [6, 6, 0, 0], color: '#E8E8ED' }, name: 'Свободно', stack: 'load' },
   ],
 }))
 </script>

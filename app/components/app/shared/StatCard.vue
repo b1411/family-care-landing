@@ -12,7 +12,7 @@
     <div class="stat-card-value count-up-number">
       <span ref="valueEl">{{ prefix }}{{ displayValue }}{{ suffix }}</span>
     </div>
-    <div class="stat-card-label">{{ label }}</div>
+    <div class="stat-card-label">{{ title }}</div>
     <div v-if="sparkline.length" class="stat-card-sparkline">
       <svg :viewBox="`0 0 ${sparkline.length * 12} 28`" preserveAspectRatio="none">
         <polyline
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
-  label: string
+  title: string
   value: number
   prefix?: string
   suffix?: string

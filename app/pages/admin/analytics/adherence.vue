@@ -47,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const lowAdherenceFamilies = [
@@ -58,7 +59,7 @@ const lowAdherenceFamilies = [
 const ranges = ['0-20%', '20-40%', '40-60%', '60-80%', '80-100%']
 const counts = [3, 9, 18, 76, 142]
 
-const histogramOption = {
+const histogramOption: EChartsOption = {
   tooltip: { trigger: 'axis' as const },
   grid: { top: 20, right: 20, bottom: 30, left: 50 },
   xAxis: {
@@ -73,7 +74,7 @@ const histogramOption = {
     splitLine: { lineStyle: { color: '#F0EDF7' } },
   },
   series: [{
-    type: 'bar',
+    type: 'bar' as const,
     data: counts.map((v, i) => ({
       value: v,
       itemStyle: {

@@ -119,7 +119,8 @@ const solutionItems = [
   },
 ]
 
-const activeItems = computed(() => showSolution.value ? solutionItems : problemItems)
+type ProblemItem = { icon: string; color: string; title: string; desc: string; micro?: string; microValue?: string }
+const activeItems = computed<ProblemItem[]>(() => showSolution.value ? solutionItems : problemItems)
 
 useSplitText(titleRef, {
   type: 'words',

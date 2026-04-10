@@ -30,7 +30,7 @@ export const useJourneyStore = defineStore('journey', {
       return state.events.filter(e => e.status === 'overdue')
     },
     todayEvents: (state) => {
-      const today = new Date().toISOString().split('T')[0]
+      const today = new Date().toISOString().split('T')[0] ?? ''
       return state.events.filter(e => e.due_date?.startsWith(today))
     },
     completedCount: (state) => state.events.filter(e => e.status === 'completed').length,
@@ -56,9 +56,10 @@ export const useJourneyStore = defineStore('journey', {
 
         if (data) {
           this.activeJourneys = data as Journey[]
-          if (data.length > 0) {
-            this.currentJourney = data[0] as Journey
-            await this.fetchEvents(data[0].id)
+          const first = data[0]
+          if (first) {
+            this.currentJourney = first as Journey
+            await this.fetchEvents(first.id)
           }
         }
       }
@@ -80,7 +81,7 @@ export const useJourneyStore = defineStore('journey', {
       }
     },
 
-    async completeEvent(eventId: string) {
+    async completeEvent(eventId: string, notes?: string) {
       const supabase = useSupabaseClient()
       const user = useSupabaseUser()
       const userId = (user.value as any)?.id ?? (user.value as any)?.sub
@@ -91,6 +92,7 @@ export const useJourneyStore = defineStore('journey', {
           status: 'completed',
           completed_at: new Date().toISOString(),
           completed_by: userId,
+          ...(notes ? { notes } : {}),
         })
         .eq('id', eventId)
         .select()

@@ -124,7 +124,7 @@
             <div class="fg"><label class="fl">Начало</label><input v-model="rxForm.startDate" type="date" class="fi" /></div>
             <div class="fg"><label class="fl">Конец</label><input v-model="rxForm.endDate" type="date" class="fi" /></div>
           </div>
-          <div class="fg"><label class="fl">Примечания</label><textarea v-model="rxForm.notes" class="fi" rows="2" placeholder="Принимать после еды" /></div>
+          <div class="fg"><label class="fl">Примечания</label><textarea v-model="rxForm.instructions" class="fi" rows="2" placeholder="Принимать после еды" /></div>
           <div class="modal-actions">
             <button class="btn-cancel" @click="showRx = false">Отмена</button>
             <button class="btn-submit" @click="showRx = false">Назначить</button>
@@ -139,7 +139,7 @@
 definePageMeta({ layout: 'app' })
 
 const showRx = ref(false)
-const rxForm = reactive({ medication: '', dosage: '', frequency: '', times: [] as string[], startDate: '', endDate: '', notes: '' })
+const rxForm = reactive({ medication: '', dosage: '', frequency: '', times: [] as string[], startDate: '', endDate: '', instructions: '' })
 const activeTab = ref('all')
 
 const children = [

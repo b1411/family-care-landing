@@ -109,11 +109,15 @@ const authStore = useAuthStore()
 const appointmentsStore = useAppointmentStore()
 
 const step = ref(1)
-const doctors = ref<Array<Record<string, unknown>>>([])
-const selectedDoctor = ref<Record<string, unknown> | null>(null)
+
+interface DoctorEntry { id: string; specialty: string; user?: { first_name: string; last_name: string } | null; [key: string]: unknown }
+interface SlotEntry { id: string; start_time?: string; end_time?: string; [key: string]: unknown }
+
+const doctors = ref<DoctorEntry[]>([])
+const selectedDoctor = ref<DoctorEntry | null>(null)
 const selectedDate = ref('')
-const slots = ref<Array<Record<string, unknown>>>([])
-const selectedSlot = ref<Record<string, unknown> | null>(null)
+const slots = ref<SlotEntry[]>([])
+const selectedSlot = ref<SlotEntry | null>(null)
 const reason = ref('')
 const booking = ref(false)
 
@@ -136,7 +140,7 @@ onMounted(async () => {
     .select('*, user:users(first_name, last_name)')
     .eq('is_active', true)
 
-  if (data) doctors.value = data
+  if (data) doctors.value = data as any
 })
 
 async function loadSlots() {
@@ -150,7 +154,7 @@ async function loadSlots() {
     .eq('is_available', true)
     .order('start_time')
 
-  slots.value = data || []
+  slots.value = (data || []) as any
 }
 
 async function handleBook() {
@@ -159,13 +163,10 @@ async function handleBook() {
   booking.value = true
   try {
     await appointmentsStore.bookAppointment({
-      family_id: authStore.familyId,
-      doctor_id: selectedDoctor.value.id as string,
-      appointment_date: selectedDate.value,
-      start_time: selectedSlot.value.start_time as string,
-      end_time: selectedSlot.value.end_time as string,
-      slot_id: selectedSlot.value.id as string,
-      reason: reason.value || undefined,
+      familyId: authStore.familyId,
+      doctorId: selectedDoctor.value.id as string,
+      slotId: selectedSlot.value.id as string,
+      notes: reason.value || undefined,
     })
 
     // Mark slot as unavailable

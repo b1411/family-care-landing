@@ -17,7 +17,7 @@
         </div>
         <span class="kpi-value">{{ k.value }}</span>
         <svg class="kpi-spark" viewBox="0 0 56 20" fill="none">
-          <polyline :points="k.sparkline" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          <polyline :points="sparkPoints(k.sparkline)" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
     </div>
@@ -44,6 +44,11 @@
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
+
+function sparkPoints(pts: number[]): string {
+  const max = Math.max(...pts, 1)
+  return pts.map((v, i) => `${(i / Math.max(pts.length - 1, 1)) * 56},${20 - (v / max) * 18}`).join(' ')
+}
 
 const kpis = computed(() => [
   { label: 'Пользователей', value: mock.adminKpi.totalUsers.value, trend: mock.adminKpi.totalUsers.trend, sparkline: mock.adminKpi.totalUsers.sparkline },

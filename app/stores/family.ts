@@ -51,7 +51,7 @@ export const useFamilyStore = defineStore('family', {
       const supabase = useSupabaseClient()
       const { data, error } = await supabase
         .from('child_profiles')
-        .insert({ family_id: familyId, ...child })
+        .insert({ family_id: familyId, ...child } as any)
         .select()
         .single()
 

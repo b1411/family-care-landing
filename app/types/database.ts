@@ -172,13 +172,14 @@ export interface Appointment {
   family_id: string
   child_id: string | null
   doctor_id: string
+  clinic_id: string | null
   journey_event_id: string | null
   slot_id: string | null
   status: AppointmentStatus
   scheduled_at: string
   notes: string | null
   pre_visit_answers: Record<string, unknown> | null
-  created_at: string
+  created_at: string | null
 }
 
 export interface Document {
@@ -204,13 +205,14 @@ export interface Prescription {
   medication: string
   dosage: string
   frequency: string
-  time_of_day: string[]
+  time_of_day: string[] | null
   start_date: string
   end_date: string | null
-  prescribed_by: string
-  is_active: boolean
-  notes: string | null
-  created_at: string
+  prescribed_by: string | null
+  is_active: boolean | null
+  instructions: string | null
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface DoseLog {
@@ -250,7 +252,7 @@ export interface CoordinatorTask {
   due_date: string | null
   completed_at: string | null
   notes: string | null
-  created_at: string
+  created_at: string | null
 }
 
 export interface Notification {
@@ -377,6 +379,8 @@ export interface SOSEvent {
   family_id: string
   child_id: string | null
   category: string
+  reason?: string | null
+  status?: string | null
   triage_result: SOSTriageResult
   actions_taken: string | null
   resolved_at: string | null

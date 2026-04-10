@@ -126,12 +126,10 @@ async function sendSOS() {
 
   try {
     await supabase.from('sos_events').insert({
-      user_id: userId.value,
       family_id: authStore.familyId,
-      reason: triageOptions.find(o => o.value === selectedTriage.value)?.label || selectedTriage.value,
+      category: selectedTriage.value,
       triage_result: triageResult.value,
-      status: 'open',
-    })
+    } as any)
 
     triageComplete.value = true
   }
@@ -150,7 +148,7 @@ onMounted(async () => {
   const { data } = await supabase
     .from('sos_events')
     .select('*')
-    .eq('user_id', userId.value)
+    .eq('family_id', authStore.familyId || '')
     .order('created_at', { ascending: false })
     .limit(10)
 

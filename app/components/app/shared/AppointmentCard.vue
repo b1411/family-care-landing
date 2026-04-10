@@ -23,17 +23,31 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import type { Appointment } from '~/types/database'
+
+interface AppointmentData {
+  id: string
+  reason?: string
+  notes?: string | null
+  doctor_name?: string
+  specialty?: string
+  appointment_date?: string
+  scheduled_at?: string
+  start_time?: string
+  status: string
+  doctor?: { user?: { first_name: string; last_name: string }; specialty: string }
+}
 
 const props = defineProps<{
-  appointment: Appointment & { doctor?: { user?: { first_name: string; last_name: string }; specialty: string } }
+  appointment: AppointmentData
 }>()
 
-const day = computed(() => dayjs(props.appointment.appointment_date).format('D'))
-const month = computed(() => dayjs(props.appointment.appointment_date).format('MMM'))
+const dateStr = computed(() => props.appointment.appointment_date || props.appointment.scheduled_at?.split('T')[0] || '')
+const day = computed(() => dateStr.value ? dayjs(dateStr.value).format('D') : '')
+const month = computed(() => dateStr.value ? dayjs(dateStr.value).format('MMM') : '')
 
 const doctorName = computed(() => {
-  const doc = (props.appointment as Record<string, unknown>).doctor as { user?: { first_name: string; last_name: string }; specialty: string } | undefined
+  if (props.appointment.doctor_name) return `${props.appointment.specialty || ''} — ${props.appointment.doctor_name}`
+  const doc = props.appointment.doctor
   if (!doc?.user) return ''
   return `${doc.specialty} — ${doc.user.first_name} ${doc.user.last_name}`
 })

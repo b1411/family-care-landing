@@ -1,5 +1,5 @@
 <template>
-  <div ref="chartRef" class="echart-wrapper" :style="{ height: `${height}px` }" />
+  <div ref="chartRef" class="echart-wrapper" :style="{ height: typeof height === 'number' ? `${height}px` : height }" />
 </template>
 
 <script setup lang="ts">
@@ -7,7 +7,7 @@ import type { EChartsOption } from 'echarts'
 
 const props = withDefaults(defineProps<{
   option: EChartsOption
-  height?: number
+  height?: number | string
   autoresize?: boolean
 }>(), {
   height: 300,

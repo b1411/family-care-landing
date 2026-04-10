@@ -4,7 +4,7 @@
     <div class="nutr-hero">
       <div>
         <h1 class="nutr-hero-title">Питание</h1>
-        <p class="nutr-hero-sub">{{ mock.children[0].first_name }} · {{ mock.feedingToday.length }} кормлений сегодня</p>
+        <p class="nutr-hero-sub">{{ mock.children[0]!.first_name }} · {{ mock.feedingToday.length }} кормлений сегодня</p>
       </div>
       <div class="nutr-hero-stat">
         <Icon name="lucide:flame" size="18" style="color: var(--color-warning)" />

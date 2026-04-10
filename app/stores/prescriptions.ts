@@ -16,7 +16,7 @@ export const usePrescriptionStore = defineStore('prescriptions', {
 
   getters: {
     activePrescriptions: (state) => state.prescriptions.filter(p => p.is_active),
-    pendingDoses: (state) => state.todayDoses.filter(d => d.status === 'scheduled'),
+    pendingDoses: (state) => state.todayDoses.filter(d => d.status === 'pending'),
     confirmedDoses: (state) => state.todayDoses.filter(d => d.status === 'confirmed'),
     missedDoses: (state) => state.todayDoses.filter(d => d.status === 'missed'),
     adherencePercent: (state) => {

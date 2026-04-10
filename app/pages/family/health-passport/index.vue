@@ -4,7 +4,7 @@
     <div class="hp-hero">
       <div>
         <h1 class="hp-hero-title">Паспорт здоровья</h1>
-        <p class="hp-hero-sub">{{ mock.children[0].first_name }} · {{ entries.length }} записей</p>
+        <p class="hp-hero-sub">{{ mock.children[0]!.first_name }} · {{ entries.length }} записей</p>
       </div>
       <button class="hp-hero-btn" @click="showAdd = !showAdd">
         <Icon :name="showAdd ? 'lucide:x' : 'lucide:plus'" size="15" />
@@ -72,7 +72,7 @@ definePageMeta({ layout: 'app' })
 const mock = useAppData()
 const showAdd = ref(false)
 
-const passport = reactive({ blood_type: mock.children[0].blood_type, allergies: 1, chronic: 0 })
+const passport = reactive({ blood_type: mock.children[0]?.blood_type ?? 'N/A', allergies: 1, chronic: 0 })
 
 const entries = ref([
   { id: '1', type: 'allergy', title: 'Пищевая аллергия — яичный белок', description: 'Сыпь, отёк. Рекомендована элиминационная диета.', date: '2026-03-10' },

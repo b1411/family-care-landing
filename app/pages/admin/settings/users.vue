@@ -49,7 +49,7 @@ const search = ref('')
 const roleFilter = ref('all')
 const loading = ref(true)
 
-interface User { id: string; name: string; email: string; role: string; is_active: boolean; last_seen: string | null }
+interface User { id: string; name: string; email: string; role: string; is_active: boolean | null; last_seen: string | null }
 
 const users = ref<User[]>([])
 

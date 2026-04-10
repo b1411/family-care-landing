@@ -37,7 +37,7 @@
             <span class="stat-lbl">приёмов</span>
           </div>
           <div class="stat-item">
-            <span class="stat-val" :class="d.avg_rating >= 4.5 ? 'good' : d.avg_rating >= 3.5 ? 'warn' : 'low'">{{ d.avg_rating?.toFixed(1) || '—' }}</span>
+            <span class="stat-val" :class="(d.avg_rating ?? 0) >= 4.5 ? 'good' : (d.avg_rating ?? 0) >= 3.5 ? 'warn' : 'low'">{{ d.avg_rating?.toFixed(1) || '—' }}</span>
             <span class="stat-lbl">рейтинг</span>
           </div>
         </div>
@@ -62,7 +62,7 @@ interface Doctor {
   name: string
   specialty: string
   experience_years: number | null
-  is_active: boolean
+  is_active: boolean | null
   appointment_count: number
   avg_rating: number | null
 }

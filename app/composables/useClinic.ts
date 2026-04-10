@@ -57,7 +57,7 @@ export function useClinic() {
     try {
       const { data, error: dbError } = await supabase
         .from('clinics')
-        .update(updates)
+        .update(updates as any)
         .eq('id', clinicId.value)
         .select()
         .single()

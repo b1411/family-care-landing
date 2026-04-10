@@ -115,7 +115,7 @@ async function sendMessage(text?: string) {
 
   // Create conversation if needed
   if (!conversationId.value) {
-    const { data } = await supabase.from('ai_conversations').insert({
+    const { data } = await (supabase as any).from('ai_conversations').insert({
       user_id: userId.value,
       title: msg.slice(0, 60),
     }).select().single()
@@ -133,7 +133,7 @@ async function sendMessage(text?: string) {
   scrollToBottom()
 
   // Save user message
-  await supabase.from('ai_messages').insert({
+  await (supabase as any).from('ai_messages').insert({
     conversation_id: conversationId.value,
     role: 'user',
     content: msg,
@@ -181,7 +181,7 @@ async function sendMessage(text?: string) {
     messages.value.push(aiMsg)
 
     // Save AI response
-    await supabase.from('ai_messages').insert({
+    await (supabase as any).from('ai_messages').insert({
       conversation_id: conversationId.value,
       role: 'assistant',
       content: aiContent,
@@ -194,7 +194,7 @@ async function sendMessage(text?: string) {
 }
 
 async function feedback(messageId: string, type: string) {
-  await supabase.from('ai_feedback').insert({
+  await (supabase as any).from('ai_feedback').insert({
     message_id: messageId,
     user_id: userId.value,
     type,
@@ -204,7 +204,7 @@ async function feedback(messageId: string, type: string) {
 onMounted(async () => {
   // Load recent conversations
   if (!user.value) return
-  const { data } = await supabase
+  const { data } = await (supabase as any)
     .from('ai_conversations')
     .select('id')
     .eq('user_id', userId.value)
@@ -213,7 +213,7 @@ onMounted(async () => {
 
   if (data?.[0]) {
     conversationId.value = data[0].id
-    const { data: msgs } = await supabase
+    const { data: msgs } = await (supabase as any)
       .from('ai_messages')
       .select('*')
       .eq('conversation_id', conversationId.value)

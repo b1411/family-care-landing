@@ -45,7 +45,7 @@ export function useJourney() {
       if (events.length > 0) {
         const { error: eventsError } = await supabase
           .from('journey_events')
-          .insert(events)
+          .insert(events as any)
 
         if (eventsError) {
           error.value = eventsError.message
@@ -140,7 +140,7 @@ export function useJourney() {
 
   /** Complete a journey event */
   async function completeEvent(eventId: string, notes?: string) {
-    return journeyStore.completeEvent(eventId, notes)
+    return journeyStore.completeEvent(eventId, notes as string | undefined)
   }
 
   /** Skip a journey event */
@@ -174,16 +174,15 @@ function buildEventsForJourney(
   if (type === 'pregnancy' && lmpDate) {
     const lmp = dayjs(lmpDate)
     for (const evt of PREGNANCY_EVENTS_KZ) {
-      const dueDate = lmp.add(evt.triggerWeek * 7, 'day')
+      const dueDate = lmp.add(evt.week * 7, 'day')
       events.push({
         journey_id: journeyId,
         type: evt.type,
         title: evt.title,
-        description: evt.description,
-        trigger_week: evt.triggerWeek,
+        trigger_week: evt.week,
         due_date: dueDate.format('YYYY-MM-DD'),
         status: 'upcoming',
-        is_mandatory: evt.mandatory !== false,
+        is_mandatory: evt.mandatory,
       })
     }
   }
@@ -249,7 +248,7 @@ async function generateVaccinations(childId: string, dob: string) {
     child_id: childId,
     vaccine_name: v.vaccine,
     dose_number: 1,
-    scheduled_date: birthDate.add(v.triggerDay, 'day').format('YYYY-MM-DD'),
+    scheduled_date: birthDate.add(v.trigger_day, 'day').format('YYYY-MM-DD'),
     status: 'scheduled' as const,
   }))
 

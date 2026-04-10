@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн']
@@ -50,9 +51,9 @@ for (let y = 0; y < months.length; y++) {
   }
 }
 
-const heatmapOption = {
+const heatmapOption: EChartsOption = {
   tooltip: {
-    formatter: (p: { data: number[] }) => `Когорта ${months[p.data[1]]}: ${p.data[2]}% через ${periods[p.data[0]]}`,
+    formatter: ((p: { data: number[] }) => `Когорта ${months[p.data[1]!]}: ${p.data[2]}% через ${periods[p.data[0]!]}`) as any,
   },
   grid: { top: 40, right: 20, bottom: 40, left: 60 },
   xAxis: {
@@ -78,10 +79,10 @@ const heatmapOption = {
     },
   },
   series: [{
-    type: 'heatmap',
+    type: 'heatmap' as const,
     data,
     itemStyle: { borderRadius: 4, borderWidth: 2, borderColor: '#FFFFFF' },
-    label: { show: true, color: '#4A4458', fontSize: 11, fontWeight: 600, formatter: (p: { data: number[] }) => `${p.data[2]}%` },
+    label: { show: true, color: '#4A4458', fontSize: 11, fontWeight: 600, formatter: ((p: { data: number[] }) => `${p.data[2]}%`) as any },
   }],
 }
 </script>

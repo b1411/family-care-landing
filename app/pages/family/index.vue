@@ -362,7 +362,7 @@ function formatDate(iso: string): string {
 
 function shortMonth(iso: string): string {
   const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
-  return months[new Date(iso).getMonth()]
+  return months[new Date(iso).getMonth()]!
 }
 
 function handleComplete(eventId: string) {

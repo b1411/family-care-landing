@@ -4,7 +4,7 @@
     <div class="grow-hero">
       <div>
         <h1 class="grow-hero-title">Рост и развитие</h1>
-        <p class="grow-hero-sub">{{ mock.children[0].first_name }} · {{ achievedCount }}/{{ mock.milestones.length }} вех</p>
+        <p class="grow-hero-sub">{{ mock.children[0]!.first_name }} · {{ achievedCount }}/{{ mock.milestones.length }} вех</p>
       </div>
       <div class="grow-hero-metrics">
         <div class="grow-metric">
@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
@@ -66,16 +67,16 @@ const latestHeight = g.height[g.height.length - 1]
 const latestHead = g.head[g.head.length - 1]
 const achievedCount = computed(() => mock.milestones.filter(m => m.achieved).length)
 
-const weightChartOption = computed(() => ({
+const weightChartOption = computed<EChartsOption>(() => ({
   grid: { top: 30, right: 16, bottom: 30, left: 42 },
   tooltip: { trigger: 'axis' },
-  xAxis: { type: 'category', data: g.months.map(m => `${m} мес`), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
-  yAxis: { type: 'value', name: 'кг', nameTextStyle: { color: '#9690a8', fontSize: 11 }, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
+  xAxis: { type: 'category' as const, data: g.months.map(m => `${m} мес`), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
+  yAxis: { type: 'value' as const, name: 'кг', nameTextStyle: { color: '#9690a8', fontSize: 11 }, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
   series: [
-    { name: '3-й перцентиль', type: 'line', data: g.whoWeight3rd, lineStyle: { type: 'dashed', color: '#d4d0e0', width: 1 }, symbol: 'none', itemStyle: { color: '#d4d0e0' } },
-    { name: '50-й перцентиль', type: 'line', data: g.whoWeight50th, lineStyle: { type: 'dashed', color: '#b8b0d0', width: 1 }, symbol: 'none', itemStyle: { color: '#b8b0d0' } },
-    { name: '97-й перцентиль', type: 'line', data: g.whoWeight97th, lineStyle: { type: 'dashed', color: '#d4d0e0', width: 1 }, symbol: 'none', itemStyle: { color: '#d4d0e0' } },
-    { name: 'Вес ребёнка', type: 'line', data: g.weight, lineStyle: { color: '#8B7EC8', width: 3 }, symbol: 'circle', symbolSize: 8, itemStyle: { color: '#8B7EC8', borderColor: '#fff', borderWidth: 2 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139,126,200,0.18)' }, { offset: 1, color: 'rgba(139,126,200,0)' }] } } },
+    { name: '3-й перцентиль', type: 'line' as const, data: g.whoWeight3rd, lineStyle: { type: 'dashed', color: '#d4d0e0', width: 1 }, symbol: 'none', itemStyle: { color: '#d4d0e0' } },
+    { name: '50-й перцентиль', type: 'line' as const, data: g.whoWeight50th, lineStyle: { type: 'dashed', color: '#b8b0d0', width: 1 }, symbol: 'none', itemStyle: { color: '#b8b0d0' } },
+    { name: '97-й перцентиль', type: 'line' as const, data: g.whoWeight97th, lineStyle: { type: 'dashed', color: '#d4d0e0', width: 1 }, symbol: 'none', itemStyle: { color: '#d4d0e0' } },
+    { name: 'Вес ребёнка', type: 'line' as const, data: g.weight, lineStyle: { color: '#8B7EC8', width: 3 }, symbol: 'circle', symbolSize: 8, itemStyle: { color: '#8B7EC8', borderColor: '#fff', borderWidth: 2 }, areaStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139,126,200,0.18)' }, { offset: 1, color: 'rgba(139,126,200,0)' }] } } },
   ],
 }))
 

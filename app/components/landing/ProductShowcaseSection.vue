@@ -185,7 +185,7 @@ const panels = [
   },
 ]
 
-const activePanel = computed(() => panels[activeTab.value])
+const activePanel = computed(() => panels[activeTab.value]!)
 
 const tabIndicatorStyle = computed(() => {
   const el = tabRefs.value[activeTab.value]

@@ -529,7 +529,7 @@ export function useAppData() {
   const npsScore = 72
   const npsSplit = { promoters: 58, passives: 28, detractors: 14 }
 
-  return {
+  return reactive({
     // Meta
     loading,
     initialized,
@@ -548,5 +548,5 @@ export function useAppData() {
     adminKpi, revenueMonthly, retentionCohort, adherenceTrend,
     doctorPerformance, capacityHeatmap, complianceOverall,
     complianceProtocols, npsScore, npsSplit,
-  }
+  })
 }

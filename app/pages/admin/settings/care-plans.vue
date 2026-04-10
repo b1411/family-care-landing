@@ -57,7 +57,7 @@ const loading = ref(true)
 const typeFilter = ref('all')
 
 interface TemplateEvent { type: string; title: string; trigger_week: number | null; trigger_day: number | null; is_mandatory: boolean }
-interface Template { id: string; type: string; name: string; description: string | null; is_default: boolean; is_active: boolean; event_count: number; events: TemplateEvent[]; created_at: string }
+interface Template { id: string; type: string; name: string; description: string | null; is_default: boolean | null; is_active: boolean | null; event_count: number; events: TemplateEvent[]; created_at: string | null }
 
 const templates = ref<Template[]>([])
 
@@ -78,14 +78,15 @@ function typeLabel(s: string) {
   return { pregnancy: 'Беременность', postpartum: 'Послеродовой', infant: 'Младенец', toddler: 'Тоддлер' }[s] || s
 }
 
-function formatDate(dt: string) {
+function formatDate(dt: string | null) {
+  if (!dt) return '—'
   return new Date(dt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 onMounted(async () => {
   const { data } = await sb.from('journey_templates').select('*').order('type').order('name')
   templates.value = (data || []).map(t => {
-    const events: TemplateEvent[] = Array.isArray(t.events_json) ? t.events_json : []
+    const events: TemplateEvent[] = Array.isArray(t.events_json) ? t.events_json as unknown as TemplateEvent[] : []
     return {
       id: t.id,
       type: t.type,

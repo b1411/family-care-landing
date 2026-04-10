@@ -37,11 +37,12 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
-const gaugeOption = {
+const gaugeOption: EChartsOption = {
   series: [{
-    type: 'gauge',
+    type: 'gauge' as const,
     startAngle: 180,
     endAngle: 0,
     min: -100,
@@ -71,7 +72,7 @@ const gaugeOption = {
 const months = ['Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек', 'Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн']
 const npsValues = [48, 52, 55, 56, 58, 60, 58, 61, 63, 62, 64, 64]
 
-const trendOption = {
+const trendOption: EChartsOption = {
   grid: { top: 20, right: 20, bottom: 30, left: 40 },
   xAxis: {
     type: 'category' as const,
@@ -87,7 +88,7 @@ const trendOption = {
     splitLine: { lineStyle: { color: '#F0EDF7' } },
   },
   series: [{
-    type: 'line',
+    type: 'line' as const,
     data: npsValues,
     smooth: true,
     areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139, 126, 200, 0.2)' }, { offset: 1, color: 'rgba(139, 126, 200, 0)' }] } },

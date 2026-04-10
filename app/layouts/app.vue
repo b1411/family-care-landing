@@ -418,7 +418,8 @@ async function handleLogout() {
 
 function formatNotifTime(dt: string) {
   const d = dayjs(dt)
-  return d.isToday?.() ? d.format('HH:mm') : d.format('DD.MM HH:mm')
+  const isToday = d.format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')
+  return isToday ? d.format('HH:mm') : d.format('DD.MM HH:mm')
 }
 
 // Close menus on route change
@@ -447,7 +448,7 @@ onMounted(async () => {
     notifStore.subscribeToNotifications()
   }
   // Show onboarding for new users
-  if (authStore.profile && !authStore.profile.onboarding_completed) {
+  if (authStore.profile && !(authStore.profile as any).onboarding_completed) {
     showOnboarding.value = true
   }
   document.addEventListener('click', onClickOutside)

@@ -71,7 +71,7 @@ onMounted(() => {
     start: 'top 70%',
     end: 'bottom 30%',
     scrub: 1,
-    onUpdate(self) {
+    onUpdate(self: any) {
       const progress = self.progress
       // Burn banknotes one by one
       const burnIndex = Math.floor(progress * 5)

@@ -29,10 +29,10 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.profile,
     role: (state): UserRole => state.profile?.role ?? 'mother',
     clinicId: (state) => state.profile?.clinic_id,
-    familyId: (state) => state.family?.id,
+    familyId: (state): string | undefined => state.family?.id,
     fullName: (state) => state.profile ? `${state.profile.first_name} ${state.profile.last_name}` : '',
     homeRoute(): string {
-      return ROLE_HOME_MAP[this.role]
+      return ROLE_HOME_MAP[this.role] || '/'
     },
     activeChildren: (state) => state.children.filter(c => c.dob),
     hasConsent: (state) => (type: string) => {

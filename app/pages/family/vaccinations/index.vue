@@ -4,7 +4,7 @@
     <div class="vax-hero">
       <div>
         <h1 class="vax-hero-title">Прививки</h1>
-        <p class="vax-hero-sub">{{ mock.children[0].first_name }} · Национальный календарь</p>
+        <p class="vax-hero-sub">{{ mock.children[0]!.first_name }} · Национальный календарь</p>
       </div>
       <AppSharedProgressRing :value="completionPercent" :size="72" :strokeWidth="6" variant="success" />
     </div>

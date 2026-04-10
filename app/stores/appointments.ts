@@ -38,7 +38,7 @@ export const useAppointmentStore = defineStore('appointments', {
           .order('scheduled_at', { ascending: false })
           .limit(50)
 
-        if (data) this.appointments = data as Appointment[]
+        if (data) this.appointments = data as unknown as Appointment[]
       }
       finally {
         this.loading = false
@@ -64,14 +64,15 @@ export const useAppointmentStore = defineStore('appointments', {
           slot_id: input.slotId,
           journey_event_id: input.journeyEventId || null,
           status: 'requested',
-          scheduled_at: new Date().toISOString(), // Will be set from slot
+          appointment_date: new Date().toISOString().slice(0, 10),
+          start_time: new Date().toTimeString().slice(0, 8),
           notes: input.notes || null,
-        })
+        } as any)
         .select()
         .single()
 
       if (!error && data) {
-        this.appointments.unshift(data as Appointment)
+        this.appointments.unshift(data as unknown as Appointment)
 
         // Mark slot as unavailable
         await supabase
@@ -94,7 +95,7 @@ export const useAppointmentStore = defineStore('appointments', {
 
       if (!error && data) {
         const idx = this.appointments.findIndex(a => a.id === appointmentId)
-        if (idx >= 0) this.appointments[idx] = data as Appointment
+        if (idx >= 0) this.appointments[idx] = data as unknown as Appointment
       }
       return { data, error }
     },

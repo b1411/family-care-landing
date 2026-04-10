@@ -49,7 +49,7 @@ export const useCoordinatorStore = defineStore('coordinator', {
           .order('created_at', { ascending: false })
           .limit(100)
 
-        if (data) this.tasks = data as CoordinatorTask[]
+        if (data) this.tasks = data as unknown as CoordinatorTask[]
       }
       finally {
         this.loading = false
@@ -118,7 +118,7 @@ export const useCoordinatorStore = defineStore('coordinator', {
 
       if (!error && data) {
         const idx = this.tasks.findIndex(t => t.id === taskId)
-        if (idx >= 0) this.tasks[idx] = data as CoordinatorTask
+        if (idx >= 0) this.tasks[idx] = data as unknown as CoordinatorTask
       }
       return { data, error }
     },
@@ -134,7 +134,7 @@ export const useCoordinatorStore = defineStore('coordinator', {
 
       if (!error && data) {
         const idx = this.tasks.findIndex(t => t.id === taskId)
-        if (idx >= 0) this.tasks[idx] = data as CoordinatorTask
+        if (idx >= 0) this.tasks[idx] = data as unknown as CoordinatorTask
       }
       return { data, error }
     },
@@ -169,9 +169,7 @@ export const useCoordinatorStore = defineStore('coordinator', {
         supabase
           .from('appointments')
           .select('*', { count: 'exact', head: true })
-          .eq('clinic_id', clinicId)
-          .gte('scheduled_at', today)
-          .lt('scheduled_at', `${today}T23:59:59`),
+          .eq('appointment_date' as any, today),
 
         familyIds.length
           ? supabase

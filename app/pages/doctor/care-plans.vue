@@ -108,11 +108,11 @@ onMounted(async () => {
 
   const evMap: Record<string, { total: number; completed: number; upcoming: UpcomingEvent[] }> = {}
   evData?.forEach(ev => {
-    evMap[ev.journey_id] ??= { total: 0, completed: 0, upcoming: [] }
-    evMap[ev.journey_id].total++
-    if (ev.status === 'completed') evMap[ev.journey_id].completed++
+    if (!evMap[ev.journey_id]) evMap[ev.journey_id] = { total: 0, completed: 0, upcoming: [] }
+    evMap[ev.journey_id]!.total++
+    if (ev.status === 'completed') evMap[ev.journey_id]!.completed++
     if (['upcoming', 'due', 'overdue'].includes(ev.status)) {
-      evMap[ev.journey_id].upcoming.push({ id: ev.id, title: ev.title, status: ev.status, due_date: ev.due_date })
+      evMap[ev.journey_id]!.upcoming.push({ id: ev.id, title: ev.title, status: ev.status, due_date: ev.due_date })
     }
   })
 

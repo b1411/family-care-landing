@@ -60,8 +60,9 @@ export const useNotificationStore = defineStore('notifications', {
 
       if (!error) {
         const idx = this.notifications.findIndex(n => n.id === notificationId)
-        if (idx >= 0) {
-          this.notifications[idx].read_at = new Date().toISOString()
+        const notif = this.notifications[idx]
+        if (idx >= 0 && notif) {
+          notif.read_at = new Date().toISOString()
           this.unreadCount = Math.max(0, this.unreadCount - 1)
         }
       }

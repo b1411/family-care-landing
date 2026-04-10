@@ -62,7 +62,7 @@
             <span class="recent-body">{{ n.body }}</span>
           </div>
           <span class="recent-status" :class="n.status">{{ statusLabel(n.status) }}</span>
-          <span class="recent-time">{{ formatTime(n.created_at) }}</span>
+          <span class="recent-time">{{ formatTime(n.created_at || '') }}</span>
         </div>
       </div>
       <p v-else class="empty-hint">Нет отправленных уведомлений</p>
@@ -99,7 +99,7 @@ const triggers = reactive([
   { key: 'missed_appointment', label: 'Неявка', desc: 'Уведомление координатору при неявке', channel: 'in_app', enabled: true },
 ])
 
-interface RecentNotif { id: string; channel: string; title: string; body: string; status: string; created_at: string }
+interface RecentNotif { id: string; channel: string; title: string; body: string | null; status: string; created_at: string | null }
 const recent = ref<RecentNotif[]>([])
 
 function statusLabel(s: string) {

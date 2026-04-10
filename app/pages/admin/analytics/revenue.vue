@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
@@ -68,14 +69,14 @@ const forecasts = [
   { month: 'Июль 2026', value: '3.1M ₸' },
 ]
 
-const revenueChart = computed(() => ({
+const revenueChart = computed<EChartsOption>(() => ({
   grid: { top: 10, right: 16, bottom: 24, left: 50 },
   xAxis: { type: 'category', data: mock.revenueMonthly.map(r => r.month), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
   yAxis: { type: 'value', axisLabel: { fontSize: 10, color: '#999', formatter: (v: number) => `${(v / 1000000).toFixed(1)}M` }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
   series: [
-    { type: 'bar', name: 'Консультации', data: mock.revenueMonthly.map(r => r.consultations), stack: 'rev', itemStyle: { color: '#8B7EC8', borderRadius: [0, 0, 0, 0] } },
-    { type: 'bar', name: 'Пакеты', data: mock.revenueMonthly.map(r => r.packages), stack: 'rev', itemStyle: { color: '#E8A0BF' } },
-    { type: 'bar', name: 'Лаборатория', data: mock.revenueMonthly.map(r => r.lab), stack: 'rev', itemStyle: { color: '#A8C8E8', borderRadius: [4, 4, 0, 0] } },
+    { type: 'bar' as const, name: 'Консультации', data: mock.revenueMonthly.map(r => r.consultations), stack: 'rev', itemStyle: { color: '#8B7EC8', borderRadius: [0, 0, 0, 0] } },
+    { type: 'bar' as const, name: 'Пакеты', data: mock.revenueMonthly.map(r => r.packages), stack: 'rev', itemStyle: { color: '#E8A0BF' } },
+    { type: 'bar' as const, name: 'Лаборатория', data: mock.revenueMonthly.map(r => r.lab), stack: 'rev', itemStyle: { color: '#A8C8E8', borderRadius: [4, 4, 0, 0] } },
   ],
   tooltip: { trigger: 'axis' },
   legend: { show: false },

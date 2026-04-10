@@ -181,7 +181,7 @@ onMounted(() => {
       start: 'top 60%',
       end: 'bottom 40%',
       scrub: 0.6,
-      onUpdate(self) {
+      onUpdate(self: any) {
         if (connectorFillRef.value) {
           connectorFillRef.value.style.transform = `scaleX(${self.progress})`
         }

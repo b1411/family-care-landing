@@ -209,10 +209,16 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    preset: 'vercel',
     prerender: {
       routes: ['/', '/for-clinics', '/for-families'],
     },
     routeRules: {
+      '/_nuxt/**': {
+        headers: {
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      },
       '/api/**': {
         headers: {
           'X-Content-Type-Options': 'nosniff',

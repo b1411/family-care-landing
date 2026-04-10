@@ -80,7 +80,7 @@ const weekDates = computed(() => {
   for (let i = 0; i < 14; i++) {
     const d = new Date(now)
     d.setDate(d.getDate() + i)
-    days.push({ iso: d.toISOString().slice(0, 10), day: d.getDate(), dayName: dayNames[d.getDay()] })
+    days.push({ iso: d.toISOString().slice(0, 10), day: d.getDate(), dayName: dayNames[d.getDay()]! })
   }
   return days
 })

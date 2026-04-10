@@ -119,15 +119,17 @@ function formatDate(iso: string) {
   return `${d.getDate()} ${months[d.getMonth()]}`
 }
 
-const moodChartOption = computed(() => ({
+import type { EChartsOption } from 'echarts'
+
+const moodChartOption = computed<EChartsOption>(() => ({
   grid: { top: 16, right: 8, bottom: 24, left: 32 },
-  xAxis: { type: 'category', data: mock.moodHistory.map(e => formatDate(e.date)), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 10, rotate: 45 } },
-  yAxis: { type: 'value', min: 1, max: 5, interval: 1, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
+  xAxis: { type: 'category' as const, data: mock.moodHistory.map(e => formatDate(e.date)), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 10, rotate: 45 } },
+  yAxis: { type: 'value' as const, min: 1, max: 5, interval: 1, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
   series: [{
-    type: 'line', data: mock.moodHistory.map(e => e.score), smooth: true,
+    type: 'line' as const, data: mock.moodHistory.map(e => e.score), smooth: true,
     lineStyle: { color: '#E8A0BF', width: 3 }, symbol: 'circle', symbolSize: 7,
     itemStyle: { color: '#E8A0BF', borderColor: '#fff', borderWidth: 2 },
-    areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(232,160,191,0.2)' }, { offset: 1, color: 'rgba(232,160,191,0)' }] } },
+    areaStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(232,160,191,0.2)' }, { offset: 1, color: 'rgba(232,160,191,0)' }] } },
   }],
 }))
 </script>

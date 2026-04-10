@@ -57,7 +57,7 @@ interface Coordinator {
   id: string
   name: string
   email: string
-  is_active: boolean
+  is_active: boolean | null
   was_online_recently: boolean
   pending_tasks: number
   completed_tasks: number
@@ -86,8 +86,9 @@ onMounted(async () => {
   tasks?.forEach(t => {
     if (!t.assigned_to) return
     taskMap[t.assigned_to] ??= { pending: 0, completed: 0 }
-    if (t.status === 'completed') taskMap[t.assigned_to].completed++
-    else taskMap[t.assigned_to].pending++
+    const tm = taskMap[t.assigned_to]!
+    if (t.status === 'completed') tm.completed++
+    else tm.pending++
   })
 
   // Families assigned (via tasks)

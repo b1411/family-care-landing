@@ -30,13 +30,14 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
 const ltvData = [980, 1050, 1120, 1280, 1350, 1480, 1520, 1680, 1720, 1800, 1850, 1920]
 const trendLine = ltvData.map((_, i) => 900 + i * 90)
 
-const ltvOption = {
+const ltvOption: EChartsOption = {
   tooltip: { trigger: 'axis' as const },
   legend: { data: ['LTV (тыс. ₸)', 'Тренд'], top: 0, textStyle: { color: '#7B7394' } },
   grid: { top: 40, right: 20, bottom: 30, left: 60 },
@@ -54,14 +55,14 @@ const ltvOption = {
   series: [
     {
       name: 'LTV (тыс. ₸)',
-      type: 'bar',
+      type: 'bar' as const,
       data: ltvData,
       itemStyle: { color: '#8B7EC8', borderRadius: [4, 4, 0, 0] },
       barWidth: '50%',
     },
     {
       name: 'Тренд',
-      type: 'line',
+      type: 'line' as const,
       data: trendLine,
       smooth: true,
       lineStyle: { color: '#E8A0BF', width: 2 },

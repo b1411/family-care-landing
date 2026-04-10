@@ -97,7 +97,7 @@ onMounted(() => {
     start: 'top 80%',
     end: 'bottom 20%',
     scrub: 0.5,
-    onUpdate: (self) => {
+    onUpdate: (self: any) => {
       fillHeight.value = self.progress * 150
     },
   })

@@ -4,7 +4,7 @@
     <div class="sleep-hero">
       <div>
         <h1 class="sleep-hero-title">Сон</h1>
-        <p class="sleep-hero-sub">{{ mock.children[0].first_name }} · Трекер сна</p>
+        <p class="sleep-hero-sub">{{ mock.children[0]!.first_name }} · Трекер сна</p>
       </div>
       <div class="sleep-hero-total">
         <Icon name="lucide:moon" size="20" style="color: var(--color-primary)" />
@@ -58,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
@@ -67,18 +68,18 @@ const avgTotal = computed(() => {
   return w.reduce((s, d) => s + d.night + d.nap, 0) / w.length
 })
 
-const sleepChartOption = computed(() => ({
+const sleepChartOption = computed<EChartsOption>(() => ({
   grid: { top: 20, right: 8, bottom: 24, left: 38 },
   tooltip: { trigger: 'axis' },
-  xAxis: { type: 'category', data: mock.sleepWeek.map(d => d.date), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
-  yAxis: { type: 'value', name: 'часы', nameTextStyle: { color: '#9690a8', fontSize: 11 }, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
+  xAxis: { type: 'category' as const, data: mock.sleepWeek.map(d => d.date), axisLine: { lineStyle: { color: '#e0dce8' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
+  yAxis: { type: 'value' as const, name: 'часы', nameTextStyle: { color: '#9690a8', fontSize: 11 }, axisLine: { show: false }, splitLine: { lineStyle: { color: '#f0eef5' } }, axisLabel: { color: '#9690a8', fontSize: 11 } },
   series: [
     {
-      name: 'Ночной', type: 'bar', stack: 'sleep', data: mock.sleepWeek.map(d => d.night),
+      name: 'Ночной', type: 'bar' as const, stack: 'sleep', data: mock.sleepWeek.map(d => d.night),
       itemStyle: { color: '#8B7EC8', borderRadius: [0, 0, 4, 4] }, barWidth: '40%',
     },
     {
-      name: 'Дневной', type: 'bar', stack: 'sleep', data: mock.sleepWeek.map(d => d.nap),
+      name: 'Дневной', type: 'bar' as const, stack: 'sleep', data: mock.sleepWeek.map(d => d.nap),
       itemStyle: { color: '#E8A0BF', borderRadius: [4, 4, 0, 0] }, barWidth: '40%',
     },
   ],

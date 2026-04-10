@@ -107,6 +107,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
@@ -155,10 +156,10 @@ const activityItems = [
 ]
 
 const palette = ['#8B7EC8', '#E8A0BF', '#F2C4A0', '#A8C8E8', '#E9C46A', '#D4727C']
-const taskPieOption = computed(() => ({
-  tooltip: { trigger: 'item' },
+const taskPieOption = computed<EChartsOption>(() => ({
+  tooltip: { trigger: 'item' as const },
   series: [{
-    type: 'pie', radius: ['45%', '72%'], padAngle: 3, itemStyle: { borderRadius: 6 },
+    type: 'pie' as const, radius: ['45%', '72%'], padAngle: 3, itemStyle: { borderRadius: 6 },
     label: { show: false }, emphasis: { scale: true, scaleSize: 6 },
     data: mock.tasksByType.map((t, i) => ({ name: t.name, value: t.value, itemStyle: { color: palette[i % palette.length] } })),
   }],

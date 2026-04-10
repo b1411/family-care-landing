@@ -157,7 +157,7 @@ onMounted(() => {
     trigger: section,
     start: 'top 70%',
     end: 'bottom 40%',
-    onUpdate: (self) => {
+    onUpdate: (self: any) => {
       const p = self.progress
       if (lineRef.value) lineRef.value.style.height = `${p * 100}%`
       if (p > 0.05 && activeStep.value < 0) { activeStep.value = 0; typeName() }

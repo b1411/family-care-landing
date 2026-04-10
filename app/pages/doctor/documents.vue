@@ -36,7 +36,7 @@
           </div>
         </div>
         <div class="doc-right">
-          <span class="doc-date">{{ formatDate(d.created_at) }}</span>
+          <span class="doc-date">{{ formatDate(d.created_at || '') }}</span>
           <span v-if="d.file_type" class="doc-size">{{ d.file_type }}</span>
         </div>
       </div>
@@ -56,7 +56,7 @@ const loading = ref(true)
 
 interface Doc {
   id: string; title: string; description: string | null; type: string
-  file_type: string | null; patient_name: string; child_name: string | null; created_at: string
+  file_type: string | null; patient_name: string; child_name: string | null; created_at: string | null
 }
 
 const documents = ref<Doc[]>([])

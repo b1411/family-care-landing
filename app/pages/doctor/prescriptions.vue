@@ -75,7 +75,7 @@ const loading = ref(true)
 interface Rx {
   id: string; medication: string; dosage: string; frequency: string; time_of_day: string[]
   start_date: string; end_date: string | null; instructions: string | null
-  is_active: boolean; patient_name: string; child_name: string | null; adherence: number | null
+  is_active: boolean | null; patient_name: string; child_name: string | null; adherence: number | null
 }
 
 const prescriptions = ref<Rx[]>([])
@@ -108,9 +108,9 @@ onMounted(async () => {
   const { data: logs } = await sb.from('dose_logs').select('prescription_id, status').in('prescription_id', ids).gte('scheduled_at', since)
   const adhMap: Record<string, { total: number; confirmed: number }> = {}
   logs?.forEach(l => {
-    adhMap[l.prescription_id] ??= { total: 0, confirmed: 0 }
-    adhMap[l.prescription_id].total++
-    if (l.status === 'confirmed') adhMap[l.prescription_id].confirmed++
+    if (!adhMap[l.prescription_id]) adhMap[l.prescription_id] = { total: 0, confirmed: 0 }
+    adhMap[l.prescription_id]!.total++
+    if (l.status === 'confirmed') adhMap[l.prescription_id]!.confirmed++
   })
 
   prescriptions.value = data.map(r => {

@@ -7,7 +7,7 @@
         <h1>Видеоконсультация</h1>
         <div v-if="appointment" class="appointment-info">
           <p class="doctor-name">{{ appointment.doctor_name }}</p>
-          <p class="appt-time">{{ formatDateTime(appointment.date) }}</p>
+          <p class="appt-time">{{ formatDateTime(appointment.date as string) }}</p>
         </div>
 
         <div class="device-check">
@@ -162,9 +162,9 @@ async function submitReview() {
 
   if (rating.value > 0) {
     const { data: appt } = await supabase.from('appointments').select('family_id').eq('id', appointmentId).single()
-    await supabase.from('visit_ratings').insert({
+    await (supabase as any).from('visit_ratings').insert({
       appointment_id: appointmentId,
-      family_id: appt?.family_id,
+      family_id: appt?.family_id ?? null,
       rating: rating.value,
       comment: reviewComment.value || null,
     })

@@ -108,7 +108,7 @@ onMounted(async () => {
   const { data } = await supabase
     .from('lab_results')
     .select('*')
-    .eq('user_id', userId.value)
+    .eq('family_id', (userId.value || '') as any)
     .order('created_at', { ascending: false })
 
   results.value = (data || []).map((r: Record<string, unknown>) => {

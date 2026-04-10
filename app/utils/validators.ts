@@ -62,7 +62,7 @@ export const moodLogSchema = z.object({
 
 export const feedingLogSchema = z.object({
   type: z.enum(['breast_left', 'breast_right', 'formula', 'solid', 'mixed']),
-  details: z.record(z.unknown()).default({}),
+  details: z.record(z.string(), z.unknown()).default({}),
 })
 
 export const sleepLogSchema = z.object({

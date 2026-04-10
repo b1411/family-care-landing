@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import type { EChartsOption } from 'echarts'
 definePageMeta({ layout: 'app' })
 
 const mock = useAppData()
@@ -85,17 +86,17 @@ const kpis = [
   { label: 'Retention', value: '89%', desc: 'Возврат семей' },
 ]
 
-const adherenceChart = computed(() => ({
+const adherenceChart = computed<EChartsOption>(() => ({
   grid: { top: 10, right: 16, bottom: 24, left: 36 },
-  xAxis: { type: 'category', data: mock.adherenceTrend.map((_, i) => `${i + 1}`), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
-  yAxis: { type: 'value', min: 80, max: 100, axisLabel: { fontSize: 10, color: '#999', formatter: '{value}%' }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
+  xAxis: { type: 'category' as const, data: mock.adherenceTrend.map((_, i) => `${i + 1}`), axisLabel: { fontSize: 10, color: '#999' }, axisLine: { show: false }, axisTick: { show: false } },
+  yAxis: { type: 'value' as const, min: 80, max: 100, axisLabel: { fontSize: 10, color: '#999', formatter: '{value}%' }, splitLine: { lineStyle: { color: '#f0f0f0' } } },
   series: [{
-    type: 'line', data: mock.adherenceTrend.map(d => d.value), smooth: true,
+    type: 'line' as const, data: mock.adherenceTrend.map(d => d.value), smooth: true,
     lineStyle: { color: '#8B7EC8', width: 2 },
-    areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139,126,200,0.15)' }, { offset: 1, color: 'rgba(139,126,200,0)' }] } },
+    areaStyle: { color: { type: 'linear' as const, x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(139,126,200,0.15)' }, { offset: 1, color: 'rgba(139,126,200,0)' }] } },
     symbol: 'none',
   }],
-  tooltip: { trigger: 'axis', formatter: (p: any) => `День ${p[0].name}: ${p[0].value}%` },
+  tooltip: { trigger: 'axis' as const, formatter: (p: any) => `День ${p[0].name}: ${p[0].value}%` },
 }))
 
 function cohortStyle(val?: number) {

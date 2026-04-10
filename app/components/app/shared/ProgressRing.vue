@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
-  percent: number
+  value: number
   size?: number
   strokeWidth?: number
   variant?: 'primary' | 'warm' | 'blue' | 'success' | 'danger'
@@ -81,7 +81,7 @@ const colorMap: Record<string, [string, string]> = {
 const colorStart = computed(() => colorMap[props.variant]?.[0] ?? '#8B7EC8')
 const colorEnd = computed(() => colorMap[props.variant]?.[1] ?? '#B8ADE8')
 
-const animatedPercent = ref(props.animate ? 0 : props.percent)
+const animatedPercent = ref(props.animate ? 0 : props.value)
 const displayPercent = computed(() => Math.round(animatedPercent.value))
 
 const dashOffset = computed(() => {
@@ -93,7 +93,7 @@ let rafId: number
 onMounted(() => {
   if (!props.animate) return
   const start = performance.now()
-  const target = props.percent
+  const target = props.value
   function tick(now: number) {
     const elapsed = now - start
     const progress = Math.min(elapsed / props.duration, 1)
@@ -108,7 +108,7 @@ onMounted(() => {
 
 onUnmounted(() => { if (rafId) cancelAnimationFrame(rafId) })
 
-watch(() => props.percent, (v) => { animatedPercent.value = v })
+watch(() => props.value, (v) => { animatedPercent.value = v })
 </script>
 
 <style scoped>

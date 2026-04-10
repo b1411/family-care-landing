@@ -86,11 +86,12 @@ onMounted(() => {
 
   // Magnetic hover — card follows mouse slightly
   cards.forEach((card) => {
+    const htmlCard = card as HTMLElement
     const handleMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect()
+      const rect = htmlCard.getBoundingClientRect()
       const x = (e.clientX - rect.left - rect.width / 2) / rect.width
       const y = (e.clientY - rect.top - rect.height / 2) / rect.height
-      gsap.to(card, {
+      gsap.to(htmlCard, {
         x: x * 8,
         y: y * 6,
         rotateY: x * 3,
@@ -100,7 +101,7 @@ onMounted(() => {
       })
     }
     const handleLeave = () => {
-      gsap.to(card, {
+      gsap.to(htmlCard, {
         x: 0,
         y: 0,
         rotateY: 0,
@@ -109,8 +110,8 @@ onMounted(() => {
         ease: 'elastic.out(1, 0.5)',
       })
     }
-    card.addEventListener('mousemove', handleMove)
-    card.addEventListener('mouseleave', handleLeave)
+    htmlCard.addEventListener('mousemove', handleMove)
+    htmlCard.addEventListener('mouseleave', handleLeave)
   })
 })
 </script>

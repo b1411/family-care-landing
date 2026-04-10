@@ -24,10 +24,18 @@
 
 <script setup lang="ts">
 import { formatDateTime } from '~/utils/formatters'
-import type { DoseLog } from '~/types/database'
+
+interface DoseData {
+  id: string
+  status: string
+  scheduled_at: string
+  prescription?: { medication: string }
+  prescription_id?: string
+  confirmed_at?: string | null
+}
 
 const props = defineProps<{
-  dose: DoseLog & { prescription?: { medication: string } }
+  dose: DoseData
 }>()
 
 defineEmits<{
@@ -36,9 +44,7 @@ defineEmits<{
 }>()
 
 const medicationName = computed(() => {
-  return (props.dose as Record<string, unknown>).prescription
-    ? ((props.dose as Record<string, unknown>).prescription as { medication: string }).medication
-    : 'Назначение'
+  return props.dose.prescription?.medication ?? 'Назначение'
 })
 
 const formattedTime = computed(() => formatDateTime(props.dose.scheduled_at))

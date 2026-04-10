@@ -112,7 +112,7 @@ onMounted(() => {
     trigger: timelineRef.value,
     start: 'top 70%',
     end: 'bottom 40%',
-    onUpdate(self) {
+    onUpdate(self: any) {
       const p = self.progress
       // Fill the vertical line
       if (lineRef.value) {
