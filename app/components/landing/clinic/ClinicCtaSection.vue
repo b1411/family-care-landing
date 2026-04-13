@@ -24,10 +24,6 @@
           <label for="cta-email">Email</label>
           <input id="cta-email" v-model="form.email" type="email" required placeholder="you@clinic.kz" />
         </div>
-        <div class="form-field form-field--full">
-          <label for="cta-families">Количество семей в месяц (примерно)</label>
-          <input id="cta-families" v-model="form.familiesCount" type="number" placeholder="30" min="1" />
-        </div>
       </div>
       <button type="submit" class="submit-btn font-heading" :disabled="submitted">
         {{ submitted ? 'Отправлено ✓' : 'Обсудить подключение' }}
@@ -41,7 +37,7 @@
 import { ref, reactive } from 'vue'
 
 const submitted = ref(false)
-const form = reactive({ name: '', clinic: '', phone: '', email: '', familiesCount: '' })
+const form = reactive({ name: '', clinic: '', phone: '', email: '' })
 
 async function onSubmit() {
   try {
@@ -52,7 +48,7 @@ async function onSubmit() {
         organization: form.clinic,
         email: form.email,
         phone_or_messenger: form.phone,
-        comment: `Семей/мес: ${form.familiesCount}`,
+        comment: '',
         type: 'clinic_inquiry',
       },
     })

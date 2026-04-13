@@ -209,9 +209,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    sharp: {
-      // Disable bundling sharp binaries — Vercel provides sharp natively
-    },
+    // Vercel provides sharp natively — no extra config needed
   },
 
   nitro: {

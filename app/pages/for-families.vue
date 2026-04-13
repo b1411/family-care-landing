@@ -18,6 +18,9 @@
     <!-- 6. Как подключиться + FAQ -->
     <LandingFamilyOnboardingSection />
     <LandingFamilyFaqSection />
+
+    <!-- 7. CTA для семей -->
+    <LandingFamilyCtaSection />
   </div>
 </template>
 

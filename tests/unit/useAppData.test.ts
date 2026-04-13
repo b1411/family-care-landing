@@ -58,6 +58,11 @@ vi.stubGlobal('useCoordinatorStore', () => mockCoordinatorStore)
 vi.stubGlobal('useAuthStore', () => mockAuthStore)
 vi.stubGlobal('ref', vi.fn((v) => ({ value: v })))
 vi.stubGlobal('computed', vi.fn((fn) => ({ value: fn() })))
+vi.stubGlobal('reactive', vi.fn((obj) => obj))
+vi.stubGlobal('useState', vi.fn((_key: string, init: () => any) => ({ value: init() })))
+vi.stubGlobal('useSupabaseClient', vi.fn(() => ({ from: vi.fn(() => ({ select: vi.fn() })) })))
+vi.stubGlobal('watch', vi.fn())
+vi.stubGlobal('onMounted', vi.fn())
 
 describe('useAppData', () => {
   beforeEach(() => {
@@ -213,26 +218,26 @@ describe('useAppData', () => {
     it('has growth data', async () => {
       const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
-      expect(data.growthData.months.length).toBe(7)
-      expect(data.growthData.weight.length).toBe(7)
+      expect(data.growthData.value.months.length).toBe(7)
+      expect(data.growthData.value.weight.length).toBe(7)
     })
 
     it('has milestones', async () => {
       const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
-      expect(data.milestones.length).toBe(8)
+      expect(data.milestones.value.length).toBe(8)
     })
 
     it('has achievements', async () => {
       const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
-      expect(data.achievements.length).toBe(6)
+      expect(data.achievements.value.length).toBe(6)
     })
 
     it('has education articles', async () => {
       const { useAppData } = await import('../../app/composables/useAppData')
       const data = useAppData()
-      expect(data.educationArticles.length).toBe(6)
+      expect(data.educationArticles.value.length).toBe(6)
     })
   })
 })
