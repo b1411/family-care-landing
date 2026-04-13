@@ -86,6 +86,10 @@
                 {{ feature }}
               </li>
             </ul>
+            <NuxtLink :to="`/demo?role=${demoRoles[activeTab]}`" class="showcase-demo-btn">
+              <Icon name="lucide:play" size="16" />
+              Попробовать эту роль в демо
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -104,6 +108,8 @@ const infoRef = ref<HTMLElement | null>(null)
 const tabRefs = ref<(HTMLElement | null)[]>([])
 const rowRefs = ref<(HTMLElement | null)[]>([])
 const featureRefs = ref<(HTMLElement | null)[]>([])
+
+const demoRoles = ['mom', 'coordinator', 'admin']
 
 const activeTab = ref(0)
 const isAnimating = ref(false)
@@ -624,6 +630,26 @@ onUnmounted(() => {
   color: var(--color-success);
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+.showcase-demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.showcase-demo-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 900px) {

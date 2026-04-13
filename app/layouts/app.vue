@@ -181,6 +181,12 @@
 
     <!-- Main content -->
     <main class="app-main" :class="{ 'sidebar-collapsed': sidebarCollapsed, 'has-bottom-nav': isFamily }">
+      <!-- Demo mode banner -->
+      <div v-if="isDemoUser" class="demo-banner">
+        <Icon name="lucide:flask-conical" size="16" />
+        <span>Вы в демо-режиме. Данные тестовые.</span>
+        <NuxtLink to="/#contact" class="demo-banner-link">Обсудить подключение →</NuxtLink>
+      </div>
       <slot />
     </main>
 
@@ -259,6 +265,7 @@ const userInitials = computed(() => {
   return parts.map(p => p[0]).join('').toUpperCase().slice(0, 2)
 })
 const userRole = computed<UserRole>(() => authStore.role)
+const isDemoUser = computed(() => user.value?.email?.endsWith('@demo.kz') ?? false)
 const roleLabel = computed(() => {
   const labels: Record<string, string> = {
     mother: 'Мама',
@@ -477,6 +484,36 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* ─── Demo Banner ─── */
+.demo-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, rgba(139, 126, 200, 0.12), rgba(139, 126, 200, 0.06));
+  border-bottom: 1px solid rgba(139, 126, 200, 0.18);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.demo-banner .icon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.demo-banner-link {
+  margin-left: auto;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.demo-banner-link:hover {
+  text-decoration: underline;
+}
+
 /* ─── Layout ─── */
 .app-layout {
   display: flex;
