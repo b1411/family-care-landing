@@ -12,8 +12,8 @@
           <div class="number-icon-wrap" :style="{ background: item.iconBg }">
             <Icon :name="item.icon" size="22" :style="{ color: item.iconColor }" />
           </div>
-          <span ref="valueRefs" class="number-value font-display">
-            {{ item.prefix }}0{{ item.suffix }}
+          <span class="number-value font-display">
+            {{ item.prefix }}{{ item.value }}{{ item.suffix }}
           </span>
           <p class="number-label">{{ item.label }}</p>
         </div>
@@ -27,7 +27,6 @@ const { gsap, ScrollTrigger } = useGsap()
 
 const sectionRef = ref<HTMLElement | null>(null)
 const cardRefs = ref<HTMLElement[]>([])
-const valueRefs = ref<HTMLElement[]>([])
 
 const numbers = [
   {
@@ -68,38 +67,6 @@ const numbers = [
   },
 ]
 
-const scrambleChars = '0123456789'
-
-function scrambleValue(el: HTMLElement, target: number, prefix: string, suffix: string) {
-  const targetStr = String(target)
-  const len = targetStr.length
-  const revealSpeed = 3
-  const totalFrames = len * revealSpeed
-
-  const obj = { progress: 0 }
-  gsap.to(obj, {
-    progress: 1,
-    duration: 1.6,
-    ease: 'power2.inOut',
-    onUpdate() {
-      const frame = Math.floor(obj.progress * totalFrames)
-      const revealed = Math.floor(frame / revealSpeed)
-      let output = ''
-      for (let i = 0; i < len; i++) {
-        if (i < revealed) {
-          output += targetStr[i]
-        } else {
-          output += scrambleChars[Math.floor(Math.random() * scrambleChars.length)]
-        }
-      }
-      el.textContent = prefix + output + suffix
-    },
-    onComplete() {
-      el.textContent = prefix + targetStr + suffix
-    },
-  })
-}
-
 onMounted(() => {
   if (!gsap || !ScrollTrigger || !sectionRef.value) return
 
@@ -118,15 +85,6 @@ onMounted(() => {
         duration: 0.7,
         stagger: 0.1,
         ease: 'back.out(1.7)',
-        onComplete: () => {
-          // Start scramble after cards land
-          valueRefs.value.forEach((el, i) => {
-            const num = numbers[i]!
-            setTimeout(() => {
-              scrambleValue(el, num.value, num.prefix, num.suffix)
-            }, i * 120)
-          })
-        },
       })
     },
   })

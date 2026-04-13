@@ -16,7 +16,7 @@
             </svg>
           </div>
           <h3 class="split-title font-heading">Вы управляете клиникой?</h3>
-          <p class="split-desc">Узнайте, как удержать 67% семей, которые уходят после родов, и вырастить LTV каждого пациента</p>
+          <p class="split-desc">Узнайте, как платформа помогает удерживать семьи после родов и автоматизировать сопровождение</p>
           <span class="split-link font-heading">
             Подробнее
             <Icon name="lucide:arrow-right" size="18" class="split-arrow" />

@@ -45,7 +45,7 @@
                 <rect width="360" height="240" rx="8" fill="var(--color-surface, #F8F5F0)" />
                 <text x="16" y="28" font-size="12" font-weight="700" fill="var(--color-text-primary, #1A1A2E)">Карточка пациента</text>
                 <rect x="16" y="40" width="328" height="32" rx="6" fill="white" stroke="var(--color-border, #E5E0DA)" stroke-width="1" />
-                <text x="28" y="60" font-size="11" fill="var(--color-text-primary, #1A1A2E)">Каримова А. — 28 нед.</text>
+                <text x="28" y="60" font-size="11" fill="var(--color-text-primary, #1A1A2E)">Семья А. — 28 нед.</text>
                 <rect v-for="(s, i) in patientSections" :key="i" x="16" :y="82 + i * 40" width="328" height="32" rx="6" fill="white" stroke="var(--color-border, #E5E0DA)" stroke-width="1" />
                 <text v-for="(s, i) in patientSections" :key="'s'+i" x="28" :y="102 + i * 40" font-size="11" fill="var(--color-text-secondary, #6B7280)">{{ s }}</text>
               </svg>
@@ -107,10 +107,10 @@ const tabs = [
 ]
 
 const coordTasks = [
-  { label: 'Просрочено: УЗИ II триместр — Каримова А.', color: 'var(--color-danger, #D4727C)' },
-  { label: 'Неявка: приём гинеколога — Алиева Д.', color: 'var(--color-danger, #D4727C)' },
-  { label: 'Низкое соблюдение: витамины — Нурланова С.', color: '#FBBF24' },
-  { label: 'Подключение: Жумабаева К. — 8 нед.', color: 'var(--color-accent-blue, #A8C8E8)' },
+  { label: 'Просрочено: УЗИ II триместр — Семья А.', color: 'var(--color-danger, #D4727C)' },
+  { label: 'Неявка: приём гинеколога — Семья Б.', color: 'var(--color-danger, #D4727C)' },
+  { label: 'Низкое соблюдение: витамины — Семья В.', color: '#FBBF24' },
+  { label: 'Подключение: Семья Г. — 8 нед.', color: 'var(--color-accent-blue, #A8C8E8)' },
 ]
 
 const bars = [

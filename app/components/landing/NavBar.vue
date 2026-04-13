@@ -24,12 +24,10 @@
 
       <!-- Auth + CTA -->
       <div class="navbar-actions">
-        <button class="navbar-demo font-heading" @click="demoModalOpen = true">
-          <Icon name="lucide:play-circle" size="16" />
-          Смотреть демо
-        </button>
-        <NuxtLink to="/auth/login" class="navbar-login font-heading">Войти</NuxtLink>
-        <a href="#contact" class="navbar-cta font-heading">Запросить демо</a>
+        <NuxtLink to="/demo" class="navbar-demo font-heading">
+          Попробовать демо
+        </NuxtLink>
+        <a href="#contact" class="navbar-cta font-heading">Обсудить подключение</a>
       </div>
 
       <!-- Mobile burger -->
@@ -53,20 +51,14 @@
             {{ tab.label }}
           </NuxtLink>
           <div class="mobile-auth">
-            <NuxtLink to="/auth/login" class="mobile-auth-btn mobile-auth-login font-heading" @click="menuOpen = false">Войти</NuxtLink>
-            <NuxtLink to="/auth/register" class="mobile-auth-btn mobile-auth-register font-heading" @click="menuOpen = false">Регистрация</NuxtLink>
+            <NuxtLink to="/demo" class="mobile-auth-btn mobile-auth-login font-heading" @click="menuOpen = false">Попробовать демо</NuxtLink>
           </div>
-          <button class="mobile-demo font-heading" @click="menuOpen = false; demoModalOpen = true">
-            <Icon name="lucide:play-circle" size="18" />
-            Смотреть демо
-          </button>
-          <a href="#contact" class="mobile-cta font-heading" @click="menuOpen = false">Запросить демо</a>
+          <a href="#contact" class="mobile-cta font-heading" @click="menuOpen = false">Обсудить подключение</a>
         </nav>
       </div>
     </Transition>
 
-    <!-- Demo Modal -->
-    <LandingDemoModal v-model="demoModalOpen" />
+    <!-- Demo Modal removed — all demo links go to /demo directly -->
   </header>
 </template>
 
@@ -74,12 +66,11 @@
 const route = useRoute()
 const menuOpen = ref(false)
 const isScrolled = ref(false)
-const demoModalOpen = ref(false)
 
 const tabs = [
   { to: '/', label: 'Платформа' },
-  { to: '/for-clinics', label: 'Компаниям' },
-  { to: '/for-families', label: 'Родителям' },
+  { to: '/for-clinics', label: 'Для клиник' },
+  { to: '/for-families', label: 'Для родителей' },
 ]
 
 function isActiveTab(path: string) {

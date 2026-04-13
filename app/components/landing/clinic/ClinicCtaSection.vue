@@ -2,15 +2,15 @@
   <LandingUiSectionWrapper
     id="clinic-cta"
     badge="Начните"
-    title="Запросите персональное демо"
-    subtitle="Покажем платформу на реальных данных вашей клиники. 30 минут — и вы увидите, сколько семей вы теряете и сколько можете вернуть."
+    title="Обсудить подключение"
+    subtitle="Расскажите о вашей клинике — мы подготовим предложение по пилотному запуску."
     alternate
   >
     <form class="cta-form landing-card" data-reveal="fade-up" @submit.prevent="onSubmit">
       <div class="form-grid">
         <div class="form-field">
           <label for="cta-name">Имя</label>
-          <input id="cta-name" v-model="form.name" type="text" required placeholder="Айгуль" />
+          <input id="cta-name" v-model="form.name" type="text" required placeholder="Ваше имя" />
         </div>
         <div class="form-field">
           <label for="cta-clinic">Клиника</label>
@@ -30,9 +30,9 @@
         </div>
       </div>
       <button type="submit" class="submit-btn font-heading" :disabled="submitted">
-        {{ submitted ? 'Отправлено ✓' : 'Запросить демо' }}
+        {{ submitted ? 'Отправлено ✓' : 'Обсудить подключение' }}
       </button>
-      <p class="form-footer">Ответим в течение 1 рабочего дня. Никакого спама. Никаких обязательств.</p>
+      <p class="form-footer">Ответим в течение 1 рабочего дня. Никакого спама.</p>
     </form>
   </LandingUiSectionWrapper>
 </template>
@@ -45,9 +45,16 @@ const form = reactive({ name: '', clinic: '', phone: '', email: '', familiesCoun
 
 async function onSubmit() {
   try {
-    await $fetch('/api/demo-request', {
+    await $fetch('/api/contact-request', {
       method: 'POST',
-      body: { ...form, contact: form.phone || form.email, source: 'for-clinics' },
+      body: {
+        name: form.name,
+        organization: form.clinic,
+        email: form.email,
+        phone_or_messenger: form.phone,
+        comment: `Семей/мес: ${form.familiesCount}`,
+        type: 'clinic_inquiry',
+      },
     })
     submitted.value = true
   }

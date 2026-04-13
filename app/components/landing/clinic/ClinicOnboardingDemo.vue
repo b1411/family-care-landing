@@ -73,7 +73,7 @@
                     <!-- Field: Name -->
                     <text x="24" y="148" font-size="10" fill="var(--color-text-secondary)">Название</text>
                     <rect x="24" y="154" width="220" height="32" rx="8" fill="white" stroke="var(--color-primary)" stroke-width="1.5" />
-                    <text x="36" y="175" font-size="12" fill="var(--color-text-primary)">Клиника «Мать и Дитя»</text>
+                    <text x="36" y="175" font-size="12" fill="var(--color-text-primary)">Клиника «Ваше название»</text>
                     <!-- Field: City -->
                     <text x="260" y="148" font-size="10" fill="var(--color-text-secondary)">Город</text>
                     <rect x="260" y="154" width="220" height="32" rx="8" fill="white" stroke="var(--color-border)" stroke-width="1" />
@@ -81,15 +81,15 @@
                     <!-- Field: Contact -->
                     <text x="24" y="210" font-size="10" fill="var(--color-text-secondary)">Контактное лицо</text>
                     <rect x="24" y="216" width="220" height="32" rx="8" fill="white" stroke="var(--color-border)" stroke-width="1" />
-                    <text x="36" y="237" font-size="12" fill="var(--color-text-primary)">Айгуль Нурланова</text>
+                    <text x="36" y="237" font-size="12" fill="var(--color-text-primary)">Имя контактного лица</text>
                     <!-- Field: Phone -->
                     <text x="260" y="210" font-size="10" fill="var(--color-text-secondary)">Телефон</text>
                     <rect x="260" y="216" width="220" height="32" rx="8" fill="white" stroke="var(--color-border)" stroke-width="1" />
-                    <text x="272" y="237" font-size="12" fill="var(--color-text-primary)">+7 (777) 123-45-67</text>
+                    <text x="272" y="237" font-size="12" fill="var(--color-text-primary)">+7 (7XX) XXX-XX-XX</text>
                     <!-- Field: Email -->
                     <text x="24" y="272" font-size="10" fill="var(--color-text-secondary)">Email</text>
                     <rect x="24" y="278" width="456" height="32" rx="8" fill="white" stroke="var(--color-border)" stroke-width="1" />
-                    <text x="36" y="299" font-size="12" fill="var(--color-text-primary)">admin@mother-child.kz</text>
+                    <text x="36" y="299" font-size="12" fill="var(--color-text-primary)">admin@example.kz</text>
                     <!-- Button -->
                     <rect x="340" y="320" width="140" height="0" rx="0" fill="none" />
                   </svg>
@@ -147,7 +147,7 @@
                     <!-- Avatar + info block -->
                     <circle cx="56" cy="90" r="24" fill="var(--color-secondary-light)" />
                     <text x="44" y="95" font-size="18">👩</text>
-                    <text x="92" y="82" font-size="14" font-weight="600" fill="var(--color-text-primary)">Каримова Алия</text>
+                    <text x="92" y="82" font-size="14" font-weight="600" fill="var(--color-text-primary)">Семья А.</text>
                     <text x="92" y="100" font-size="10" fill="var(--color-text-secondary)">28 лет • Срок: 12 недель • Первая беременность</text>
                     <rect x="92" y="108" width="60" height="18" rx="9" fill="var(--color-primary-light)" />
                     <text x="103" y="121" font-size="9" fill="var(--color-primary)" font-weight="600">Низкий риск</text>
@@ -191,7 +191,7 @@
                     <!-- Task card -->
                     <rect x="16" y="36" width="244" height="80" rx="10" fill="white" stroke="var(--color-danger)" stroke-width="1.5" />
                     <circle cx="32" cy="52" r="5" fill="var(--color-danger)" />
-                    <text x="44" y="56" font-size="10" font-weight="600" fill="var(--color-text-primary)">Каримова А. — пропущен визит</text>
+                    <text x="44" y="56" font-size="10" font-weight="600" fill="var(--color-text-primary)">Семья А. — пропущен визит</text>
                     <text x="44" y="72" font-size="9" fill="var(--color-text-secondary)">УЗИ 2 триместра • Просрочено 3 дня</text>
                     <!-- Action buttons -->
                     <rect x="28" y="86" width="70" height="22" rx="6" fill="var(--color-primary)" />
@@ -211,8 +211,8 @@
                     <rect x="322" y="56" width="166" height="68" rx="12" fill="white" stroke="var(--color-border)" stroke-width="1" class="anim-slide-in" />
                     <rect x="330" y="64" width="24" height="24" rx="6" fill="var(--color-primary-light)" />
                     <text x="337" y="81" font-size="10">🏥</text>
-                    <text x="360" y="76" font-size="9" font-weight="600" fill="var(--color-text-primary)">Мать и Дитя</text>
-                    <text x="360" y="90" font-size="8" fill="var(--color-text-secondary)">Алия, у вас назначено УЗИ</text>
+                    <text x="360" y="76" font-size="9" font-weight="600" fill="var(--color-text-primary)">Ваша клиника</text>
+                    <text x="360" y="90" font-size="8" fill="var(--color-text-secondary)">У вас назначено УЗИ</text>
                     <text x="360" y="102" font-size="8" fill="var(--color-text-secondary)">2 триместра. Записать на</text>
                     <text x="360" y="114" font-size="8" fill="var(--color-primary)" font-weight="600">завтра, 10:00? →</text>
                     <!-- App screen behind -->
@@ -236,14 +236,14 @@
                     <rect width="520" height="340" fill="#FEFCFF" />
                     <!-- Header -->
                     <rect x="0" y="0" width="520" height="48" fill="var(--color-primary-ultralight)" />
-                    <text x="24" y="20" font-size="8" fill="var(--color-text-muted)">Клиника «Мать и Дитя»</text>
+                    <text x="24" y="20" font-size="8" fill="var(--color-text-muted)">Ваша клиника</text>
                     <text x="24" y="36" font-size="14" font-weight="700" fill="var(--color-text-primary)" font-family="Satoshi, sans-serif">Панель координатора</text>
                     <!-- KPI strip -->
                     <rect x="260" y="6" width="62" height="36" rx="8" fill="white" stroke="var(--color-border-light)" stroke-width="1" />
-                    <text x="272" y="22" font-size="16" font-weight="700" fill="var(--color-primary)" font-family="JetBrains Mono">87%</text>
-                    <text x="272" y="36" font-size="7" fill="var(--color-text-muted)">Retention</text>
+                    <text x="272" y="22" font-size="16" font-weight="700" fill="var(--color-primary)" font-family="JetBrains Mono">—</text>
+                    <text x="272" y="36" font-size="7" fill="var(--color-text-muted)">Удержание</text>
                     <rect x="330" y="6" width="62" height="36" rx="8" fill="white" stroke="var(--color-border-light)" stroke-width="1" />
-                    <text x="342" y="22" font-size="16" font-weight="700" fill="var(--color-success)" font-family="JetBrains Mono">94%</text>
+                    <text x="342" y="22" font-size="16" font-weight="700" fill="var(--color-success)" font-family="JetBrains Mono">—</text>
                     <text x="342" y="36" font-size="7" fill="var(--color-text-muted)">Визиты</text>
                     <rect x="400" y="6" width="62" height="36" rx="8" fill="white" stroke="var(--color-border-light)" stroke-width="1" />
                     <text x="412" y="22" font-size="16" font-weight="700" fill="var(--color-accent-warm)" font-family="JetBrains Mono">4.8</text>
@@ -253,13 +253,13 @@
                     <!-- Tabs -->
                     <rect x="24" y="58" width="68" height="24" rx="6" fill="var(--color-primary)" />
                     <text x="34" y="74" font-size="9" fill="white" font-weight="600">Задачи (6)</text>
-                    <text x="104" y="74" font-size="9" fill="var(--color-text-muted)">Семьи (142)</text>
+                    <text x="104" y="74" font-size="9" fill="var(--color-text-muted)">Семьи</text>
                     <text x="190" y="74" font-size="9" fill="var(--color-text-muted)">Аналитика</text>
                     <!-- Task list -->
                     <!-- Task 1: overdue -->
                     <rect x="24" y="92" width="472" height="44" rx="8" fill="white" stroke="var(--color-danger)" stroke-width="1" />
                     <circle cx="40" cy="114" r="5" fill="var(--color-danger)" />
-                    <text x="52" y="108" font-size="10" font-weight="600" fill="var(--color-text-primary)">Каримова А. — УЗИ 2 триместра</text>
+                    <text x="52" y="108" font-size="10" font-weight="600" fill="var(--color-text-primary)">Семья А. — УЗИ 2 триместра</text>
                     <text x="52" y="124" font-size="8" fill="var(--color-danger)">Просрочено 3 дня</text>
                     <rect x="380" y="102" width="52" height="20" rx="6" fill="var(--color-primary)" />
                     <text x="388" y="116" font-size="8" fill="white" font-weight="600">Связаться</text>
@@ -268,7 +268,7 @@
                     <!-- Task 2: today -->
                     <rect x="24" y="144" width="472" height="44" rx="8" fill="white" stroke="var(--color-warning)" stroke-width="1" />
                     <circle cx="40" cy="166" r="5" fill="var(--color-warning)" />
-                    <text x="52" y="160" font-size="10" font-weight="600" fill="var(--color-text-primary)">Бекова Д. — вакцинация АКДС</text>
+                    <text x="52" y="160" font-size="10" font-weight="600" fill="var(--color-text-primary)">Семья Б. — вакцинация АКДС</text>
                     <text x="52" y="176" font-size="8" fill="var(--color-warning)">Сегодня, 14:00</text>
                     <rect x="380" y="154" width="52" height="20" rx="6" fill="var(--color-primary)" />
                     <text x="386" y="168" font-size="8" fill="white" font-weight="600">Напомн.</text>
@@ -277,17 +277,17 @@
                     <!-- Task 3: upcoming -->
                     <rect x="24" y="196" width="472" height="44" rx="8" fill="white" stroke="var(--color-success)" stroke-width="1" />
                     <circle cx="40" cy="218" r="5" fill="var(--color-success)" />
-                    <text x="52" y="212" font-size="10" font-weight="600" fill="var(--color-text-primary)">Ахметова Ж. — приём педиатра</text>
+                    <text x="52" y="212" font-size="10" font-weight="600" fill="var(--color-text-primary)">Семья В. — приём педиатра</text>
                     <text x="52" y="228" font-size="8" fill="var(--color-success)">Завтра, 11:00 • Подтверждено</text>
                     <!-- Task 4: scheduled -->
                     <rect x="24" y="248" width="472" height="44" rx="8" fill="white" stroke="var(--color-accent-blue)" stroke-width="1" />
                     <circle cx="40" cy="270" r="5" fill="var(--color-accent-blue)" />
-                    <text x="52" y="264" font-size="10" font-weight="600" fill="var(--color-text-primary)">Сулейменова Р. — выписка</text>
+                    <text x="52" y="264" font-size="10" font-weight="600" fill="var(--color-text-primary)">Семья Г. — выписка</text>
                     <text x="52" y="280" font-size="8" fill="var(--color-accent-blue)">Через 3 дня • Переход: Грудничок</text>
                     <!-- Summary footer -->
                     <rect x="24" y="304" width="472" height="28" rx="8" fill="var(--color-primary-ultralight)" />
                     <text x="36" y="322" font-size="9" fill="var(--color-text-secondary)">
-                      🔴 2 просрочено  •  🟡 1 сегодня  •  🟢 8 по расписанию  •  142 семьи в маршруте
+                      🔴 2 просрочено  •  🟡 1 сегодня  •  🟢 8 по расписанию  •  Все семьи в маршруте
                     </text>
                   </svg>
                 </div>
@@ -460,9 +460,9 @@ const steps = [
     desc: 'Все семьи на одном экране. Приоритеты, просроченные, сегодняшние задачи. KPI в реальном времени. Без Excel, без обзвонов.',
     mobile: false,
     highlights: [
-      'Все 142 семьи — один экран',
+      'Все семьи — один экран',
       'Приоритеты: 🔴 просрочено → 🟡 сегодня → 🟢 по плану',
-      '87% retention, 94% визитов по маршруту',
+      'Удержание, визиты, NPS — всё на одном экране',
     ],
   },
 ]

@@ -54,8 +54,8 @@
             <div class="step-screen">
               <div class="screen-inner chat-screen">
                 <div :class="['chat-bubble', { visible: activeStep >= 1 }]">
-                  <span class="chat-sender">Клиника «Мать и дитя»</span>
-                  <p>Здравствуйте, Айгерим! Маршрут Алисы готов. Откройте: <span class="chat-link">care.clinic.kz/a/xK3m</span></p>
+                  <span class="chat-sender">Ваша клиника</span>
+                  <p>Здравствуйте! Маршрут вашего ребёнка готов. Откройте: <span class="chat-link">care.clinic.kz/a/xK3m</span></p>
                   <span class="chat-time">09:41</span>
                 </div>
                 <div :class="['chat-action', { visible: activeStep >= 2 }]">

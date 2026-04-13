@@ -1,8 +1,8 @@
 <template>
   <LandingUiSectionWrapper
     id="roi"
-    badge="ROI"
-    title="ROI-калькулятор"
+    badge="Калькулятор"
+    title="Что платформа делает для ваших семей"
     alternate
   >
     <div class="calc-layout" data-reveal="fade-up">
@@ -20,52 +20,41 @@
         <span class="slider-value font-display">{{ families }}</span>
       </div>
 
-      <!-- 3 columns: Now / With platform / Difference -->
+      <!-- 4 functional metric columns -->
       <div class="result-columns">
-        <div class="result-col landing-card col-loss">
-          <h4 class="col-heading font-heading">Сейчас вы теряете</h4>
-          <p class="col-metric font-display">{{ animatedLost }} семей/год</p>
-          <p class="col-detail">уходят после родов (67%)</p>
+        <div class="result-col landing-card col-events">
+          <h4 class="col-heading font-heading">События маршрута</h4>
+          <p class="col-metric font-display">{{ animatedEvents }}/год</p>
+          <p class="col-detail">осмотры, анализы, прививки, назначения</p>
         </div>
-        <div class="result-col landing-card col-gain">
-          <h4 class="col-heading font-heading">С платформой сохраняете</h4>
-          <p class="col-metric font-display">{{ animatedRetained }} семей</p>
-          <p class="col-detail">из {{ Math.round(displayLost.value !== undefined ? displayLost.value : lostFamilies) }} остаются в педиатрию (70%)</p>
+        <div class="result-col landing-card col-reminders">
+          <h4 class="col-heading font-heading">Напоминаний</h4>
+          <p class="col-metric font-display">{{ animatedReminders }}/год</p>
+          <p class="col-detail">push-уведомления семьям автоматически</p>
         </div>
-        <div class="result-col landing-card col-diff" :class="{ 'roi-positive': roiPercent > 100 }">
-          <h4 class="col-heading font-heading">Разница</h4>
-          <p class="col-metric font-display">+{{ animatedDiffRevenue }} ₸/год</p>
-          <p class="col-detail">{{ animatedRetained }} семей × 1.8M ₸ LTV</p>
+        <div class="result-col landing-card col-vaccines">
+          <h4 class="col-heading font-heading">Прививок по календарю</h4>
+          <p class="col-metric font-display">{{ animatedVaccines }}/год</p>
+          <p class="col-detail">контроль по нац. календарю РК</p>
+        </div>
+        <div class="result-col landing-card col-time">
+          <h4 class="col-heading font-heading">Время координатора</h4>
+          <p class="col-metric font-display">−{{ animatedHours }} ч/день</p>
+          <p class="col-detail">экономия на ручных обзвонах и напоминаниях</p>
         </div>
       </div>
 
-      <!-- Cost & ROI strip -->
+      <!-- Cost note -->
       <div class="roi-strip">
         <div class="roi-item">
-          <span class="roi-label">Стоимость платформы</span>
-          <span class="roi-val font-mono">{{ formattedCost }} ₸/год</span>
-        </div>
-        <div class="roi-divider" />
-        <div class="roi-item">
-          <span class="roi-label">ROI</span>
-          <span class="roi-val roi-val--highlight font-display">{{ animatedRoi }}%</span>
+          <span class="roi-label">Стоимость</span>
+          <span class="roi-val font-mono">Рассчитывается индивидуально</span>
         </div>
       </div>
-
-      <!-- Formulas breakdown -->
-      <details class="formulas-block">
-        <summary class="formulas-toggle font-heading">Как считаем</summary>
-        <div class="formulas-body font-mono">
-          <p>Семей уходит: {{ families }} × 12 мес × 0.67 = {{ Math.round(families * 12 * 0.67) }}</p>
-          <p>Остаётся с платформой: {{ Math.round(families * 12 * 0.67) }} × 0.70 = {{ Math.round(families * 12 * 0.67 * 0.70) }}</p>
-          <p>Revenue per family: 1,800,000 ₸ (150K/мес × 12)</p>
-          <p>Platform cost: 1,500,000 ₸/мес × 12 = 18,000,000 ₸/год</p>
-        </div>
-      </details>
 
       <div class="calc-cta" data-reveal="fade-up">
         <a href="#clinic-cta" class="cta-btn font-heading">
-          Запросить персональный расчёт
+          Обсудить подключение
           <Icon name="lucide:arrow-right" size="18" />
         </a>
       </div>
@@ -81,36 +70,27 @@ const { gsap } = useGsap()
 
 const families = ref(30)
 
-// Revenue per retained family ~ 1.8M ₸/year
-const revenuePerFamily = 1_800_000
-// Churn rate without platform: 67%
-const churnRate = 0.67
-// Re-retention with platform: 70% of those who would have left
-const reRetention = 0.70
-// Platform cost: 1.5M/month
-const platformCostYear = 18_000_000
-
-const lostFamilies = computed(() => Math.round(families.value * 12 * churnRate))
-const retainedFamilies = computed(() => Math.round(lostFamilies.value * reRetention))
-const diffRevenue = computed(() => retainedFamilies.value * revenuePerFamily)
-const roiPercent = computed(() => Math.round((diffRevenue.value - platformCostYear) / platformCostYear * 100))
+// Functional metrics based on family count
+const eventsPerYear = computed(() => families.value * 12 * 50) // ~50 events per family per journey
+const remindersPerYear = computed(() => families.value * 12 * 120) // ~120 push reminders per family
+const vaccinesPerYear = computed(() => families.value * 12 * 18) // ~18 vaccines per child
+const hoursSaved = computed(() => Math.round(families.value * 0.1)) // ~6 min per family → hours/day
 
 // Animated display values
-const displayLost = ref({ value: lostFamilies.value })
-const displayRetained = ref({ value: retainedFamilies.value })
-const displayDiffRevenue = ref({ value: diffRevenue.value })
-const displayRoi = ref({ value: roiPercent.value })
+const displayEvents = ref({ value: eventsPerYear.value })
+const displayReminders = ref({ value: remindersPerYear.value })
+const displayVaccines = ref({ value: vaccinesPerYear.value })
+const displayHours = ref({ value: hoursSaved.value })
 
-const animatedLost = computed(() => Math.round(displayLost.value.value))
-const animatedRetained = computed(() => Math.round(displayRetained.value.value))
-const animatedDiffRevenue = computed(() => Math.round(displayDiffRevenue.value.value).toLocaleString('ru-RU'))
-const animatedRoi = computed(() => Math.round(displayRoi.value.value))
-const formattedCost = computed(() => platformCostYear.toLocaleString('ru-RU'))
+const animatedEvents = computed(() => Math.round(displayEvents.value.value).toLocaleString('ru-RU'))
+const animatedReminders = computed(() => Math.round(displayReminders.value.value).toLocaleString('ru-RU'))
+const animatedVaccines = computed(() => Math.round(displayVaccines.value.value).toLocaleString('ru-RU'))
+const animatedHours = computed(() => Math.round(displayHours.value.value))
 
-watch(lostFamilies, (val) => { gsap.to(displayLost.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
-watch(retainedFamilies, (val) => { gsap.to(displayRetained.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
-watch(diffRevenue, (val) => { gsap.to(displayDiffRevenue.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
-watch(roiPercent, (val) => { gsap.to(displayRoi.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
+watch(eventsPerYear, (val) => { gsap.to(displayEvents.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
+watch(remindersPerYear, (val) => { gsap.to(displayReminders.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
+watch(vaccinesPerYear, (val) => { gsap.to(displayVaccines.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
+watch(hoursSaved, (val) => { gsap.to(displayHours.value, { value: val, duration: 0.6, ease: 'power2.out' }) })
 </script>
 
 <style scoped>
@@ -149,10 +129,10 @@ watch(roiPercent, (val) => { gsap.to(displayRoi.value, { value: val, duration: 0
   font-variant-numeric: tabular-nums;
 }
 
-/* 3 columns */
+/* 4 columns */
 .result-columns {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 }
 
@@ -180,24 +160,16 @@ watch(roiPercent, (val) => { gsap.to(displayRoi.value, { value: val, duration: 0
   font-variant-numeric: tabular-nums;
 }
 
-.col-loss .col-metric { color: var(--color-danger); }
-.col-gain .col-metric { color: var(--color-success); }
-.col-diff .col-metric { color: var(--color-primary); }
+.col-events .col-metric { color: var(--color-primary); }
+.col-reminders .col-metric { color: var(--color-secondary-dark); }
+.col-vaccines .col-metric { color: var(--color-success); }
+.col-time .col-metric { color: var(--color-accent-blue); }
 
 .col-detail {
   font-size: 12px;
   color: var(--color-text-secondary);
   margin: 0;
   line-height: 1.4;
-}
-
-.roi-positive {
-  border-color: var(--color-success);
-  box-shadow: 0 0 24px rgba(76, 175, 80, 0.15);
-}
-
-.roi-positive .col-metric {
-  color: var(--color-success);
 }
 
 /* ROI strip */

@@ -64,10 +64,10 @@ const visualRef = ref<HTMLElement | null>(null)
 const ctaBtnRef = ref<HTMLElement | null>(null)
 
 const metrics = [
-  { value: '0', label: 'забытых прививок', bar: '100%' },
-  { value: '94%', label: 'витаминов принято', bar: '94%' },
-  { value: '5 сек', label: 'найти анализ', bar: '70%' },
-  { value: '24/7', label: 'маршрут рядом', bar: '100%' },
+  { value: 'Все назначения', label: 'в одном приложении', bar: '100%' },
+  { value: 'Каждый анализ', label: 'сохранён и доступен', bar: '100%' },
+  { value: 'Каждая прививка', label: 'с напоминанием за 3 дня', bar: '100%' },
+  { value: '24/7', label: 'маршрут всегда под рукой', bar: '100%' },
 ]
 
 useSplitText(familyTitleRef, {

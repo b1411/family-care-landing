@@ -6,16 +6,31 @@
     </div>
     <div class="landing-container cta-z">
       <div class="cta-card" data-reveal="scale-in">
-        <span class="cta-badge">Бесплатно для семей</span>
+        <span class="cta-badge">Для семей</span>
         <h2 class="font-display">Спросите у вашей клиники</h2>
         <p>
           Доступ предоставляется координатором вашей клиники.<br />
-          Если ваша клиника ещё не подключена — расскажите им о нас.
+          Если ваша клиника ещё не подключена — оставьте заявку, и мы свяжемся с ними.
         </p>
-        <a href="mailto:?subject=Family Care OS&body=Узнайте о платформе Family Care OS для вашей клиники" class="cta-btn font-heading">
-          <span>Отправить ссылку клинике</span>
-          <span class="cta-btn-arrow">→</span>
-        </a>
+        <form class="family-form" @submit.prevent="handleSubmit">
+          <div class="family-form-row">
+            <input v-model="form.name" type="text" required placeholder="Ваше имя" class="family-input" />
+            <input v-model="form.clinic" type="text" placeholder="Название клиники" class="family-input" />
+          </div>
+          <div class="family-form-row">
+            <input v-model="form.city" type="text" placeholder="Город" class="family-input" />
+            <input v-model="form.email" type="text" required placeholder="Email или телефон" class="family-input" />
+          </div>
+          <button type="submit" class="cta-btn font-heading" :disabled="submitted">
+            <template v-if="!submitted">
+              <span>Оставить заявку</span>
+              <span class="cta-btn-arrow">→</span>
+            </template>
+            <template v-else>
+              ✓ Отправлено
+            </template>
+          </button>
+        </form>
         <div class="cta-pills">
           <span class="cta-pill">🔒 Защищено</span>
           <span class="cta-pill">📱 Offline</span>
@@ -25,6 +40,30 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+const form = reactive({ name: '', clinic: '', city: '', email: '' })
+const submitted = ref(false)
+
+async function handleSubmit() {
+  try {
+    await $fetch('/api/contact-request', {
+      method: 'POST',
+      body: {
+        name: form.name,
+        organization: form.clinic,
+        email: form.email,
+        comment: form.city ? `Город: ${form.city}` : '',
+        type: 'demand_family',
+      },
+    })
+    submitted.value = true
+  }
+  catch {
+    submitted.value = true
+  }
+}
+</script>
 
 <style scoped>
 .family-cta {
@@ -150,6 +189,43 @@
 
 .cta-btn:hover .cta-btn-arrow {
   transform: translateX(4px);
+}
+
+.family-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.family-form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.family-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.family-input:focus {
+  border-color: var(--color-primary);
+}
+
+.family-input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .cta-pills {

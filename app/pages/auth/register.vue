@@ -60,7 +60,10 @@
 <script setup lang="ts">
 import { registerSchema } from '~/utils/validators'
 
-definePageMeta({ layout: 'auth' })
+definePageMeta({
+  layout: 'auth',
+  middleware: () => navigateTo('/demo', { replace: true }),
+})
 
 const supabase = useSupabaseClient()
 

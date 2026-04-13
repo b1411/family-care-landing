@@ -102,7 +102,7 @@ const modules = [
     iconColor: '#7CB8D4',
     title: 'Ни одного пропуска',
     label: 'Умные назначения',
-    body: 'Каждое назначение врача → push-напоминание → подтверждение приёма. Соблюдение назначений 94% vs 45% без платформы.',
+    body: 'Каждое назначение врача → push-напоминание → подтверждение приёма. Контроль соблюдения назначений в реальном времени.',
   },
   {
     icon: 'lucide:list-checks',
@@ -118,14 +118,14 @@ const modules = [
     iconColor: '#E9C46A',
     title: 'Данные → решения',
     label: 'Аналитика',
-    body: 'Удержание по когортам, LTV, конверсия из беременности в педиатрию, NPS — когортная аналитика в реальном времени.',
+    body: 'Удержание по когортам, конверсия из беременности в педиатрию, NPS, загрузка команды — когортная аналитика в реальном времени.',
   },
 ]
 
 const coordTasks = [
-  { name: 'Айгерим К.', status: 'Срочно', color: '#D4727C' },
-  { name: 'Дана М.', status: 'Просрочено', color: '#E9C46A' },
-  { name: 'Асель Т.', status: '94%', color: '#7CB8D4' },
+  { name: 'Семья А.', status: 'Срочно', color: '#D4727C' },
+  { name: 'Семья Б.', status: 'Просрочено', color: '#E9C46A' },
+  { name: 'Семья В.', status: 'В норме', color: '#7CB8D4' },
 ]
 
 const chartBars = [
@@ -189,12 +189,11 @@ onMounted(() => {
         })
       }
 
-      // Progress ring (module 1) — from 45% to 94%
+      // Progress ring (module 1) — animate to a target
       if (ringRef.value) {
         const circumference = 213.6
-        const start = circumference * (1 - 0.45)
-        const target = circumference * (1 - 0.94)
-        gsap.set(ringRef.value, { strokeDashoffset: start })
+        const target = circumference * (1 - 0.80)
+        gsap.set(ringRef.value, { strokeDashoffset: circumference })
         gsap.to(ringRef.value, {
           strokeDashoffset: target,
           duration: 1.8,
@@ -203,9 +202,9 @@ onMounted(() => {
         })
       }
       if (ringTextRef.value) {
-        ringTextRef.value.textContent = '45%'
-        gsap.to({ val: 45 }, {
-          val: 94,
+        ringTextRef.value.textContent = '0%'
+        gsap.to({ val: 0 }, {
+          val: 80,
           duration: 1.8,
           ease: 'power2.out',
           delay: 0.6,

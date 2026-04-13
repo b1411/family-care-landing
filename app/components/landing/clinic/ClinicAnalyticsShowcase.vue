@@ -67,20 +67,20 @@
             </div>
           </div>
 
-          <!-- Revenue view -->
+          <!-- Metrics view -->
           <div v-else class="revenue-view">
             <div class="revenue-metrics">
               <div class="rev-metric">
-                <span class="rev-label">ARPU / семья</span>
-                <span class="rev-val font-display">12 500 ₸</span>
+                <span class="rev-label">Семей в маршруте</span>
+                <span class="rev-val font-display">Демо</span>
               </div>
               <div class="rev-metric">
-                <span class="rev-label">Доход (24 мес)</span>
-                <span class="rev-val font-display">540 000 ₸</span>
+                <span class="rev-label">Конверсия в педиатрию</span>
+                <span class="rev-val font-display">Воронка</span>
               </div>
               <div class="rev-metric">
-                <span class="rev-label">MRR</span>
-                <span class="rev-val font-display">2.5М ₸</span>
+                <span class="rev-label">Загрузка команды</span>
+                <span class="rev-val font-display">Обзор</span>
               </div>
             </div>
           </div>
@@ -151,10 +151,10 @@ onMounted(() => {
 const dashTabs = ['Удержание', 'Задачи', 'Доход']
 
 const kpis = [
-  { icon: 'lucide:users', value: 87, suffix: '%', label: 'Удержание (6 мес)', color: 'var(--color-primary)', trend: '+12%', trendUp: true },
-  { icon: 'lucide:calendar-check', value: 94, suffix: '%', label: 'Визиты по маршруту', color: 'var(--color-secondary)', trend: '+8%', trendUp: true },
-  { icon: 'lucide:syringe', value: 98, suffix: '%', label: 'Вакцинация вовремя', color: 'var(--color-accent-blue)', trend: '+15%', trendUp: true },
-  { icon: 'lucide:star', value: 4.8, suffix: '/5', label: 'NPS семей', color: 'var(--color-accent-warm)', trend: '+0.3', trendUp: true },
+  { icon: 'lucide:users', value: 50, suffix: '+', label: 'Семей в маршруте', color: 'var(--color-primary)', trend: 'Демо', trendUp: true },
+  { icon: 'lucide:calendar-check', value: 8, suffix: '', label: 'Модулей платформы', color: 'var(--color-secondary)', trend: '', trendUp: true },
+  { icon: 'lucide:syringe', value: 18, suffix: '+', label: 'Прививок в календаре', color: 'var(--color-accent-blue)', trend: '', trendUp: true },
+  { icon: 'lucide:route', value: 40, suffix: '+', label: 'Недель маршрута', color: 'var(--color-accent-warm)', trend: '', trendUp: true },
 ]
 
 const cohorts = [
@@ -165,10 +165,10 @@ const cohorts = [
 ]
 
 const tasks = [
-  { family: 'Нурсултан & Аяна', desc: 'Пропущен скрининг 2 триместра', due: 'Просрочено', priorityColor: 'var(--color-danger)' },
-  { family: 'Алмас & Данагуль', desc: 'Напомнить о вакцинации АКДС', due: 'Сегодня', priorityColor: 'var(--color-warning)' },
-  { family: 'Ерлан & Жанна', desc: 'Приём у педиатра назначен', due: 'Завтра', priorityColor: 'var(--color-success)' },
-  { family: 'Бауржан & Мадина', desc: 'Загрузить результаты анализов', due: 'Через 3 дня', priorityColor: 'var(--color-accent-blue)' },
+  { family: 'Семья А.', desc: 'Пропущен скрининг 2 триместра', due: 'Просрочено', priorityColor: 'var(--color-danger)' },
+  { family: 'Семья Б.', desc: 'Напомнить о вакцинации', due: 'Сегодня', priorityColor: 'var(--color-warning)' },
+  { family: 'Семья В.', desc: 'Приём у педиатра назначен', due: 'Завтра', priorityColor: 'var(--color-success)' },
+  { family: 'Семья Г.', desc: 'Загрузить результаты анализов', due: 'Через 3 дня', priorityColor: 'var(--color-accent-blue)' },
 ]
 
 const features = [

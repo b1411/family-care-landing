@@ -16,11 +16,11 @@
         <span class="hero-overtitle font-heading" data-reveal="fade-up">ДЛЯ КЛИНИК И МЕДИЦИНСКИХ ЦЕНТРОВ</span>
 
         <h1 ref="clinicTitleRef" class="hero-title font-display">
-          67% семей уходят после родов. Мы&nbsp;возвращаем&nbsp;их.
+          Семьи уходят после родов. Платформа&nbsp;их&nbsp;удерживает.
         </h1>
 
         <p class="hero-body" data-reveal="fade-up" data-reveal-delay="100">
-          Family Care OS — платформа, которая превращает разовый визит в&nbsp;2&#8209;летний цифровой маршрут. Больше повторных визитов, выше доход на семью, меньше ручной работы.
+          Family Care OS превращает разовый визит в&nbsp;2&#8209;летний цифровой маршрут наблюдения. Больше повторных визитов, меньше ручной работы, полная видимость в&nbsp;аналитику.
         </p>
 
         <div class="hero-kpis" data-stagger="fade-up">
@@ -31,13 +31,13 @@
         </div>
 
         <div class="hero-actions" data-reveal="fade-up" data-reveal-delay="300">
-          <a href="#clinic-cta" class="hero-cta-primary font-heading">
-            Запросить демо
+          <NuxtLink to="/demo" class="hero-cta-primary font-heading">
+            Попробовать демо
             <Icon name="lucide:arrow-right" size="18" />
-          </a>
-          <a href="#roi" class="hero-cta-secondary font-heading">
-            Посмотреть ROI-калькулятор
-            <Icon name="lucide:chevron-down" size="16" />
+          </NuxtLink>
+          <a href="#clinic-cta" class="hero-cta-secondary font-heading">
+            Обсудить подключение
+            <Icon name="lucide:message-circle" size="16" />
           </a>
         </div>
       </div>
@@ -53,10 +53,10 @@
 const clinicTitleRef = ref<HTMLElement | null>(null)
 
 const kpis = [
-  { value: '×3–5', label: 'Рост дохода на семью', color: 'var(--color-primary)' },
-  { value: '–70%', label: 'Ручной работы', color: 'var(--color-secondary)' },
-  { value: '87%', label: 'Удержание с платф.', color: 'var(--color-accent-blue)' },
-  { value: '<4 нед', label: 'До запуска', color: 'var(--color-accent-warm)' },
+  { value: '50+', label: 'Событий в маршруте', color: 'var(--color-primary)' },
+  { value: '3 роли', label: 'Мама · Координатор · Руководитель', color: 'var(--color-secondary)' },
+  { value: 'White-label', label: 'Под брендом клиники', color: 'var(--color-accent-blue)' },
+  { value: 'Real-time', label: 'Аналитика и дашборд', color: 'var(--color-accent-warm)' },
 ]
 
 useSplitText(clinicTitleRef, {

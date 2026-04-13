@@ -6,57 +6,23 @@
         <h2 ref="titleRef" class="section-title font-display">Знакомая ситуация?</h2>
       </div>
 
-      <!-- Tab switcher -->
-      <div class="problem-tabs">
-        <button
-          class="problem-tab font-heading"
-          :class="{ 'is-active': !showSolution }"
-          @click="showSolution = false"
-        >
-          <span class="problem-tab-dot problem-tab-dot--red" />
-          Без платформы
-        </button>
-        <button
-          class="problem-tab font-heading"
-          :class="{ 'is-active': showSolution }"
-          @click="showSolution = true"
-        >
-          <span class="problem-tab-dot problem-tab-dot--green" />
-          С платформой
-        </button>
-      </div>
-
       <!-- Cards grid -->
       <div ref="cardsRef" class="problem-cards">
-        <TransitionGroup name="problem-card" tag="div" class="problem-cards-inner">
+        <div class="problem-cards-inner">
           <div
-            v-for="(item, i) in activeItems"
+            v-for="item in problemItems"
             :key="item.title"
-            class="problem-card landing-card"
-            :class="showSolution ? 'problem-card--solution' : 'problem-card--problem'"
-            :style="{ transitionDelay: `${i * 80}ms` }"
+            class="problem-card landing-card problem-card--problem"
           >
-            <div class="problem-card-icon" :class="`problem-card-icon--${item.color}`">
+            <div class="problem-card-icon problem-card-icon--danger">
               <Icon :name="item.icon" size="20" />
             </div>
             <div class="problem-card-content">
               <h3 class="problem-card-title font-heading">{{ item.title }}</h3>
               <p class="problem-card-desc">{{ item.desc }}</p>
             </div>
-            <!-- Micro-illustration for solution cards -->
-            <div v-if="showSolution && item.micro" class="problem-card-micro">
-              <div v-if="item.micro === 'progress'" class="micro-progress">
-                <div class="micro-progress-bar">
-                  <div class="micro-progress-fill" :style="{ width: item.microValue }" />
-                </div>
-                <span class="micro-progress-label font-mono">{{ item.microValue }}</span>
-              </div>
-              <div v-else-if="item.micro === 'badge'" class="micro-badge font-mono">
-                {{ item.microValue }}
-              </div>
-            </div>
           </div>
-        </TransitionGroup>
+        </div>
       </div>
     </div>
   </section>
@@ -68,59 +34,24 @@ const { gsap, ScrollTrigger } = useGsap()
 const sectionRef = ref<HTMLElement | null>(null)
 const cardsRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
-const showSolution = ref(false)
-let autoSwitchTimer: ReturnType<typeof setTimeout> | null = null
 
 const problemItems = [
   {
     icon: 'lucide:smartphone',
-    color: 'danger',
     title: 'Мама ищет результаты в 3 чатах',
     desc: 'Анализы в WhatsApp, направления в SMS, назначения на бумажке. Каждый раз — заново.'
   },
   {
     icon: 'lucide:clipboard-list',
-    color: 'danger',
     title: 'Координатор обзванивает вслепую',
-    desc: '40 семей в Excel — без приоритетов, без статусов соблюдения. Кто выпал — неизвестно.'
+    desc: 'Десятки семей в Excel — без приоритетов, без статусов соблюдения. Кто выпал — неизвестно.'
   },
   {
     icon: 'lucide:trending-down',
-    color: 'danger',
     title: 'Руководитель не видит потерь',
-    desc: '67% семей уходят после родов, но клиника узнаёт об этом слишком поздно.'
+    desc: 'Большинство семей уходят после родов, но клиника узнаёт об этом слишком поздно.'
   },
 ]
-
-const solutionItems = [
-  {
-    icon: 'lucide:check-circle',
-    color: 'success',
-    title: 'Всё в одном приложении',
-    desc: 'Push-напоминания, документы, запись к врачу — мама нашла за 5 секунд.',
-    micro: 'badge',
-    microValue: '5 сек',
-  },
-  {
-    icon: 'lucide:target',
-    color: 'success',
-    title: 'Координатор видит кого звать',
-    desc: 'Сводка: 3 семьи просрочили визит, соблюдение назначений — 94%.',
-    micro: 'progress',
-    microValue: '94%',
-  },
-  {
-    icon: 'lucide:trending-up',
-    color: 'success',
-    title: 'Удержание на экране',
-    desc: 'Руководитель видит: 87% остались, конверсия в педиатрию — 73%.',
-    micro: 'progress',
-    microValue: '87%',
-  },
-]
-
-type ProblemItem = { icon: string; color: string; title: string; desc: string; micro?: string; microValue?: string }
-const activeItems = computed<ProblemItem[]>(() => showSolution.value ? solutionItems : problemItems)
 
 useSplitText(titleRef, {
   type: 'words',
@@ -132,23 +63,7 @@ useSplitText(titleRef, {
 })
 
 onMounted(() => {
-  if (!gsap || !ScrollTrigger || !sectionRef.value) return
-
-  // Auto-switch to solution after 3s of being in viewport
-  ScrollTrigger.create({
-    trigger: sectionRef.value,
-    start: 'top 60%',
-    once: true,
-    onEnter: () => {
-      autoSwitchTimer = setTimeout(() => {
-        if (!showSolution.value) showSolution.value = true
-      }, 3000)
-    },
-  })
-})
-
-onUnmounted(() => {
-  if (autoSwitchTimer) clearTimeout(autoSwitchTimer)
+  // section animations handled by data-reveal attributes
 })
 </script>
 

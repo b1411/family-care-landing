@@ -41,9 +41,9 @@
 
 <script setup lang="ts">
 const themes = [
-  { primary: '#2A9D8F', name: 'Клиника Рахат' },
-  { primary: '#1E40AF', name: 'Керуен Medicus' },
-  { primary: '#059669', name: 'IRM Group' },
+  { primary: '#2A9D8F', name: 'Клиника А' },
+  { primary: '#1E40AF', name: 'Клиника Б' },
+  { primary: '#059669', name: 'Клиника В' },
 ]
 
 const currentIndex = ref(0)

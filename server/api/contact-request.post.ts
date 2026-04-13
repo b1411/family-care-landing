@@ -2,12 +2,11 @@ import { z } from 'zod'
 
 const schema = z.object({
   name: z.string().min(1).max(200),
-  contact: z.string().min(1).max(200),
-  clinic: z.string().max(200).optional(),
-  email: z.string().email().max(200).optional(),
-  phone: z.string().max(50).optional(),
-  familiesCount: z.string().max(50).optional(),
-  source: z.string().max(50).optional(),
+  organization: z.string().max(200).optional(),
+  email: z.string().min(1).max(200),
+  phone_or_messenger: z.string().max(200).optional(),
+  comment: z.string().max(2000).optional(),
+  type: z.enum(['clinic_inquiry', 'demand_family']),
 })
 
 export default defineEventHandler(async (event) => {
@@ -18,9 +17,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Invalid form data' })
   }
 
-  const { name, contact, clinic, email, phone, familiesCount, source } = parsed.data
+  const data = parsed.data
 
-  // Store in Supabase
   const supabaseUrl = process.env.SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
@@ -29,7 +27,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await $fetch(`${supabaseUrl}/rest/v1/demo_requests`, {
+    await $fetch(`${supabaseUrl}/rest/v1/contact_requests`, {
       method: 'POST',
       headers: {
         'apikey': supabaseKey,
@@ -38,18 +36,17 @@ export default defineEventHandler(async (event) => {
         'Prefer': 'return=minimal',
       },
       body: {
-        name,
-        contact,
-        clinic_name: clinic || null,
-        email: email || null,
-        phone: phone || null,
-        families_count: familiesCount || null,
-        source: source || 'landing',
+        name: data.name,
+        organization: data.organization || null,
+        email: data.email,
+        phone_or_messenger: data.phone_or_messenger || null,
+        comment: data.comment || null,
+        type: data.type,
       },
     })
   }
   catch (err) {
-    console.error('Failed to store demo request:', err)
+    console.error('Failed to store contact request:', err)
     throw createError({ statusCode: 500, message: 'Failed to save request' })
   }
 

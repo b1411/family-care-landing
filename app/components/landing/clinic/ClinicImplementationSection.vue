@@ -45,30 +45,30 @@ const { ScrollTrigger } = useGsap()
 
 const steps = [
   {
-    title: 'Demo',
-    dur: '1 день',
-    desc: 'Показываем платформу на реальных данных вашей клиники',
+    title: 'Знакомство',
+    dur: 'Шаг 1',
+    desc: 'Показываем платформу на примере вашей клиники',
     // Video call icon
     miniSvg: '<rect x="4" y="7" width="15" height="14" rx="2" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><path d="M19 11 L24 8 L24 20 L19 17" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>',
   },
   {
-    title: 'Setup',
-    dur: '2-3 недели',
+    title: 'Настройка',
+    dur: 'Шаг 2',
     desc: 'Настраиваем под ваш бренд, маршруты, роли, уведомления',
     // Gears icon
     miniSvg: '<circle cx="11" cy="14" r="4" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><circle cx="20" cy="11" r="3" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><path d="M11 10 L11 8 M11 18 L11 20 M7 14 L5 14 M15 14 L17 14 M8 11 L6.5 9.5 M14 17 L15.5 18.5" stroke="var(--color-primary)" stroke-width="1.2" stroke-linecap="round"/>',
   },
   {
-    title: 'Training',
-    dur: '3-5 дней',
+    title: 'Обучение',
+    dur: 'Шаг 3',
     desc: 'Обучаем координаторов и врачей. Shadow-режим: мы работаем рядом.',
     // People at table
     miniSvg: '<circle cx="8" cy="9" r="2.5" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><circle cx="20" cy="9" r="2.5" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><path d="M4 18 C4 15 6 13 8 13 C10 13 12 15 12 18" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><path d="M16 18 C16 15 18 13 20 13 C22 13 24 15 24 18" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><line x1="4" y1="21" x2="24" y2="21" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round"/>',
   },
   {
-    title: 'Pilot',
-    dur: '3 мес',
-    desc: 'Запускаем на 30-50 семей, измеряем KPI. Еженедельные отчёты.',
+    title: 'Пилот',
+    dur: 'Шаг 4',
+    desc: 'Запускаем на 30–50 семей, измеряем KPI. Еженедельные отчёты.',
     // Rocket
     miniSvg: '<path d="M14 4 C14 4 8 10 8 18 L12 20 L16 20 L20 18 C20 10 14 4 14 4 Z" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linejoin="round"/><circle cx="14" cy="13" r="2" stroke="var(--color-primary)" stroke-width="1.2" fill="none"/><path d="M8 18 L5 22 L9 20 M20 18 L23 22 L19 20" stroke="var(--color-primary)" stroke-width="1.2" fill="none" stroke-linejoin="round"/><path d="M11 22 L14 26 L17 22" stroke="var(--color-primary)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>',
   },

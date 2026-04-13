@@ -27,7 +27,7 @@
       <p v-if="errorMessage" class="form-error-global">{{ errorMessage }}</p>
     </form>
 
-    <p class="auth-switch">Нет аккаунта? <NuxtLink to="/auth/register" class="link">Зарегистрироваться</NuxtLink></p>
+    <p class="auth-switch">Нет аккаунта? <NuxtLink to="/demo" class="link">Попробовать демо</NuxtLink></p>
   </div>
 </template>
 

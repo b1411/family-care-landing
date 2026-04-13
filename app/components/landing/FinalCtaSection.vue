@@ -4,8 +4,8 @@
       <div ref="cardRef" class="cta-card landing-card">
         <div class="cta-content">
           <span class="cta-badge font-heading">Начните сейчас</span>
-          <h2 ref="titleRef" class="cta-title font-display">Готовы увидеть платформу в действии?</h2>
-          <p ref="descRef" class="cta-desc">Оставьте заявку — мы покажем демо на примере реального маршрута за 30 минут. Бесплатно, без обязательств.</p>
+          <h2 ref="titleRef" class="cta-title font-display">Изучите платформу самостоятельно</h2>
+          <p ref="descRef" class="cta-desc">Попробуйте демо прямо сейчас или оставьте заявку — мы свяжемся и обсудим подключение.</p>
 
           <form ref="formRef" class="cta-form" @submit.prevent="handleSubmit">
             <div class="form-row">
@@ -17,15 +17,31 @@
                 class="cta-input"
               />
               <input
-                v-model="form.contact"
+                v-model="form.organization"
                 type="text"
-                placeholder="Email или телефон"
+                placeholder="Организация"
+                class="cta-input"
+              />
+            </div>
+            <div class="form-row">
+              <input
+                v-model="form.email"
+                type="email"
+                placeholder="Email"
                 required
                 class="cta-input"
               />
+              <input
+                v-model="form.message"
+                type="text"
+                placeholder="Сообщение (опционально)"
+                class="cta-input"
+              />
+            </div>
+            <div class="form-actions">
               <button type="submit" class="cta-submit btn-shimmer" :disabled="submitted">
                 <template v-if="!submitted">
-                  Запросить демо
+                  Обсудить подключение
                   <Icon name="lucide:arrow-right" size="18" />
                 </template>
                 <template v-else>
@@ -33,8 +49,11 @@
                   Отправлено
                 </template>
               </button>
+              <NuxtLink to="/demo" class="cta-demo-link font-heading">
+                Попробовать демо →
+              </NuxtLink>
             </div>
-            <p class="form-note">Демо 30 минут · Настройка за 1 день · Пилот на 10-20 семей</p>
+            <p class="form-note">Без обязательств. Ответим в течение 1 рабочего дня.</p>
           </form>
         </div>
 
@@ -50,7 +69,7 @@
 <script setup lang="ts">
 const { gsap, ScrollTrigger } = useGsap()
 
-const form = reactive({ name: '', contact: '' })
+const form = reactive({ name: '', organization: '', email: '', message: '' })
 const submitted = ref(false)
 
 const sectionRef = ref<HTMLElement | null>(null)
@@ -113,9 +132,15 @@ onMounted(() => {
 
 async function handleSubmit() {
   try {
-    await $fetch('/api/demo-request', {
+    await $fetch('/api/contact-request', {
       method: 'POST',
-      body: { name: form.name, contact: form.contact, source: 'landing-final' },
+      body: {
+        name: form.name,
+        organization: form.organization,
+        email: form.email,
+        comment: form.message,
+        type: 'clinic_inquiry',
+      },
     })
     submitted.value = true
   }
@@ -183,6 +208,26 @@ async function handleSubmit() {
   display: flex;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.cta-demo-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.cta-demo-link:hover {
+  opacity: 0.8;
 }
 
 .cta-input {

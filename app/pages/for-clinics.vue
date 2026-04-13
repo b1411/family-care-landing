@@ -15,8 +15,8 @@
     <!-- 4. ROI калькулятор -->
     <LandingClinicUnitEconomicsSection id="clinic-roi" />
 
-    <!-- 5. Кейсы клиник — Testimonials (анонимизированные) -->
-    <LandingClinicTestimonialsSection id="clinic-cases" />
+    <!-- 5. Программа пилотного запуска -->
+    <LandingClinicPilotSection id="clinic-pilot" />
 
     <!-- 6. Внедрение — 4 шага -->
     <LandingClinicImplementationSection id="clinic-launch" />
@@ -39,8 +39,8 @@ const sectionNavItems = [
   { id: 'clinic-hero', label: 'Главная' },
   { id: 'clinic-problem', label: 'Проблема' },
   { id: 'clinic-solution', label: 'Решение' },
-  { id: 'clinic-roi', label: 'ROI' },
-  { id: 'clinic-cases', label: 'Кейсы' },
+  { id: 'clinic-roi', label: 'Экономика' },
+  { id: 'clinic-pilot', label: 'Пилот' },
   { id: 'clinic-launch', label: 'Запуск' },
   { id: 'clinic-brand', label: 'Бренд' },
   { id: 'clinic-faq', label: 'FAQ' },
@@ -50,7 +50,7 @@ const sectionNavItems = [
 useSeoMeta({
   title: 'Family Care OS для клиник — удержание семей, рост дохода',
   ogTitle: 'Family Care OS для клиник — удержание семей, рост дохода',
-  description: '67% семей уходят после родов. Платформа возвращает их. Окупаемость от 160%. Внедрение за 4 недели.',
-  ogDescription: '67% семей уходят после родов. Платформа возвращает их. Окупаемость от 160%. Внедрение за 4 недели.',
+  description: 'Платформа для сопровождения семей от беременности до 2 лет. Автоматизация маршрутов, уведомления, аналитика удержания.',
+  ogDescription: 'Платформа для сопровождения семей от беременности до 2 лет. Автоматизация маршрутов, уведомления, аналитика удержания.',
 })
 </script>

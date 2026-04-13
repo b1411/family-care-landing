@@ -18,54 +18,55 @@
           <span class="hero-typewriter" :class="{ 'typewriter-active': isTyping, 'typewriter-done': isDone }">{{ displayText }}</span>
         </p>
 
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <span ref="stat1Ref" class="hero-stat-number font-display">87%</span>
-            <span class="hero-stat-label">удержание семей</span>
+        <div class="hero-features">
+          <div class="hero-feature">
+            <div class="hero-feature-icon">
+              <Icon name="lucide:zap" size="18" />
+            </div>
+            <div class="hero-feature-text">
+              <span class="hero-feature-title font-heading">Маршрут за 2 секунды</span>
+              <span class="hero-feature-desc">50+ событий генерируются автоматически</span>
+            </div>
           </div>
-          <div class="hero-stat-divider" />
-          <div class="hero-stat">
-            <span ref="stat2Ref" class="hero-stat-number font-display">94%</span>
-            <span class="hero-stat-label">соблюдение назначений</span>
+          <div class="hero-feature">
+            <div class="hero-feature-icon">
+              <Icon name="lucide:users" size="18" />
+            </div>
+            <div class="hero-feature-text">
+              <span class="hero-feature-title font-heading">3 роли</span>
+              <span class="hero-feature-desc">Мама, координатор, руководитель — каждый видит своё</span>
+            </div>
           </div>
-          <div class="hero-stat-divider" />
-          <div class="hero-stat">
-            <span ref="stat3Ref" class="hero-stat-number font-display">×4.2</span>
-            <span class="hero-stat-label">рост LTV на семью</span>
+          <div class="hero-feature">
+            <div class="hero-feature-icon">
+              <Icon name="lucide:palette" size="18" />
+            </div>
+            <div class="hero-feature-text">
+              <span class="hero-feature-title font-heading">White-label</span>
+              <span class="hero-feature-desc">Приложение под брендом вашей клиники</span>
+            </div>
           </div>
-        </div>
-
-        <!-- Smart segment banner -->
-        <div class="hero-segment-banner">
-          <NuxtLink to="/for-clinics" class="segment-link segment-link--clinic">
-            <Icon name="lucide:building-2" size="16" />
-            <span>Вы руководитель клиники?</span>
-            <Icon name="lucide:arrow-right" size="14" class="segment-arrow" />
-          </NuxtLink>
-          <NuxtLink to="/for-families" class="segment-link segment-link--family">
-            <Icon name="lucide:heart" size="16" />
-            <span>Вы ждёте малыша?</span>
-            <Icon name="lucide:arrow-right" size="14" class="segment-arrow" />
-          </NuxtLink>
+          <div class="hero-feature">
+            <div class="hero-feature-icon">
+              <Icon name="lucide:rocket" size="18" />
+            </div>
+            <div class="hero-feature-text">
+              <span class="hero-feature-title font-heading">0 дней IT</span>
+              <span class="hero-feature-desc">Настройка без вашего IT-отдела</span>
+            </div>
+          </div>
         </div>
 
         <div ref="heroActionsRef" class="hero-actions">
-          <a href="#contact" class="hero-cta-primary font-heading btn-shimmer magnetic-btn">
-            Запросить демо
+          <NuxtLink to="/demo" class="hero-cta-primary font-heading btn-shimmer magnetic-btn">
+            Попробовать демо
             <Icon name="lucide:arrow-right" size="18" class="cta-arrow" />
-          </a>
-          <a href="#how-it-works" class="hero-cta-secondary font-heading magnetic-btn">
-            Как это работает
-            <Icon name="lucide:chevron-down" size="18" />
+          </NuxtLink>
+          <a href="#contact" class="hero-cta-secondary font-heading magnetic-btn">
+            Обсудить подключение
+            <Icon name="lucide:message-circle" size="18" />
           </a>
         </div>
-
-        <p class="hero-auth-hint font-body">
-          Уже есть аккаунт?
-          <NuxtLink to="/auth/login" class="hero-auth-link">Войти</NuxtLink>
-          или
-          <NuxtLink to="/auth/register" class="hero-auth-link">Зарегистрироваться</NuxtLink>
-        </p>
       </div>
 
       <!-- ====== NEW: CSS 3D Phone + Floating Cards ====== -->
@@ -194,10 +195,10 @@
               <Icon name="lucide:trending-up" size="14" />
             </div>
             <div class="float-body">
-              <span class="float-title">Adherence</span>
+              <span class="float-title">Маршрут</span>
               <div class="float-bar"><div class="float-bar-fill" /></div>
             </div>
-            <span class="float-pct font-mono">94%</span>
+            <span class="float-pct font-mono">68%</span>
           </div>
         </div>
 
@@ -225,9 +226,9 @@
         <div ref="floatingAiRef" class="hero-float hero-float--ai" data-speed="0.9">
           <div class="float-card glass-card float-card--compact">
             <div class="float-icon float-icon--ai">
-              <Icon name="lucide:sparkles" size="14" />
+              <Icon name="lucide:calendar-check" size="14" />
             </div>
-            <span class="float-title">AI-помощник</span>
+            <span class="float-title">Напоминания</span>
           </div>
         </div>
       </div>
@@ -251,18 +252,8 @@ const heroSubRef = ref<HTMLElement | null>(null)
 const heroActionsRef = ref<HTMLElement | null>(null)
 const scrollIndicatorRef = ref<HTMLElement | null>(null)
 
-// Counter-up refs
-const stat1Ref = ref<HTMLElement | null>(null)
-const stat2Ref = ref<HTMLElement | null>(null)
-const stat3Ref = ref<HTMLElement | null>(null)
-
 // Week badge ref
 const weekBadgeRef = ref<HTMLElement | null>(null)
-
-// Counter-up for hero stats
-useCountUp(stat1Ref, 87, { suffix: '%', delay: 0.3 })
-useCountUp(stat2Ref, 94, { suffix: '%', delay: 0.5 })
-useCountUp(stat3Ref, 4.2, { prefix: '×', decimals: 1, delay: 0.7 })
 
 // Typewriter for subtitle
 const { displayText, isTyping, isDone } = useTypewriter(

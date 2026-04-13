@@ -30,6 +30,7 @@
           <ul class="footer-list">
             <li><NuxtLink to="/for-clinics">Для клиник</NuxtLink></li>
             <li><NuxtLink to="/for-families">Для родителей</NuxtLink></li>
+            <li><NuxtLink to="/demo">Попробовать демо</NuxtLink></li>
           </ul>
         </div>
 
@@ -40,10 +41,6 @@
             <li>
               <Icon name="lucide:mail" size="16" />
               <a href="mailto:hello@familycare.kz">hello@familycare.kz</a>
-            </li>
-            <li>
-              <Icon name="lucide:phone" size="16" />
-              <a href="tel:+77001234567">+7 700 123 45 67</a>
             </li>
             <li>
               <Icon name="lucide:map-pin" size="16" />
@@ -57,6 +54,11 @@
         <p class="footer-copy">
           © {{ currentYear }} Family Care OS. Сделано с заботой в Казахстане.
         </p>
+        <div class="footer-legal">
+          <NuxtLink to="/privacy">Политика конфиденциальности</NuxtLink>
+          <span class="footer-dot">·</span>
+          <NuxtLink to="/terms">Условия использования</NuxtLink>
+        </div>
       </div>
     </div>
   </footer>
