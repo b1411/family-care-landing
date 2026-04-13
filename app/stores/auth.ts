@@ -2,6 +2,9 @@ import { defineStore } from 'pinia'
 import type { User, Family, MotherProfile, ChildProfile, Consent, UserRole } from '~/types/database'
 import { ROLE_HOME_MAP, DOCTOR_ROLES } from '~/utils/constants'
 
+// Module-level mutex to prevent concurrent initialize() calls
+let _initPromise: Promise<void> | null = null
+
 interface AuthState {
   profile: User | null
   family: Family | null
@@ -43,6 +46,18 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async initialize() {
       if (this.initialized) return
+      // Reuse in-flight init promise to avoid concurrent duplicate requests
+      if (_initPromise) return _initPromise
+
+      _initPromise = this._doInitialize()
+      try {
+        await _initPromise
+      } finally {
+        _initPromise = null
+      }
+    },
+
+    async _doInitialize() {
       this.loading = true
 
       try {
@@ -51,7 +66,11 @@ export const useAuthStore = defineStore('auth', {
         // On SSR, useSupabaseUser() returns decoded JWT payload (sub, not id)
         // On client, it returns the full User object (id)
         const userId = (user.value as any)?.id ?? (user.value as any)?.sub
-        if (!userId) return
+        if (!userId) {
+          // Mark as initialized to prevent infinite retries
+          this.initialized = true
+          return
+        }
 
         // Fetch user profile from public.users
         const { data: profile, error: profileError } = await supabase

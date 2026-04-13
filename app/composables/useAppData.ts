@@ -64,30 +64,31 @@ export function useAppData() {
   const loading = computed(() =>
     journeyStore.loading || prescriptionsStore.loading || appointmentsStore.loading,
   )
-  const initialized = ref(false)
+  // Use useState so the flag is shared across all component instances (layout + pages)
+  const initialized = useState('appData:initialized', () => false)
 
-  // ── Doctor/Admin real data refs ──
-  const _doctorSchedule = ref<any[]>([])
-  const _doctorPatients = ref<any[]>([])
-  const _doctorStats = ref<{ todayAppointments: number; totalPatients: number; freeSlots: number; avgRating: number } | null>(null)
-  const _adminStats = ref<{ totalUsers: number; totalFamilies: number; totalDoctors: number; monthlyAppointments: number } | null>(null)
-  const _adminUsers = ref<any[]>([])
-  const _adminUsersTotal = ref(0)
-  const _vaccinationsRaw = ref<any[]>([])
+  // ── Doctor/Admin real data refs (shared via useState) ──
+  const _doctorSchedule = useState<any[]>('appData:doctorSchedule', () => [])
+  const _doctorPatients = useState<any[]>('appData:doctorPatients', () => [])
+  const _doctorStats = useState<{ todayAppointments: number; totalPatients: number; freeSlots: number; avgRating: number } | null>('appData:doctorStats', () => null)
+  const _adminStats = useState<{ totalUsers: number; totalFamilies: number; totalDoctors: number; monthlyAppointments: number } | null>('appData:adminStats', () => null)
+  const _adminUsers = useState<any[]>('appData:adminUsers', () => [])
+  const _adminUsersTotal = useState('appData:adminUsersTotal', () => 0)
+  const _vaccinationsRaw = useState<any[]>('appData:vaccinationsRaw', () => [])
 
-  // ── Family-module real data refs ──
-  const _growthRaw = ref<any[]>([])
-  const _milestonesRaw = ref<any[]>([])
-  const _moodLogsRaw = ref<any[]>([])
-  const _epdsRaw = ref<any[]>([])
-  const _sleepLogsRaw = ref<any[]>([])
-  const _sleepLogsTodayRaw = ref<any[]>([])
-  const _feedingLogsRaw = ref<any[]>([])
-  const _foodIntrosRaw = ref<any[]>([])
-  const _achievementsRaw = ref<any[]>([])
-  const _userAchievementsRaw = ref<any[]>([])
-  const _referralRaw = ref<any | null>(null)
-  const _educationRaw = ref<any[]>([])
+  // ── Family-module real data refs (shared via useState) ──
+  const _growthRaw = useState<any[]>('appData:growthRaw', () => [])
+  const _milestonesRaw = useState<any[]>('appData:milestonesRaw', () => [])
+  const _moodLogsRaw = useState<any[]>('appData:moodLogsRaw', () => [])
+  const _epdsRaw = useState<any[]>('appData:epdsRaw', () => [])
+  const _sleepLogsRaw = useState<any[]>('appData:sleepLogsRaw', () => [])
+  const _sleepLogsTodayRaw = useState<any[]>('appData:sleepLogsTodayRaw', () => [])
+  const _feedingLogsRaw = useState<any[]>('appData:feedingLogsRaw', () => [])
+  const _foodIntrosRaw = useState<any[]>('appData:foodIntrosRaw', () => [])
+  const _achievementsRaw = useState<any[]>('appData:achievementsRaw', () => [])
+  const _userAchievementsRaw = useState<any[]>('appData:userAchievementsRaw', () => [])
+  const _referralRaw = useState<any | null>('appData:referralRaw', () => null)
+  const _educationRaw = useState<any[]>('appData:educationRaw', () => [])
 
   const sb = useSupabaseClient()
 

@@ -19,6 +19,8 @@ export default defineNuxtPlugin(async () => {
       }
       if (!newUser) {
         authStore.reset()
+        // Reset shared appData state so next login starts fresh
+        useState('appData:initialized').value = false
       }
     })
   }

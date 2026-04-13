@@ -16,21 +16,24 @@
 
 <script setup lang="ts">
 import { ROLE_HOME_MAP } from '~/utils/constants'
-import type { UserRole } from '~/types/database'
 
 definePageMeta({ layout: 'auth' })
 
 const user = useSupabaseUser()
+const authStore = useAuthStore()
 
-onMounted(() => {
-  setTimeout(() => {
-    if (user.value) {
-      const role = (user.value.user_metadata?.role as UserRole) || 'mother'
-      navigateTo(ROLE_HOME_MAP[role])
-    } else {
-      navigateTo('/auth/login')
-    }
-  }, 1500)
+onMounted(async () => {
+  // Wait for animation, then initialize store before redirecting
+  await new Promise(resolve => setTimeout(resolve, 1500))
+
+  if (user.value) {
+    authStore.$patch({ initialized: false })
+    await authStore.initialize()
+    const role = authStore.role
+    navigateTo(ROLE_HOME_MAP[role] || '/family', { replace: true })
+  } else {
+    navigateTo('/auth/login', { replace: true })
+  }
 })
 </script>
 
