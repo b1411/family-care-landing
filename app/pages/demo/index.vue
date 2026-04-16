@@ -81,10 +81,10 @@ const loadingRole = ref<string | null>(null)
 const error = ref('')
 
 const DEMO_HOME: Record<string, string> = {
-  mom: '/demo/family',
-  coordinator: '/demo/coordinator',
-  doctor: '/demo/doctor',
-  admin: '/demo/coordinator', // admin shares coordinator view in demo
+  mom: '/family',
+  coordinator: '/coordinator',
+  doctor: '/doctor',
+  admin: '/admin',
 }
 
 const roles = [

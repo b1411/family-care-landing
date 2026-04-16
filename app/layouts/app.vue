@@ -181,11 +181,33 @@
 
     <!-- Main content -->
     <main class="app-main" :class="{ 'sidebar-collapsed': sidebarCollapsed, 'has-bottom-nav': isFamily }">
-      <!-- Demo mode banner -->
+      <!-- Demo mode banner with role switching -->
       <div v-if="isDemoUser" class="demo-banner">
-        <Icon name="lucide:flask-conical" size="16" />
-        <span>Вы в демо-режиме. Данные тестовые.</span>
-        <NuxtLink to="/#contact" class="demo-banner-link">Обсудить подключение →</NuxtLink>
+        <div class="demo-banner-left">
+          <Icon name="lucide:flask-conical" size="16" />
+          <span class="demo-banner-label">Демо-режим</span>
+        </div>
+        <div class="demo-banner-roles">
+          <button
+            v-for="dr in demoRoles"
+            :key="dr.key"
+            class="demo-role-tab"
+            :class="{ active: isDemoRoleActive(dr.key) }"
+            :disabled="switchingRole !== null"
+            @click="switchDemoRole(dr.key)"
+          >
+            <Icon :name="dr.icon" size="14" />
+            <span>{{ dr.label }}</span>
+            <span v-if="switchingRole === dr.key" class="demo-role-spinner" />
+          </button>
+        </div>
+        <div class="demo-banner-right">
+          <NuxtLink to="/for-clinics#clinic-cta" class="demo-banner-link">Оставить заявку →</NuxtLink>
+          <button class="demo-exit-btn" @click="exitDemo">
+            <Icon name="lucide:log-out" size="14" />
+            Выйти
+          </button>
+        </div>
       </div>
       <slot />
     </main>
@@ -467,6 +489,52 @@ function onClickOutside(e: MouseEvent) {
 
 const appData = useAppData()
 
+// ─── Demo role switching ───
+const switchingRole = ref<string | null>(null)
+
+const demoRoles = [
+  { key: 'mom', label: 'Мама', icon: 'lucide:heart', route: '/family' },
+  { key: 'coordinator', label: 'Координатор', icon: 'lucide:clipboard-list', route: '/coordinator' },
+  { key: 'doctor', label: 'Врач', icon: 'lucide:stethoscope', route: '/doctor' },
+  { key: 'admin', label: 'Руководитель', icon: 'lucide:bar-chart-3', route: '/admin' },
+]
+
+function isDemoRoleActive(key: string): boolean {
+  const mapping: Record<string, string> = { mom: '/family', coordinator: '/coordinator', doctor: '/doctor', admin: '/admin' }
+  return route.path.startsWith(mapping[key] ?? '')
+}
+
+async function switchDemoRole(roleKey: string) {
+  if (isDemoRoleActive(roleKey) || switchingRole.value) return
+  switchingRole.value = roleKey
+  try {
+    const result = await $fetch<{ access_token: string; refresh_token: string }>('/api/auth/demo-login', {
+      method: 'POST',
+      body: { role: roleKey },
+    })
+    await supabase.auth.setSession({
+      access_token: result.access_token,
+      refresh_token: result.refresh_token,
+    })
+    authStore.reset()
+    await authStore.initialize()
+    const target = demoRoles.find(r => r.key === roleKey)?.route ?? '/family'
+    navigateTo(target, { replace: true })
+  }
+  catch {
+    // silently fail — user stays on current page
+  }
+  finally {
+    switchingRole.value = null
+  }
+}
+
+async function exitDemo() {
+  await supabase.auth.signOut()
+  authStore.reset()
+  navigateTo('/demo')
+}
+
 onMounted(async () => {
   await authStore.initialize()
   // Fetch all role-specific data in one call
@@ -491,12 +559,83 @@ onUnmounted(() => {
 .demo-banner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 12px;
+  padding: 8px 20px;
   background: linear-gradient(90deg, rgba(139, 126, 200, 0.12), rgba(139, 126, 200, 0.06));
   border-bottom: 1px solid rgba(139, 126, 200, 0.18);
   font-size: 13px;
   color: var(--color-text-secondary);
+  flex-wrap: wrap;
+}
+
+.demo-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.demo-banner-label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.demo-banner-roles {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.demo-role-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border: 1px solid rgba(139, 126, 200, 0.2);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.demo-role-tab:hover:not(:disabled):not(.active) {
+  background: rgba(139, 126, 200, 0.08);
+  border-color: rgba(139, 126, 200, 0.35);
+}
+
+.demo-role-tab.active {
+  background: var(--gradient-cta);
+  color: white;
+  border-color: transparent;
+  cursor: default;
+}
+
+.demo-role-tab:disabled:not(.active) {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.demo-role-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(139, 126, 200, 0.3);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.demo-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
 }
 
 .demo-banner .icon {
@@ -505,16 +644,55 @@ onUnmounted(() => {
 }
 
 .demo-banner-link {
-  margin-left: auto;
   color: var(--color-primary);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   text-decoration: none;
   white-space: nowrap;
 }
 
 .demo-banner-link:hover {
   text-decoration: underline;
+}
+
+.demo-exit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 6px;
+  background: transparent;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.demo-exit-btn:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+@media (max-width: 768px) {
+  .demo-banner {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+  .demo-banner-label {
+    display: none;
+  }
+  .demo-role-tab span:not(.demo-role-spinner) {
+    display: none;
+  }
+  .demo-role-tab {
+    padding: 4px 8px;
+  }
+  .demo-banner-link {
+    display: none;
+  }
 }
 
 /* ─── Layout ─── */
@@ -1189,5 +1367,9 @@ onUnmounted(() => {
   .app-bottom-nav {
     display: none !important;
   }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
