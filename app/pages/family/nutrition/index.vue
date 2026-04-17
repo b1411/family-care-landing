@@ -248,7 +248,7 @@ const introStatuses = [
 // Feed modal
 const showFeedModal = ref(false)
 const saving = ref(false)
-const { success: toastSuccess } = useToast()
+const { success: toastSuccess } = useAppToast()
 
 const feedForm = reactive({
   type: 'breast' as string,

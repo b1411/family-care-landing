@@ -93,7 +93,7 @@ const authStore = useAuthStore()
 const appData = useAppData()
 
 const confirming = ref<string | null>(null)
-const { success: toastSuccess, error: toastError } = useToast()
+const { success: toastSuccess, error: toastError } = useAppToast()
 const loading = ref(true)
 
 onMounted(async () => {

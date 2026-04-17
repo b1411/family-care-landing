@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-const { toasts } = useToast()
+const { toasts } = useAppToast()
 
 function toastIcon(type: string) {
   if (type === 'success') return 'lucide:check-circle'

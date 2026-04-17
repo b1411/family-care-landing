@@ -96,7 +96,7 @@ export default defineEventHandler(async (event) => {
         const { data: listData } = await supabase.auth.admin.listUsers()
         const existingUser = listData?.users?.find(u => u.email === account.email)
         if (existingUser) {
-          await supabase.auth.admin.updateUser(existingUser.id, {
+          await supabase.auth.admin.updateUserById(existingUser.id, {
             password,
             email_confirm: true,
             user_metadata: userMeta,

@@ -134,7 +134,7 @@ function formatDate(iso: string) {
 // Measurement modal
 const showModal = ref(false)
 const saving = ref(false)
-const { success: toastSuccess } = useToast()
+const { success: toastSuccess } = useAppToast()
 const measureForm = reactive({
   date: new Date().toISOString().slice(0, 10),
   weight_kg: null as number | null,

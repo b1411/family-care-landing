@@ -55,7 +55,7 @@ const appData = useAppData()
 const filter = ref('all')
 const loading = ref(true)
 const processingId = ref<string | null>(null)
-const { success: toastSuccess, error: toastError } = useToast()
+const { success: toastSuccess, error: toastError } = useAppToast()
 
 onMounted(async () => {
   const cid = authStore.clinicId

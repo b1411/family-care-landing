@@ -9,7 +9,7 @@ interface Toast {
 let _id = 0
 const toasts = ref<Toast[]>([])
 
-export function useToast() {
+export function useAppToast() {
   function show(type: ToastType, message: string, duration = 3000) {
     const id = ++_id
     toasts.value.push({ id, type, message })

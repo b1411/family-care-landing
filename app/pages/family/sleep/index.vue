@@ -202,7 +202,7 @@ const sleepTips = [
 // Modal
 const showModal = ref(false)
 const saving = ref(false)
-const { success: toastSuccess } = useToast()
+const { success: toastSuccess, error: toastError } = useAppToast()
 
 const sleepForm = reactive({
   type: 'night' as 'night' | 'nap',
@@ -255,8 +255,7 @@ async function saveLog() {
   }
   catch (e) {
     console.error(e)
-    toast.value = 'Ошибка при сохранении'
-    setTimeout(() => { toast.value = '' }, 2500)
+    toastError('Ошибка при сохранении')
   }
   finally {
     saving.value = false
