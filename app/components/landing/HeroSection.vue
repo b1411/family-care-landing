@@ -686,7 +686,7 @@ onBeforeUnmount(() => {
   font-weight: 900;
   line-height: var(--leading-tight);
   color: var(--color-primary);
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   letter-spacing: var(--tracking-tight);
   text-indent: 0;
   padding-left: 0;
@@ -704,7 +704,7 @@ onBeforeUnmount(() => {
   font-size: var(--text-body-lg);
   line-height: var(--leading-normal);
   color: var(--color-text-secondary);
-  margin: 0 0 28px;
+  margin: 0 0 36px;
   max-width: 520px;
   text-indent: 0;
   padding-left: 0;
@@ -743,8 +743,8 @@ onBeforeUnmount(() => {
 .hero-features {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-bottom: 32px;
+  gap: 18px;
+  margin-bottom: 36px;
 }
 
 .hero-feature {
@@ -768,7 +768,7 @@ onBeforeUnmount(() => {
 .hero-feature-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .hero-feature-title {

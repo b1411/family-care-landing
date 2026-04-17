@@ -31,7 +31,7 @@
           </div>
         </Transition>
 
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" data-lenis-prevent>
           <div v-for="(group, gi) in navGroups" :key="gi" class="nav-group">
             <span v-if="group.label && !sidebarCollapsed" class="nav-group-label">{{ group.label }}</span>
             <NuxtLink
@@ -149,7 +149,7 @@
           <span class="greeting-text">{{ greeting }},</span>
           <span class="greeting-name">{{ userFirstName }}</span>
         </div>
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" data-lenis-prevent>
           <NuxtLink
             v-for="item in flatNavItems"
             :key="item.to"
@@ -542,8 +542,9 @@ onMounted(async () => {
   if (isFamily.value) {
     notifStore.subscribeToNotifications()
   }
-  // Show onboarding for new users
-  if (authStore.profile && !(authStore.profile as any).onboarding_completed) {
+  // Show onboarding for new users (skip demo accounts)
+  const isDemoAccount = authStore.profile?.email?.endsWith('@demo.kz')
+  if (authStore.profile && !isDemoAccount && !(authStore.profile as any).onboarding_completed) {
     showOnboarding.value = true
   }
   document.addEventListener('click', onClickOutside)
