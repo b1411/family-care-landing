@@ -49,7 +49,8 @@ export async function apiFetch<T = unknown>(
 export async function isServerAvailable(): Promise<boolean> {
   try {
     const res = await fetch(`${BASE}/api/health`, { signal: AbortSignal.timeout(5000) })
-    return res.ok
+    // 429 (rate-limited) still means the server is running
+    return res.ok || res.status === 429
   }
   catch {
     return false

@@ -62,7 +62,7 @@ describe('POST /api/auth/demo-login', () => {
       method: 'GET',
     })
 
-    // Nuxt returns 404 for unmatched method (no GET handler exists)
-    expect(status).toBe(404)
+    // Nuxt returns 404 for unmatched method; 429 if rate-limited before routing
+    expect([404, 429]).toContain(status)
   })
 })

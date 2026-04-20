@@ -8,13 +8,15 @@
     <div class="calc-layout" data-reveal="fade-up">
       <!-- Slider input -->
       <div class="calc-slider landing-card">
-        <label class="slider-label font-heading">Количество семей в месяц</label>
+        <label for="calc-families-slider" class="slider-label font-heading">Количество семей в месяц</label>
         <input
+          id="calc-families-slider"
           v-model.number="families"
           type="range"
           :min="10"
           :max="100"
           :step="5"
+          aria-label="Количество семей в месяц"
           class="range-slider"
         />
         <span class="slider-value font-display">{{ families }}</span>

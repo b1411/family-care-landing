@@ -239,14 +239,34 @@ export default defineNuxtConfig({
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self)',
           'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+          'Content-Security-Policy': [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com",
+            "font-src 'self' https://api.fontshare.com https://fonts.gstatic.com",
+            "img-src 'self' data: https:",
+            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://sentry.io https://app.posthog.com",
+            "frame-ancestors 'none'",
+            "object-src 'none'",
+            "base-uri 'self'",
+          ].join('; '),
         },
       },
     },
   },
 
   vite: {
+    resolve: {
+      // cookie@1.0.2 ships CJS only and Vite's dep-optimizer occasionally
+      // strips its named exports in dev HMR — breaking @supabase/ssr's
+      // `import { parse, serialize } from "cookie"` and cascading into Vue
+      // hydration failure. Alias to a local ESM re-implementation.
+      alias: {
+        cookie: new URL('./shims/cookie.mjs', import.meta.url).pathname,
+      },
+    },
     optimizeDeps: {
-      include: ['echarts', 'cookie', '@supabase/ssr > cookie'],
+      include: ['echarts'],
     },
     ssr: {
       noExternal: [],

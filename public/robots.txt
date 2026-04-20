@@ -1,1 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /demo/family
+Disallow: /demo/doctor
+Disallow: /demo/coordinator
 
+Sitemap: https://www.umai-health.kz/sitemap.xml
