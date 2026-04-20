@@ -63,6 +63,7 @@ const tabs = [
   background: var(--color-bg);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 /* Demo banner */
@@ -195,7 +196,10 @@ const tabs = [
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  min-width: 0;
 }
+
+.demo-main > * { min-width: 0; }
 
 /* Responsive */
 @media (max-width: 768px) {

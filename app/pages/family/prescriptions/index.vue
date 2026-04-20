@@ -151,7 +151,7 @@ async function handleConfirm(doseId: string) {
 .card-title { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--color-text-primary); }
 
 /* Adherence chart */
-.adh-chart { display: flex; gap: 8px; height: 130px; padding-top: 4px; }
+.adh-chart { display: flex; gap: 8px; height: clamp(100px, 22vh, 130px); padding-top: 4px; }
 .adh-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
 .adh-track { flex: 1; width: 100%; background: rgba(139,126,200,0.06); border-radius: 6px; display: flex; align-items: flex-end; overflow: hidden; }
 .adh-fill { width: 100%; background: var(--gradient-cta); border-radius: 6px; min-height: 4px; transition: height 0.5s ease; }

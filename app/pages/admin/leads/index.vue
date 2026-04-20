@@ -422,4 +422,12 @@ onMounted(fetchLeads)
 
 .empty-card { text-align: center; padding: 48px; background: white; border: 1px solid var(--color-border-light); border-radius: 14px; }
 .empty-text { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 8px; }
+
+@media (max-width: 640px) {
+  .list-link { flex-wrap: wrap; gap: 8px 12px; }
+  .lr-info { flex: 1 1 60%; }
+  .lr-name { overflow-wrap: anywhere; }
+  .lr-source, .lr-assigned, .lr-date { font-size: 0.65rem; }
+  .fi { font-size: 16px; padding: 11px 12px; }
+}
 </style>

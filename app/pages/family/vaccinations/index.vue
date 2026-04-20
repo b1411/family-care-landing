@@ -120,4 +120,11 @@ function formatDate(iso: string) {
 .vax-badge { font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-full); flex-shrink: 0; }
 .vax-badge--done { background: rgba(124,184,212,0.1); color: var(--color-success); }
 .vax-badge--upcoming { background: rgba(233,196,106,0.1); color: var(--color-warning); }
+
+.vax-name { overflow-wrap: anywhere; }
+
+@media (max-width: 380px) {
+  .vax-name { font-size: 0.8rem; }
+  .vax-meta { font-size: 0.68rem; }
+}
 </style>

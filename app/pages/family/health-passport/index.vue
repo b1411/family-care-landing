@@ -158,4 +158,9 @@ function typeLabel(type: string) {
 
 .slide-enter-active, .slide-leave-active { transition: all 0.25s ease; }
 .slide-enter-from, .slide-leave-to { opacity: 0; transform: translateY(-8px); }
+
+@media (max-width: 480px) {
+  .hp-form-grid { flex-direction: column; gap: 10px; }
+  .hp-input { font-size: 16px; padding: 11px 12px; }
+}
 </style>

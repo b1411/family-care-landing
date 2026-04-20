@@ -128,4 +128,10 @@ function healthStatus(p: any) {
 
 .empty-card { text-align: center; padding: 48px; background: white; border: 1px solid var(--color-border-light); border-radius: 14px; }
 .empty-text { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 8px; }
+
+@media (max-width: 480px) {
+  .pt-card { padding: 12px; gap: 10px; }
+  .pt-name { font-size: 0.84rem; overflow-wrap: anywhere; }
+  .search-input { font-size: 16px; }
+}
 </style>

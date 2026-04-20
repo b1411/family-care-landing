@@ -280,4 +280,8 @@ async function toggleConsent(type: ConsentType, granted: boolean) {
 .modal-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-body); }
+
+@media (max-width: 380px) {
+  .settings-page { padding: 16px 12px; }
+}
 </style>

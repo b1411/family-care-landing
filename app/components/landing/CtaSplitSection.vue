@@ -242,4 +242,8 @@ onMounted(() => {
     padding: 48px 0;
   }
 }
+
+@media (max-width: 480px) {
+  .split-card { padding: 28px 20px; }
+}
 </style>

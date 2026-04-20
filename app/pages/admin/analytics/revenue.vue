@@ -25,6 +25,7 @@
     <!-- Doctor Revenue -->
     <div class="card">
       <h2 class="card-title"><Icon name="lucide:stethoscope" size="16" /> Доход по врачам</h2>
+      <div class="doc-table-scroll">
       <div class="doc-table">
         <div class="dt-header">
           <span class="dt-cell name">Врач</span>
@@ -38,6 +39,7 @@
           <span class="dt-cell mono">{{ d.rating }} ★</span>
           <span class="dt-cell mono">{{ d.load }}%</span>
         </div>
+      </div>
       </div>
     </div>
 
@@ -106,8 +108,9 @@ const revenueChart = computed<EChartsOption>(() => ({
 .card { background: white; border: 1px solid var(--color-border-light); border-radius: 14px; padding: 20px; }
 .card-title { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 
-.doc-table { display: flex; flex-direction: column; }
-.dt-header, .dt-row { display: grid; grid-template-columns: 1fr 70px 70px 70px; gap: 8px; padding: 8px 4px; }
+.doc-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+.doc-table { display: flex; flex-direction: column; min-width: 420px; }
+.dt-header, .dt-row { display: grid; grid-template-columns: minmax(140px, 1fr) 70px 70px 70px; gap: 8px; padding: 8px 4px; }
 .dt-header { border-bottom: 1px solid var(--color-border-light); }
 .dt-cell { font-size: 0.78rem; }
 .dt-cell.name { font-weight: 600; }
@@ -123,4 +126,9 @@ const revenueChart = computed<EChartsOption>(() => ({
 .fc-month { font-size: 0.72rem; color: var(--color-text-muted); display: block; }
 .fc-value { font-size: 1.1rem; font-weight: 800; font-family: var(--font-mono); display: block; margin: 4px 0; }
 .fc-lbl { font-size: 0.62rem; color: var(--color-text-muted); }
+
+@media (max-width: 480px) {
+  .forecast-grid { grid-template-columns: 1fr; }
+  .forecast-card { padding: 14px; }
+}
 </style>

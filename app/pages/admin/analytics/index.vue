@@ -51,6 +51,7 @@
     <!-- Retention Cohort -->
     <div class="card">
       <h2 class="card-title"><Icon name="lucide:users" size="16" /> Retention когорт</h2>
+      <div class="cohort-scroll">
       <div class="cohort-table">
         <div class="cohort-header">
           <span class="cohort-cell head">Когорта</span>
@@ -66,6 +67,7 @@
           <span class="cohort-cell" :style="cohortStyle(c.m2)">{{ c.m2 != null ? `${c.m2}%` : '—' }}</span>
           <span class="cohort-cell" :style="cohortStyle(c.m3)">{{ c.m3 != null ? `${c.m3}%` : '—' }}</span>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -144,8 +146,12 @@ function cohortStyle(val?: number) {
 .perf-bar.high { background: var(--color-danger); }
 .perf-pct { font-size: 0.72rem; font-weight: 700; font-family: var(--font-mono); width: 32px; text-align: right; }
 
-.cohort-table { display: flex; flex-direction: column; gap: 2px; }
+.cohort-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+.cohort-table { display: flex; flex-direction: column; gap: 2px; min-width: 420px; }
 .cohort-header, .cohort-row { display: grid; grid-template-columns: 100px repeat(4, 1fr); gap: 2px; }
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
 .cohort-cell { padding: 8px 6px; text-align: center; font-size: 0.78rem; font-family: var(--font-mono); border-radius: 4px; }
 .cohort-cell.head { font-size: 0.68rem; color: var(--color-text-muted); font-weight: 600; font-family: var(--font-body); }
 .cohort-cell.label { text-align: left; font-family: var(--font-body); font-weight: 500; font-size: 0.75rem; }

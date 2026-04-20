@@ -206,10 +206,10 @@ onMounted(fetchDocuments)
   font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: var(--font-body);
 }
 
-.filter-row { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; }
+.filter-row { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; -webkit-overflow-scrolling: touch; scroll-padding: 0 16px; padding-bottom: 4px; }
 .filter-btn {
-  flex-shrink: 0; padding: 6px 14px; border: 1px solid var(--color-border);
-  border-radius: 20px; background: var(--color-surface); font-size: 0.8rem;
+  flex-shrink: 0; padding: 9px 16px; min-height: 40px; border: 1px solid var(--color-border);
+  border-radius: 20px; background: var(--color-surface); font-size: 0.85rem;
   cursor: pointer; white-space: nowrap; font-family: var(--font-body);
 }
 .filter-btn.active { border-color: var(--color-primary); background: var(--color-primary-ultralight); color: var(--color-primary); font-weight: 600; }

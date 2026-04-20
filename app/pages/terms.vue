@@ -126,4 +126,16 @@ useSeoMeta({
 .legal-content a:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+  .legal-page { padding: 100px 16px 60px; }
+  .legal-title { font-size: 1.6rem; }
+}
+
+@media (max-width: 480px) {
+  .legal-page { padding: 84px 12px 48px; }
+  .legal-title { font-size: 1.4rem; }
+  .legal-content h2 { font-size: 1.05rem; }
+  .legal-content p { font-size: 14px; line-height: 1.65; }
+}
 </style>

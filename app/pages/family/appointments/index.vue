@@ -115,4 +115,10 @@ function statusLabel(s: string) {
 .apt-badge--requested { background: rgba(233,196,106,0.1); color: var(--color-warning); }
 .apt-badge--completed { background: rgba(139,126,200,0.08); color: var(--color-text-muted); }
 .apt-badge--cancelled { background: rgba(212,114,124,0.1); color: var(--color-danger); }
+
+@media (max-width: 380px) {
+  .apt-meta { font-size: 0.68rem; }
+  .apt-name { font-size: 0.8rem; }
+  .apt-badge { font-size: 0.6rem; padding: 2px 6px; }
+}
 </style>

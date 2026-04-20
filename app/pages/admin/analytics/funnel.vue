@@ -6,7 +6,7 @@
     </div>
 
     <div class="chart-card">
-      <AppSharedEChart :option="funnelOption" height="380px" />
+      <AppSharedEChart :option="funnelOption" height="clamp(240px, 50vh, 380px)" />
     </div>
 
     <div class="stages">

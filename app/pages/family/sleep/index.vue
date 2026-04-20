@@ -356,5 +356,11 @@ async function saveLog() {
 .toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(10px); }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 480px) {
+  .form-row-2 { grid-template-columns: 1fr; }
+  .tips-grid { grid-template-columns: 1fr; }
+  .fi { font-size: 16px; padding: 11px 12px; }
+}
 </style>
 

@@ -17,6 +17,7 @@
     <!-- Heatmap -->
     <div class="card">
       <h2 class="card-title"><Icon name="lucide:grid-3x3" size="16" /> Загрузка по дням</h2>
+      <div class="heatmap-scroll">
       <div class="heatmap">
         <div v-for="(day, di) in heatDays" :key="di" class="hm-row">
           <span class="hm-day">{{ day }}</span>
@@ -27,6 +28,7 @@
         <div class="hm-hours">
           <span v-for="h in 9" :key="h">{{ 8 + h }}</span>
         </div>
+      </div>
       </div>
       <div class="hm-legend">
         <span class="lg"><span class="lg-box l0" /> 0</span>
@@ -93,7 +95,8 @@ const forecasts = [
 .card { background: white; border: 1px solid var(--color-border-light); border-radius: 14px; padding: 20px; }
 .card-title { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 
-.heatmap { display: flex; flex-direction: column; gap: 3px; }
+.heatmap-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; padding: 0 4px; }
+.heatmap { display: flex; flex-direction: column; gap: 3px; min-width: max-content; }
 .hm-row { display: flex; align-items: center; gap: 6px; }
 .hm-day { width: 22px; font-size: 0.68rem; color: var(--color-text-muted); }
 .hm-cells { display: flex; gap: 3px; }
@@ -120,4 +123,11 @@ const forecasts = [
 .fc-track { flex: 1; height: 8px; background: var(--color-border-light); border-radius: 4px; overflow: hidden; }
 .fc-fill { height: 100%; background: var(--gradient-cta); border-radius: 4px; transition: width 0.4s; }
 .fc-val { width: 60px; text-align: right; font-size: 0.78rem; font-family: var(--font-mono); font-weight: 600; }
+
+@media (max-width: 480px) {
+  .fc-week { width: 80px; font-size: 0.72rem; }
+  .fc-val { width: 50px; font-size: 0.72rem; }
+  .hm-cell { width: 22px; height: 16px; }
+  .hm-hours span { width: 22px; font-size: 0.55rem; }
+}
 </style>

@@ -161,4 +161,10 @@ select.fi { appearance: auto; background: white; }
 }
 .btn-save:hover { opacity: 0.9; }
 .saved-msg { font-size: 0.82rem; color: #4a9960; align-self: flex-start; }
+
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .fi { font-size: 16px; padding: 10px 12px; }
+  .profile-header { gap: 10px; }
+}
 </style>

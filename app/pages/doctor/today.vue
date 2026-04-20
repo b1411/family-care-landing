@@ -164,4 +164,13 @@ function isNow(a: Appointment) {
 .tl-status.no_show { background: rgba(217,79,79,0.12); color: #d94f4f; }
 .tl-status.requested { background: rgba(232,184,77,0.12); color: #b08a2a; }
 .tl-status.cancelled { background: rgba(150,150,150,0.12); color: #888; }
+
+@media (max-width: 480px) {
+  .today-page { gap: 12px; }
+  .tl-item { gap: 10px; }
+  .tl-gutter { width: 44px; padding-top: 10px; }
+  .tl-time { font-size: 0.72rem; }
+  .tl-card { padding: 12px 14px; }
+  .tl-patient { font-size: 0.88rem; }
+}
 </style>

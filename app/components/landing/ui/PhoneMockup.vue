@@ -75,4 +75,15 @@ defineProps<{
     height: 360px;
   }
 }
+
+@media (max-width: 380px) {
+  .phone-frame {
+    width: clamp(200px, 70vw, 240px);
+    height: clamp(400px, 140vw, 480px);
+  }
+  .mockup-small .phone-frame {
+    width: clamp(160px, 56vw, 200px);
+    height: clamp(320px, 112vw, 400px);
+  }
+}
 </style>

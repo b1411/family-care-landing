@@ -1375,8 +1375,8 @@ onBeforeUnmount(() => {
     min-height: auto;
   }
   .hero-visual { min-height: 360px; }
-  .phone-frame { width: 240px; }
-  .hero-features { flex-wrap: wrap; }
+  .phone-frame { width: clamp(200px, 70vw, 260px); }
+  .hero-features { flex-wrap: wrap; max-width: 100%; }
 
   .hero-stats {
     flex-wrap: wrap;

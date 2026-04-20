@@ -139,7 +139,7 @@ function journeyLabel(type: string) {
 .fam-card {
   display: flex; align-items: center; gap: 12px; padding: 14px 18px;
   background: white; border: 1px solid var(--color-border-light); border-radius: 14px;
-  transition: all 0.2s; cursor: pointer;
+  transition: all 0.2s; cursor: pointer; flex-wrap: wrap;
 }
 .fam-card:hover { border-color: rgba(139,126,200,0.2); transform: translateY(-1px); }
 
@@ -191,4 +191,10 @@ function journeyLabel(type: string) {
 .skel-hero { height: 90px; border-radius: 16px; }
 .skel-search { height: 44px; border-radius: 12px; }
 .skel-row { height: 68px; }
+
+@media (max-width: 480px) {
+  .fam-card { padding: 12px; gap: 10px; }
+  .fam-name { font-size: 0.84rem; overflow-wrap: anywhere; }
+  .adherence-bar { max-width: none; }
+}
 </style>

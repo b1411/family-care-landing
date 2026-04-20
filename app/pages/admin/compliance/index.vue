@@ -121,4 +121,9 @@ const gaps = [
 .proto-fill.med { background: var(--color-warning); }
 .proto-fill.low { background: var(--color-danger); }
 .proto-pct { width: 40px; text-align: right; font-size: 0.78rem; font-family: var(--font-mono); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .summary-cards { flex-direction: column; width: 100%; }
+  .sc { text-align: left; }
+}
 </style>

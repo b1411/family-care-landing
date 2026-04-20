@@ -158,4 +158,10 @@ onMounted(async () => {
 .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--color-border-light); }
 .status-dot.active { background: #4a9960; }
 .status-dot.recent { background: #4a9960; box-shadow: 0 0 0 3px rgba(74,153,96,0.2); }
+
+@media (max-width: 480px) {
+  .coord-row { flex-wrap: wrap; gap: 10px; padding: 12px; }
+  .coord-name { white-space: normal; overflow-wrap: anywhere; }
+  .coord-stats { width: 100%; justify-content: space-around; gap: 12px; padding-top: 4px; border-top: 1px solid rgba(139,126,200,0.06); }
+}
 </style>

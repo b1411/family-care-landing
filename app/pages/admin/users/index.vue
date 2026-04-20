@@ -185,4 +185,11 @@ function openCreate() {
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border-light); border-radius: 10px; cursor: pointer; font-family: var(--font-body); }
 .btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
+
+@media (max-width: 480px) {
+  .user-row { flex-wrap: wrap; gap: 8px; padding: 12px; }
+  .user-actions { order: 3; width: 100%; justify-content: flex-end; gap: 6px; }
+  .form-row-2 { grid-template-columns: 1fr; }
+  .fi { font-size: 16px; padding: 11px 12px; }
+}
 </style>

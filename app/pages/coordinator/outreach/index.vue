@@ -137,13 +137,13 @@ const logs = [
 .scn-list { display: flex; flex-direction: column; gap: 10px; }
 .scn-card { background: white; border: 1px solid var(--color-border-light); border-radius: 14px; padding: 16px; }
 .scn-card.inactive { opacity: 0.55; }
-.scn-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.scn-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .scn-top h3 { font-size: 0.92rem; font-weight: 700; }
 .scn-trigger { font-size: 0.78rem; color: var(--color-text-muted); }
 .toggle-btn { padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; border: 1px solid var(--color-border-light); background: white; cursor: pointer; color: var(--color-text-muted); font-family: var(--font-body); }
 .toggle-btn.on { border-color: var(--color-success); color: var(--color-success); background: rgba(124,184,212,0.06); }
 
-.scn-channels { display: flex; gap: 5px; margin-top: 8px; }
+.scn-channels { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
 .ch-badge { display: flex; align-items: center; gap: 3px; padding: 2px 8px; background: rgba(139,126,200,0.06); border-radius: 12px; font-size: 0.68rem; color: var(--color-primary); font-weight: 500; }
 .scn-stats { display: flex; gap: 14px; margin-top: 8px; font-size: 0.72rem; color: var(--color-text-muted); }
 
@@ -176,4 +176,10 @@ const logs = [
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border-light); border-radius: 10px; cursor: pointer; font-family: var(--font-body); }
 .btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
+
+@media (max-width: 768px) {
+  .out-page { max-width: 100%; gap: 12px; }
+  .out-hero { padding: 18px 16px; }
+  .hero-title { font-size: 1.2rem; }
+}
 </style>

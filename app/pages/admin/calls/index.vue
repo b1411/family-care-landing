@@ -253,4 +253,10 @@ onMounted(async () => {
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border-light); border-radius: 10px; cursor: pointer; font-family: var(--font-body); }
 .btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+  .call-row { flex-wrap: wrap; gap: 6px 10px; padding: 12px 0; }
+  .call-dur, .call-date { text-align: left; min-width: 0; }
+  .fg-row { grid-template-columns: 1fr; }
+}
 </style>

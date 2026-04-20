@@ -162,8 +162,9 @@ onMounted(async () => {
   background: white; border: 1px solid var(--color-border-light); border-radius: 14px; padding: 16px 18px; transition: box-shadow 0.2s;
 }
 .cp-card:hover { box-shadow: 0 2px 8px rgba(139,126,200,0.08); }
-.cp-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.cp-patient { display: flex; align-items: center; gap: 10px; }
+.cp-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.cp-patient { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; }
+.cp-name { overflow-wrap: anywhere; }
 .cp-avatar {
   width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, rgba(139,126,200,0.15), rgba(232,160,191,0.12));
@@ -195,4 +196,10 @@ onMounted(async () => {
 .up-title { flex: 1; }
 .up-date { font-size: 0.68rem; color: var(--color-text-muted); font-family: var(--font-mono); }
 .up-overdue { font-size: 0.62rem; font-weight: 600; color: #d94f4f; }
+
+@media (max-width: 480px) {
+  .cp-page { gap: 10px; }
+  .cp-card { padding: 14px; }
+  .cp-name { font-size: 0.84rem; }
+}
 </style>

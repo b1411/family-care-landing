@@ -186,8 +186,9 @@ onMounted(async () => {
 .kpi-value.good { color: var(--color-success); }
 
 /* Pipeline Board */
-.pipeline-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; overflow-x: auto; }
-@media (max-width: 900px) { .pipeline-board { grid-template-columns: repeat(5, 200px); } }
+.pipeline-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; padding-bottom: 4px; }
+@media (max-width: 900px) { .pipeline-board { grid-template-columns: repeat(5, 240px); } .pipeline-col { scroll-snap-align: start; } }
+@media (max-width: 480px) { .pipeline-board { grid-template-columns: repeat(5, 80vw); gap: 8px; } }
 .pipeline-col { background: rgba(139,126,200,0.02); border: 1px solid var(--color-border-light); border-radius: 12px; min-height: 300px; display: flex; flex-direction: column; }
 .col-header { padding: 12px 14px; border-bottom: 1px solid var(--color-border-light); display: flex; justify-content: space-between; align-items: center; }
 .col-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
@@ -216,4 +217,9 @@ onMounted(async () => {
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border-light); border-radius: 10px; cursor: pointer; font-family: var(--font-body); }
 .btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+  .fg-row { grid-template-columns: 1fr; }
+  .fi { font-size: 16px; }
+}
 </style>

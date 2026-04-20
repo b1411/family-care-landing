@@ -28,12 +28,19 @@ const themeColors = {
   },
 }
 
+function responsiveGrid() {
+  const w = typeof window !== 'undefined' ? window.innerWidth : 1024
+  if (w < 380) return { left: 28, right: 8, top: 24, bottom: 24, containLabel: true }
+  if (w < 640) return { left: 32, right: 10, top: 28, bottom: 28, containLabel: true }
+  return { left: 40, right: 16, top: 32, bottom: 32, containLabel: true }
+}
+
 function mergeTheme(opt: EChartsOption): EChartsOption {
   return {
     ...themeColors,
     ...opt,
     textStyle: { ...themeColors.textStyle, ...(opt.textStyle as Record<string, unknown> || {}) },
-    grid: { left: 40, right: 16, top: 32, bottom: 32, containLabel: true, ...(opt.grid as Record<string, unknown> || {}) },
+    grid: { ...responsiveGrid(), ...(opt.grid as Record<string, unknown> || {}) },
   }
 }
 
@@ -50,6 +57,7 @@ onMounted(async () => {
 
 function handleResize() {
   chart?.resize()
+  chart?.setOption({ grid: responsiveGrid() })
 }
 
 watch(() => props.option, (opt) => {

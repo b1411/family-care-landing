@@ -284,4 +284,12 @@ onMounted(async () => {
 .delay-input { display: flex; align-items: center; gap: 2px; }
 .delay-label { font-size: 0.72rem; color: var(--color-text-muted); }
 .btn-icon-danger { width: 28px; height: 28px; border-radius: 6px; border: none; background: rgba(212,114,124,0.08); color: var(--color-danger); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+@media (max-width: 640px) {
+  .step-builder-row { flex-wrap: wrap; gap: 8px; }
+  .step-builder-row .fi-sm { flex: 1 1 100%; }
+  .delay-input { flex: 1 1 100%; }
+  .fi { font-size: 16px; }
+  .fi-sm { font-size: 16px; padding: 10px 12px; }
+}
 </style>

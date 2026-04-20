@@ -184,4 +184,8 @@ onMounted(async () => {
 .doctor-comment { padding: 14px; background: var(--color-primary-ultralight); border-radius: var(--radius-sm); }
 .doctor-comment h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
 .doctor-comment p { font-size: 0.85rem; }
+
+@media (max-width: 380px) {
+  .lab-page { padding: 16px 12px; }
+}
 </style>

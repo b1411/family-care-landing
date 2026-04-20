@@ -103,7 +103,8 @@ async function handleLogin() {
 .auth-form { display: flex; flex-direction: column; gap: 14px; }
 .fg { display: flex; flex-direction: column; gap: 5px; }
 .fl { font-size: 0.82rem; font-weight: 600; }
-.fi { padding: 11px 14px; border: 1px solid rgba(139,126,200,0.15); border-radius: 12px; font-size: 0.92rem; font-family: var(--font-body); background: rgba(255,255,255,0.6); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.fi { padding: 12px 14px; border: 1px solid rgba(139,126,200,0.15); border-radius: 12px; font-size: 16px; font-family: var(--font-body); background: rgba(255,255,255,0.6); outline: none; transition: border-color 0.2s, box-shadow 0.2s; min-height: 44px; }
+@media (min-width: 768px) { .fi { font-size: 0.92rem; min-height: 0; padding: 11px 14px; } }
 .fi:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(139,126,200,0.12); }
 .fi::placeholder { color: var(--color-text-muted); }
 .fe { font-size: 0.78rem; color: var(--color-danger); }

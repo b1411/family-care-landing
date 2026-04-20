@@ -134,8 +134,8 @@ async function dismissTask(id: string) {
 .filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 .filter-scroll::-webkit-scrollbar { display: none; }
 .filter-chip {
-  flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--color-border-light);
-  border-radius: 20px; background: white; font-size: 0.78rem; font-weight: 500;
+  flex-shrink: 0; padding: 10px 16px; min-height: 40px; border: 1px solid var(--color-border-light);
+  border-radius: 20px; background: white; font-size: 0.82rem; font-weight: 500;
   cursor: pointer; font-family: var(--font-body); white-space: nowrap; transition: all 0.15s;
 }
 .filter-chip:hover { border-color: rgba(139,126,200,0.2); }
@@ -160,7 +160,7 @@ async function dismissTask(id: string) {
 .task-meta { font-size: 0.68rem; color: var(--color-text-muted); }
 
 .task-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.btn-action { padding: 6px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 600; cursor: pointer; font-family: var(--font-body); border: none; transition: all 0.15s; }
+.btn-action { padding: 8px 14px; min-height: 36px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; font-family: var(--font-body); border: none; transition: all 0.15s; }
 .btn-action--done { background: rgba(124,184,212,0.12); color: var(--color-success); }
 .btn-action--done:hover { background: rgba(124,184,212,0.2); }
 .btn-action--dismiss { background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border-light); }

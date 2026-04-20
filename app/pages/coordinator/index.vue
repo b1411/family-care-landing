@@ -294,6 +294,7 @@ const taskPieOption = computed<EChartsOption>(() => {
 
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 @media (max-width: 640px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 380px) { .kpi-grid { grid-template-columns: 1fr; gap: 8px; } }
 .kpi-card { background: white; border: 1px solid var(--color-border-light); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
 .kpi-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .kpi-trend { font-size: 0.65rem; font-weight: 600; font-family: var(--font-mono); }

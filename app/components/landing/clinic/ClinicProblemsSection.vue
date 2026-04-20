@@ -430,11 +430,14 @@ const dayWith = [
   line-height: 150%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .problems-layout {
     grid-template-columns: 1fr;
   }
   .burning-visual { order: -1; }
+}
+
+@media (max-width: 768px) {
   .loss-card {
     flex-direction: column;
     text-align: center;

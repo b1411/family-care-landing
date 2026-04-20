@@ -1342,13 +1342,15 @@ onUnmounted(() => {
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 6px 12px;
+    padding: 8px 12px;
     font-size: 10px;
     font-weight: 500;
     color: var(--color-text-muted);
     text-decoration: none;
     transition: color var(--transition-fast);
     min-width: 60px;
+    min-height: 48px;
+    justify-content: center;
   }
 
   .bottom-tab.active {

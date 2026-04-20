@@ -114,4 +114,10 @@ const reviews = [
 .fi { padding: 9px 12px; border: 1px solid var(--color-border-light); border-radius: 10px; font-size: 0.88rem; font-family: var(--font-body); outline: none; }
 .fi:focus { border-color: var(--color-primary); }
 .btn-save { align-self: flex-start; padding: 9px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-family: var(--font-body); font-size: 0.82rem; }
+
+@media (max-width: 640px) {
+  .nps-bars { min-width: 100%; width: 100%; }
+  .nb-label { width: 80px; font-size: 0.72rem; }
+  .fi { font-size: 16px; }
+}
 </style>

@@ -164,4 +164,13 @@ onMounted(async () => {
 .doc-right { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; gap: 2px; }
 .doc-date { font-size: 0.72rem; color: var(--color-text-muted); white-space: nowrap; }
 .doc-size { font-size: 0.62rem; color: var(--color-text-muted); text-transform: uppercase; font-family: var(--font-mono); }
+
+@media (max-width: 480px) {
+  .doc-row { gap: 10px; padding: 12px; }
+  .doc-title { white-space: normal; word-break: break-word; }
+  .doc-desc { white-space: normal; }
+  .doc-meta { flex-wrap: wrap; }
+  .filter-btn { min-height: 38px; padding: 8px 14px; font-size: 0.82rem; }
+  .search-input { font-size: 16px; }
+}
 </style>

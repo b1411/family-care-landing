@@ -361,4 +361,23 @@ onMounted(async () => {
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border-light); border-radius: 10px; cursor: pointer; font-family: var(--font-body); }
 .btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
+
+@media (max-width: 768px) {
+  .pd-page { max-width: 100%; gap: 12px; }
+  .pd-hero { padding: 18px 16px; }
+  .hero-title { font-size: 1.1rem; }
+  .card { padding: 14px; }
+  .ev-list { max-height: none; }
+  .fi { font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+  .fg-row { grid-template-columns: 1fr; }
+  .hero-row { gap: 10px; }
+  .hero-avatar { width: 40px; height: 40px; font-size: 0.9rem; }
+  .child-meta { flex-wrap: wrap; gap: 6px; }
+  .rx-row { flex-wrap: wrap; }
+  .ev-row { flex-wrap: wrap; }
+  .ev-body { min-width: 0; flex: 1 1 60%; }
+}
 </style>

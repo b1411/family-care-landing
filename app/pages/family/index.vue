@@ -1063,7 +1063,7 @@ function pluralNotif(n: number): string {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  height: 120px;
+  height: clamp(96px, 20vh, 120px);
   padding-top: 8px;
 }
 
@@ -1276,9 +1276,19 @@ function pluralNotif(n: number): string {
 
   .quick-actions {
     grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
   }
+
+  .qa-btn { padding: 12px 6px 10px; }
+  .qa-icon { width: 36px; height: 36px; }
 
   .hero-content { flex-direction: column; text-align: center; }
   .hero-strip { flex-wrap: wrap; justify-content: center; }
+}
+
+@media (max-width: 380px) {
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  .qa-label { font-size: 0.7rem; }
+  .streaks-grid { grid-template-columns: 1fr; }
 }
 </style>

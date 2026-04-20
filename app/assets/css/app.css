@@ -641,3 +641,15 @@
     transition: none;
   }
 }
+
+/* ================================================
+   Mobile: prevent iOS auto-zoom on text inputs
+   (Safari zooms to focused input if font-size < 16px)
+   ================================================ */
+@media (max-width: 768px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}

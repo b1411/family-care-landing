@@ -166,8 +166,9 @@ onMounted(async () => {
 }
 .rx-card:hover { box-shadow: 0 2px 8px rgba(139,126,200,0.08); }
 .rx-card.inactive { opacity: 0.6; }
-.rx-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.rx-drug { display: flex; align-items: center; gap: 10px; }
+.rx-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.rx-drug { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; }
+.rx-med { overflow-wrap: anywhere; }
 .rx-icon { color: var(--color-primary); flex-shrink: 0; }
 .rx-med { font-size: 0.92rem; font-weight: 600; }
 .rx-dosage { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 1px; }
@@ -191,4 +192,11 @@ onMounted(async () => {
 .adh-val.good { color: #4a9960; }
 .adh-val.warn { color: #b08a2a; }
 .adh-val.low { color: #d94f4f; }
+
+@media (max-width: 480px) {
+  .rx-page { gap: 10px; }
+  .rx-card { padding: 14px; }
+  .rx-patient { flex-wrap: wrap; gap: 6px; }
+  .rx-med { font-size: 0.86rem; }
+}
 </style>

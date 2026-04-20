@@ -149,7 +149,7 @@ watch(selectedIdx, (idx) => {
 .slot-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; transition: background 0.15s; }
 .slot-row:hover { background: rgba(139,126,200,0.04); }
 .slot-row--free { opacity: 0.45; }
-.slot-time { font-size: 0.82rem; font-weight: 700; font-family: var(--font-mono); color: var(--color-primary); width: 100px; flex-shrink: 0; }
+.slot-time { font-size: 0.82rem; font-weight: 700; font-family: var(--font-mono); color: var(--color-primary); min-width: 92px; flex-shrink: 0; }
 .slot-name { font-size: 0.82rem; font-weight: 600; flex: 1; }
 .slot-reason { font-size: 0.7rem; color: var(--color-text-muted); }
 .slot-free { font-size: 0.78rem; color: var(--color-text-muted); font-style: italic; flex: 1; }
@@ -171,4 +171,12 @@ watch(selectedIdx, (idx) => {
 
 .fade-enter-active, .fade-leave-active { transition: opacity 0.2s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+@media (max-width: 480px) {
+  .slot-row { flex-wrap: wrap; gap: 8px; padding: 10px; }
+  .slot-time { min-width: 80px; font-size: 0.78rem; }
+  .slot-name { font-size: 0.8rem; flex: 1 1 60%; }
+  .form-row { flex-direction: column; gap: 10px; }
+  .form-input { font-size: 16px; padding: 11px 14px; }
+}
 </style>

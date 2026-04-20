@@ -154,7 +154,7 @@ const moodChartOption = computed<EChartsOption>(() => ({
 .card-title-sm { font-size: 0.88rem; font-weight: 600; margin-bottom: 14px; }
 .card-link { font-size: 0.78rem; color: var(--color-primary); text-decoration: none; font-weight: 600; }
 
-.mood-grid { display: flex; gap: 8px; justify-content: center; }
+.mood-grid { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .mood-btn {
   display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 12px 14px;
   border: 2px solid var(--color-border-light); border-radius: 12px;
@@ -197,4 +197,8 @@ const moodChartOption = computed<EChartsOption>(() => ({
 
 .slide-enter-active, .slide-leave-active { transition: all 0.25s ease; }
 .slide-enter-from, .slide-leave-to { opacity: 0; transform: translateY(-8px); }
+
+@media (max-width: 380px) {
+  .mood-btn { min-width: 56px; padding: 10px 8px; }
+}
 </style>
