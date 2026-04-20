@@ -42,7 +42,7 @@
             :style="{ transitionDelay: `${i * 60}ms` }"
           >
             <div class="ct-metric">
-              <span class="ct-icon">{{ row.icon }}</span>
+              <Icon :name="row.icon" size="18" class="ct-icon" />
               {{ row.metric }}
             </div>
             <div class="ct-before">
@@ -57,8 +57,8 @@
         <!-- Bottom CTA -->
         <div class="compare-footer" data-reveal="fade-up">
           <p class="compare-summary">
-            Средняя клиника теряет <strong>43 млн ₸/год</strong> из-за оттока семей.
-            Платформа возвращает <strong>70%</strong> из них в маршрут.
+            Средняя клиника теряет <strong>~1&nbsp;200+&nbsp;точек контроля</strong> в&nbsp;год из-за оттока семей.
+            Платформа возвращает <strong>до&nbsp;70%</strong> из&nbsp;них в&nbsp;маршрут.
           </p>
         </div>
       </div>
@@ -69,14 +69,14 @@
           <!-- WITHOUT -->
           <div class="day-column day-without">
             <div class="day-label day-label--bad">
-              <span class="day-emoji">😫</span> Без платформы
+              <Icon name="lucide:frown" size="18" class="day-emoji" /> Без платформы
             </div>
             <div class="timeline">
               <div v-for="ev in dayWithout" :key="ev.time" class="tl-event">
                 <span class="tl-time font-mono">{{ ev.time }}</span>
                 <div class="tl-card" :class="'tl-' + ev.mood">
-                  <span class="tl-icon">{{ ev.icon }}</span>
-                  <div>
+                  <Icon :name="ev.icon" size="18" class="tl-icon" />
+                  <div class="tl-body">
                     <strong class="tl-title">{{ ev.title }}</strong>
                     <p class="tl-desc">{{ ev.desc }}</p>
                   </div>
@@ -100,14 +100,14 @@
           <!-- WITH -->
           <div class="day-column day-with">
             <div class="day-label day-label--good">
-              <span class="day-emoji">😊</span> С платформой
+              <Icon name="lucide:smile" size="18" class="day-emoji" /> С платформой
             </div>
             <div class="timeline">
               <div v-for="ev in dayWith" :key="ev.time" class="tl-event">
                 <span class="tl-time font-mono">{{ ev.time }}</span>
                 <div class="tl-card" :class="'tl-' + ev.mood">
-                  <span class="tl-icon">{{ ev.icon }}</span>
-                  <div>
+                  <Icon :name="ev.icon" size="18" class="tl-icon" />
+                  <div class="tl-body">
                     <strong class="tl-title">{{ ev.title }}</strong>
                     <p class="tl-desc">{{ ev.desc }}</p>
                   </div>
@@ -183,49 +183,49 @@ onMounted(() => {
 
 const compareRows = [
   {
-    icon: '👨‍👩‍👦',
+    icon: 'lucide:users',
     metric: 'Retention семей (6 мес)',
     before: '33%',
     after: '87%',
     delta: '+54%',
   },
   {
-    icon: '📞',
+    icon: 'lucide:phone',
     metric: 'Время координатора на обзвоны',
     before: '4–6 ч/день',
     after: '1–1.5 ч/день',
     delta: '–70%',
   },
   {
-    icon: '💉',
+    icon: 'lucide:syringe',
     metric: 'Вакцинация по графику',
     before: '45%',
     after: '98%',
     delta: '+53%',
   },
   {
-    icon: '📊',
+    icon: 'lucide:bar-chart-3',
     metric: 'Видимость в аналитику',
     before: 'Excel / нет',
     after: 'Real-time дашборд',
     delta: '',
   },
   {
-    icon: '💰',
-    metric: 'LTV на семью (24 мес)',
-    before: '~600K ₸',
-    after: '~1.8M ₸',
-    delta: '×3',
+    icon: 'lucide:activity',
+    metric: 'Событий маршрута на семью (24 мес)',
+    before: '~20 (вручную)',
+    after: '~56 (авто)',
+    delta: '×2.8',
   },
   {
-    icon: '⏱',
+    icon: 'lucide:clock',
     metric: 'Время до первого визита',
     before: '3–5 дней (звонки)',
     after: '< 2 часа (авто)',
     delta: '–80%',
   },
   {
-    icon: '🔔',
+    icon: 'lucide:bell',
     metric: 'Пропущенные визиты',
     before: '30–40%',
     after: '6%',
@@ -234,21 +234,21 @@ const compareRows = [
 ]
 
 const dayWithout = [
-  { time: '08:00', icon: '📋', title: 'Открывает Excel', desc: 'Ищет кого нужно обзвонить. 142 строки, нет фильтров.', mood: 'bad' },
-  { time: '09:00', icon: '📞', title: 'Обзвон вчерашних', desc: 'Набирает 20 номеров. 8 не берут. 3 уже ушли в другую клинику.', mood: 'bad' },
-  { time: '10:30', icon: '😰', title: 'Срочный вопрос от мамы', desc: 'WhatsApp: «Когда прививка?». Ищет карту 15 мин в папках.', mood: 'bad' },
-  { time: '12:00', icon: '📝', title: 'Ручная запись', desc: 'Звонит в регистратуру, ждёт свободное окно. 5 мин на 1 запись.', mood: 'bad' },
-  { time: '14:00', icon: '🤷', title: 'Потерянная семья', desc: 'Каримова А. не пришла на УЗИ 3 дня назад. Никто не заметил.', mood: 'bad' },
-  { time: '16:00', icon: '📊', title: 'Отчёт директору', desc: '«Сколько семей осталось?» — «Нужно посчитать...» Нет данных.', mood: 'bad' },
+  { time: '08:00', icon: 'lucide:clipboard-list', title: 'Открывает Excel', desc: 'Ищет кого нужно обзвонить. 142 строки, нет фильтров.', mood: 'bad' },
+  { time: '09:00', icon: 'lucide:phone', title: 'Обзвон вчерашних', desc: 'Набирает 20 номеров. 8 не берут. 3 уже ушли в другую клинику.', mood: 'bad' },
+  { time: '10:30', icon: 'lucide:message-circle-warning', title: 'Срочный вопрос от мамы', desc: 'WhatsApp: «Когда прививка?». Ищет карту 15 мин в папках.', mood: 'bad' },
+  { time: '12:00', icon: 'lucide:pencil', title: 'Ручная запись', desc: 'Звонит в регистратуру, ждёт свободное окно. 5 мин на 1 запись.', mood: 'bad' },
+  { time: '14:00', icon: 'lucide:alert-circle', title: 'Потерянная семья', desc: 'Каримова А. не пришла на УЗИ 3 дня назад. Никто не заметил.', mood: 'bad' },
+  { time: '16:00', icon: 'lucide:bar-chart-3', title: 'Отчёт директору', desc: '«Сколько семей осталось?» — «Нужно посчитать...» Нет данных.', mood: 'bad' },
 ]
 
 const dayWith = [
-  { time: '08:00', icon: '💻', title: 'Открывает панель', desc: 'Все задачи на экране: 2 просрочено, 4 сегодня, 8 завтра.', mood: 'good' },
-  { time: '08:15', icon: '🔴', title: 'Просроченные первым делом', desc: 'Каримова А. — пропущено УЗИ. Клик → звонок. 2 минуты → записана.', mood: 'good' },
-  { time: '09:00', icon: '🔔', title: 'Автоуведомления отправлены', desc: '12 семей получили push о визитах. 9 подтвердили. 0 звонков.', mood: 'good' },
-  { time: '10:30', icon: '💬', title: 'Мама спрашивает про прививку', desc: 'Открывает карту за 3 секунды. АКДС через 2 недели. Ответ за 30 сек.', mood: 'good' },
-  { time: '12:00', icon: '📅', title: 'Автозапись', desc: 'Бекова Д. — вакцинация. Клик «Записать» → окно выбрано → готово.', mood: 'good' },
-  { time: '14:00', icon: '📊', title: 'Дашборд для директора', desc: 'Retention: 87%. Визиты: 94%. NPS: 4.8. Экспорт PDF за 1 клик.', mood: 'good' },
+  { time: '08:00', icon: 'lucide:laptop', title: 'Открывает панель', desc: 'Все задачи на экране: 2 просрочено, 4 сегодня, 8 завтра.', mood: 'good' },
+  { time: '08:15', icon: 'lucide:alert-circle', title: 'Просроченные первым делом', desc: 'Каримова А. — пропущено УЗИ. Клик → звонок. 2 минуты → записана.', mood: 'good' },
+  { time: '09:00', icon: 'lucide:bell', title: 'Автоуведомления отправлены', desc: '12 семей получили push о визитах. 9 подтвердили. 0 звонков.', mood: 'good' },
+  { time: '10:30', icon: 'lucide:message-circle', title: 'Мама спрашивает про прививку', desc: 'Открывает карту за 3 секунды. АКДС через 2 недели. Ответ за 30 сек.', mood: 'good' },
+  { time: '12:00', icon: 'lucide:calendar-check', title: 'Автозапись', desc: 'Бекова Д. — вакцинация. Клик «Записать» → окно выбрано → готово.', mood: 'good' },
+  { time: '14:00', icon: 'lucide:bar-chart-3', title: 'Дашборд для директора', desc: 'Retention: 87%. Визиты: 94%. NPS: 4.8. Экспорт PDF за 1 клик.', mood: 'good' },
 ]
 </script>
 
@@ -323,8 +323,8 @@ const dayWith = [
   color: var(--color-text-primary);
 }
 .ct-icon {
-  font-size: 18px;
   flex-shrink: 0;
+  color: var(--color-text-secondary);
 }
 .ct-before {
   background: rgba(212, 114, 124, 0.04);
@@ -394,8 +394,11 @@ const dayWith = [
   color: var(--color-primary);
 }
 .day-emoji {
-  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
 }
+.day-label--bad .day-emoji { color: var(--color-danger); }
+.day-label--good .day-emoji { color: var(--color-primary); }
 
 /* Timeline */
 .timeline {
@@ -441,20 +444,30 @@ const dayWith = [
   box-shadow: -3px 0 12px rgba(139, 126, 200, 0.1);
 }
 .tl-icon {
-  font-size: 18px;
   flex-shrink: 0;
   padding-top: 2px;
+  color: var(--color-text-secondary);
+}
+.tl-card.tl-bad .tl-icon { color: var(--color-danger); }
+.tl-card.tl-good .tl-icon { color: var(--color-primary); }
+.tl-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-xxs);
+  min-width: 0;
 }
 .tl-title {
   font-size: 13px;
+  font-weight: var(--fw-semibold);
   color: var(--color-text-primary);
   display: block;
-  margin-bottom: 2px;
+  line-height: var(--lh-h4);
+  margin: 0;
 }
 .tl-desc {
   font-size: 12px;
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: var(--lh-body);
   margin: 0;
 }
 

@@ -26,6 +26,9 @@
 
     <!-- 9. Финальный CTA -->
     <LandingFinalCtaSection />
+
+    <!-- Mobile sticky CTA -->
+    <LandingStickyMobileCta />
   </div>
 </template>
 
@@ -37,14 +40,20 @@ definePageMeta({
 useSeoMeta({
   title: 'UMAI Health — цифровой маршрут семьи от зачатия до 2 лет',
   ogTitle: 'UMAI Health — цифровой маршрут семьи',
-  description: 'Платформа сопровождения семьи для клиник. Назначения, прививки, осмотры, аналитика. Автоматический маршрут от зачатия до 2 лет.',
-  ogDescription: 'Платформа для клиник: автоматический маршрут ведения семьи от зачатия до 2 лет',
+  description: 'UMAI Health — цифровой маршрут семьи от зачатия до 2 лет под брендом вашей клиники. 50+ событий, 3 роли, white-label, без IT-отдела.',
+  ogDescription: 'Цифровой маршрут семьи под брендом вашей клиники. 50+ событий, white-label, без IT-отдела.',
   ogType: 'website',
   ogLocale: 'ru_RU',
+  ogImage: 'https://umai-health.kz/og-image.png',
+  ogUrl: 'https://umai-health.kz/',
   twitterCard: 'summary_large_image',
+  twitterImage: 'https://umai-health.kz/og-image.png',
 })
 
 useHead({
+  link: [
+    { rel: 'canonical', href: 'https://umai-health.kz/' },
+  ],
   script: [
     {
       type: 'application/ld+json',

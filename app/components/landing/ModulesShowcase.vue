@@ -64,9 +64,22 @@
         </div>
       </div>
 
+      <div class="modules-more" data-reveal="fade-up">
+        <p class="modules-more-list">
+          <span>Care Plan Engine</span><span class="dot-sep">·</span>
+          <span>Умные назначения</span><span class="dot-sep">·</span>
+          <span>Панель координатора</span><span class="dot-sep">·</span>
+          <span>Аналитика</span><span class="dot-sep">·</span>
+          <span>Календарь прививок</span><span class="dot-sep">·</span>
+          <span>Документы семьи</span><span class="dot-sep">·</span>
+          <span>White-label брендинг</span><span class="dot-sep">·</span>
+          <span>Интеграции и API</span>
+        </p>
+      </div>
+
       <div class="modules-cta" data-reveal="fade-up">
         <NuxtLink to="/for-clinics" class="modules-cta-link font-heading">
-          Всего 8 модулей — полный список
+          Подробнее о всех 8 модулях
           <Icon name="lucide:arrow-right" size="18" />
         </NuxtLink>
       </div>
@@ -123,9 +136,9 @@ const modules = [
 ]
 
 const coordTasks = [
-  { name: 'Семья А.', status: 'Срочно', color: '#D4727C' },
-  { name: 'Семья Б.', status: 'Просрочено', color: '#E9C46A' },
-  { name: 'Семья В.', status: 'В норме', color: '#7CB8D4' },
+  { name: 'Айгерим К.', status: 'Срочно', color: '#D4727C' },
+  { name: 'Данияр Б.', status: 'Просрочено', color: '#E9C46A' },
+  { name: 'Амина Ж.', status: 'В норме', color: '#7CB8D4' },
 ]
 
 const chartBars = [
@@ -512,10 +525,33 @@ onMounted(() => {
   margin-top: 4px;
 }
 
+.modules-more {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.modules-more-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 8px;
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.modules-more-list .dot-sep {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
 /* CTA */
 .modules-cta {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 16px;
 }
 
 .modules-cta-link {

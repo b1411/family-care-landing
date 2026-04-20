@@ -1,7 +1,7 @@
 // Tenant middleware — determines clinic from subdomain or user metadata
 export default defineNuxtRouteMiddleware((to) => {
   // Skip for public landing pages
-  const publicPaths = ['/', '/for-clinics', '/for-families', '/auth']
+  const publicPaths = ['/', '/for-clinics', '/for-families', '/auth', '/demo', '/privacy', '/terms', '/security', '/integrations']
   const isPublic = publicPaths.some(p => to.path === p || to.path.startsWith(p + '/'))
   if (isPublic) return
 

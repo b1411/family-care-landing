@@ -165,10 +165,10 @@ const cohorts = [
 ]
 
 const tasks = [
-  { family: 'Семья А.', desc: 'Пропущен скрининг 2 триместра', due: 'Просрочено', priorityColor: 'var(--color-danger)' },
-  { family: 'Семья Б.', desc: 'Напомнить о вакцинации', due: 'Сегодня', priorityColor: 'var(--color-warning)' },
-  { family: 'Семья В.', desc: 'Приём у педиатра назначен', due: 'Завтра', priorityColor: 'var(--color-success)' },
-  { family: 'Семья Г.', desc: 'Загрузить результаты анализов', due: 'Через 3 дня', priorityColor: 'var(--color-accent-blue)' },
+  { family: 'Айгерим К.', desc: 'Пропущен скрининг 2 триместра', due: 'Просрочено', priorityColor: 'var(--color-danger)' },
+  { family: 'Данияр Б.', desc: 'Напомнить о вакцинации', due: 'Сегодня', priorityColor: 'var(--color-warning)' },
+  { family: 'Амина Ж.', desc: 'Приём у педиатра назначен', due: 'Завтра', priorityColor: 'var(--color-success)' },
+  { family: 'Нурай С.', desc: 'Загрузить результаты анализов', due: 'Через 3 дня', priorityColor: 'var(--color-accent-blue)' },
 ]
 
 const features = [

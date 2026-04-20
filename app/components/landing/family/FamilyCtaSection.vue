@@ -32,9 +32,9 @@
           </button>
         </form>
         <div class="cta-pills">
-          <span class="cta-pill">🔒 Защищено</span>
-          <span class="cta-pill">📱 Offline</span>
-          <span class="cta-pill">💜 Бесплатно</span>
+          <span class="cta-pill"><Icon name="lucide:lock" size="14" /> Защищено</span>
+          <span class="cta-pill"><Icon name="lucide:smartphone" size="14" /> Offline</span>
+          <span class="cta-pill"><Icon name="lucide:heart" size="14" /> Бесплатно</span>
         </div>
       </div>
     </div>
@@ -236,11 +236,17 @@ async function handleSubmit() {
 }
 
 .cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 4px 12px;
   border-radius: var(--radius-full);
   background: var(--color-bg-alt);
   font-size: 12px;
   color: var(--color-text-secondary);
   font-weight: 500;
+}
+.cta-pill :deep(svg) {
+  color: var(--color-primary);
 }
 </style>

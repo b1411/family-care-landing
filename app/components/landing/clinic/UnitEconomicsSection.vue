@@ -46,14 +46,6 @@
         </div>
       </div>
 
-      <!-- Cost note -->
-      <div class="roi-strip">
-        <div class="roi-item">
-          <span class="roi-label">Стоимость</span>
-          <span class="roi-val font-mono">Рассчитывается индивидуально</span>
-        </div>
-      </div>
-
       <div class="calc-cta" data-reveal="fade-up">
         <a href="#clinic-cta" class="cta-btn font-heading">
           Обсудить подключение

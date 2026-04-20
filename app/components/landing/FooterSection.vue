@@ -31,6 +31,8 @@
             <li><NuxtLink to="/for-clinics">Для клиник</NuxtLink></li>
             <li><NuxtLink to="/for-families">Для родителей</NuxtLink></li>
             <li><NuxtLink to="/demo">Попробовать демо</NuxtLink></li>
+            <li><NuxtLink to="/integrations">Интеграции</NuxtLink></li>
+            <li><NuxtLink to="/security">Безопасность</NuxtLink></li>
           </ul>
         </div>
 
@@ -42,11 +44,38 @@
               <Icon name="lucide:mail" size="16" />
               <a href="mailto:info@umai-health.kz">info@umai-health.kz</a>
             </li>
+            <li v-if="contact.phone">
+              <Icon name="lucide:phone" size="16" />
+              <a :href="`tel:${contact.phone.replace(/\s+/g, '')}`">{{ contact.phone }}</a>
+            </li>
+            <li v-if="contact.whatsapp">
+              <Icon name="lucide:message-circle" size="16" />
+              <a :href="contact.whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+            </li>
             <li>
               <Icon name="lucide:map-pin" size="16" />
-              <span>Алматы, Казахстан</span>
+              <span>{{ contact.city }}</span>
+            </li>
+            <li v-if="contact.address">
+              <Icon name="lucide:building-2" size="16" />
+              <span>{{ contact.address }}</span>
+            </li>
+            <li v-if="contact.legal">
+              <Icon name="lucide:landmark" size="16" />
+              <span>{{ contact.legal }}</span>
             </li>
           </ul>
+          <div v-if="contact.linkedin || contact.instagram || contact.telegram" class="footer-social">
+            <a v-if="contact.linkedin" :href="contact.linkedin" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <Icon name="lucide:linkedin" size="18" />
+            </a>
+            <a v-if="contact.instagram" :href="contact.instagram" target="_blank" rel="noopener" aria-label="Instagram">
+              <Icon name="lucide:instagram" size="18" />
+            </a>
+            <a v-if="contact.telegram" :href="contact.telegram" target="_blank" rel="noopener" aria-label="Telegram">
+              <Icon name="lucide:send" size="18" />
+            </a>
+          </div>
         </div>
       </div>
 
@@ -66,6 +95,19 @@
 
 <script setup lang="ts">
 const currentYear = new Date().getFullYear()
+
+// Feature-flagged contact fields — values appear only when set.
+// Fill in these as data becomes available (phone, legal entity, office, socials).
+const contact = {
+  city: 'Алматы, Казахстан',
+  phone: '', // e.g. '+7 700 000-00-00'
+  whatsapp: '', // e.g. 'https://wa.me/77000000000'
+  address: '', // physical office address when available
+  legal: '', // e.g. 'ТОО "UMAI Health", БИН 000000000000'
+  linkedin: '', // e.g. 'https://linkedin.com/company/umai-health'
+  instagram: '', // e.g. 'https://instagram.com/umai.health'
+  telegram: '', // e.g. 'https://t.me/umai_health'
+}
 </script>
 
 <style scoped>
@@ -153,6 +195,30 @@ const currentYear = new Date().getFullYear()
   align-items: center;
   gap: 8px;
   color: var(--color-text-muted);
+}
+
+.footer-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-light);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.footer-social a:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 /* Bottom */

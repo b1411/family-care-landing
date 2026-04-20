@@ -18,6 +18,12 @@
         </p>
       </div>
 
+      <p v-if="deeplinkRole && !error" class="demo-breadcrumbs">
+        <NuxtLink to="/demo" class="crumb">Все роли</NuxtLink>
+        <Icon name="lucide:chevron-right" size="14" class="crumb-sep" />
+        <span class="crumb crumb-current">{{ activeRoleLabel }}</span>
+      </p>
+
       <div class="demo-roles">
         <button
           v-for="role in roles"
@@ -31,7 +37,7 @@
             <Icon :name="role.icon" size="32" />
           </div>
           <div class="role-body">
-            <h2 class="role-title font-heading">{{ role.title }}</h2>
+            <h3 class="role-title font-heading">{{ role.title }}</h3>
             <p class="role-desc">{{ role.description }}</p>
             <ul class="role-features">
               <li v-for="f in role.features" :key="f">
@@ -39,6 +45,10 @@
                 {{ f }}
               </li>
             </ul>
+            <span v-if="role.extraBadge" class="role-extra-badge" :title="role.extraTooltip">
+              <Icon name="lucide:user-plus" size="12" />
+              {{ role.extraBadge }}
+            </span>
           </div>
           <div class="role-action">
             <span v-if="loadingRole === role.key" class="role-spinner" />
@@ -53,7 +63,8 @@
       <p v-if="error" class="demo-error">{{ error }}</p>
 
       <p class="demo-hint">
-        Аналогичный кабинет доступен для второго родителя (папа, бабушка).
+        <Icon name="lucide:info" size="14" class="hint-icon" />
+        Второй родитель и&nbsp;бабушка получают доступ с&nbsp;уровнем «просмотр» или «полный». Решение для расширенной семьи — реальность Казахстана.
       </p>
 
       <div class="demo-footer-cta">
@@ -72,11 +83,23 @@ definePageMeta({ layout: 'landing' })
 
 useSeoMeta({
   title: 'Попробовать демо — UMAI Health',
-  description: 'Изучите платформу UMAI Health с тестовыми данными. Выберите роль: мама, координатор или руководитель.',
+  description: 'Попробуйте платформу UMAI Health — 4 роли, тестовые данные, без регистрации.',
+  ogTitle: 'Попробовать демо — UMAI Health',
+  ogDescription: '4 роли, тестовые данные, без регистрации.',
+  ogImage: 'https://umai-health.kz/og-image.png',
+  ogUrl: 'https://umai-health.kz/demo',
+  robots: 'noindex, follow', // Demo data pages shouldn't be indexed
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://umai-health.kz/demo' },
+  ],
 })
 
 const supabase = useSupabaseClient()
 const authStore = useAuthStore()
+const route = useRoute()
 const loadingRole = ref<string | null>(null)
 const error = ref('')
 
@@ -85,7 +108,30 @@ const DEMO_HOME: Record<string, string> = {
   coordinator: '/coordinator',
   doctor: '/doctor',
   admin: '/admin',
+  // TZ alias: ?role=director → admin dashboard
+  director: '/admin',
 }
+
+const ROLE_ALIAS: Record<string, string> = {
+  director: 'admin',
+}
+
+const rawRoleParam = computed(() => {
+  const v = route.query.role
+  return typeof v === 'string' ? v.toLowerCase() : ''
+})
+
+const deeplinkRole = computed(() => {
+  const raw = rawRoleParam.value
+  if (!raw) return ''
+  const normalized = ROLE_ALIAS[raw] || raw
+  return DEMO_HOME[normalized] ? normalized : ''
+})
+
+const activeRoleLabel = computed(() => {
+  const r = roles.find((x) => x.key === deeplinkRole.value)
+  return r ? r.title : ''
+})
 
 const roles = [
   {
@@ -96,6 +142,8 @@ const roles = [
     gradient: 'linear-gradient(135deg, var(--color-secondary), var(--color-accent-warm))',
     features: ['Маршрут от беременности до 2 лет', 'Напоминания о витаминах', 'Календарь прививок', 'Хранение документов'],
     actionLabel: 'мама',
+    extraBadge: '+ доступ для папы и бабушки',
+    extraTooltip: 'Второй родитель и бабушка получают доступ с уровнем «просмотр» или «полный»',
   },
   {
     key: 'coordinator',
@@ -127,14 +175,20 @@ const roles = [
 ]
 
 async function enterDemo(roleKey: string) {
-  loadingRole.value = roleKey
+  const normalizedKey = ROLE_ALIAS[roleKey] || roleKey
+  if (!DEMO_HOME[normalizedKey]) {
+    error.value = 'Неизвестная роль'
+    return
+  }
+
+  loadingRole.value = normalizedKey
   error.value = ''
 
   try {
     // Call server endpoint to get demo session
     const result = await $fetch<{ access_token: string; refresh_token: string }>('/api/auth/demo-login', {
       method: 'POST',
-      body: { role: roleKey },
+      body: { role: normalizedKey },
     })
 
     if (!result.access_token || !result.refresh_token) {
@@ -167,7 +221,7 @@ async function enterDemo(roleKey: string) {
     await authStore.initialize()
 
     // Navigate to demo dashboard
-    navigateTo(DEMO_HOME[roleKey] || '/demo/family', { replace: true })
+    navigateTo(DEMO_HOME[normalizedKey] || '/family', { replace: true })
   }
   catch (err: any) {
     error.value = err?.data?.message || err?.message || 'Ошибка входа. Попробуйте ещё раз.'
@@ -176,6 +230,19 @@ async function enterDemo(roleKey: string) {
     loadingRole.value = null
   }
 }
+
+// Deeplink auto-entry: /demo?role=mom|coordinator|doctor|admin|director
+onMounted(() => {
+  // Log invalid values to console (per TZ 0.3) but never break the page
+  if (rawRoleParam.value && !deeplinkRole.value) {
+    // eslint-disable-next-line no-console
+    console.warn(`[demo] Unknown role deeplink: "${rawRoleParam.value}" — falling back to selector`)
+    return
+  }
+  if (deeplinkRole.value) {
+    enterDemo(deeplinkRole.value)
+  }
+})
 </script>
 
 <style scoped>
@@ -400,10 +467,71 @@ async function enterDemo(roleKey: string) {
 }
 
 .demo-hint {
-  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  max-width: 600px;
+  margin: 0 auto 48px;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+}
+
+.hint-icon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.demo-breadcrumbs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-size: 14px;
   color: var(--color-text-secondary);
-  margin: 0 0 48px;
+  margin: -24px 0 24px;
+}
+
+.crumb {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.crumb:hover {
+  color: var(--color-primary);
+}
+
+.crumb-current {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.crumb-sep {
+  color: var(--color-text-muted, var(--color-text-secondary));
+  opacity: 0.6;
+}
+
+.role-extra-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+  cursor: help;
 }
 
 .demo-footer-cta {

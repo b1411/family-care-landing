@@ -168,6 +168,20 @@ export default defineNuxtConfig({
         'lucide:crown',
         'lucide:alarm-clock',
         'lucide:hand-heart',
+        // TZ §1.4 — emoji replacements
+        'lucide:frown',
+        'lucide:laptop',
+        'lucide:pencil',
+        'lucide:alert-circle',
+        'lucide:message-circle-warning',
+        'lucide:party-popper',
+        // Footer socials
+        'lucide:linkedin',
+        'lucide:instagram',
+        // Integrations page
+        'lucide:credit-card',
+        // Sticky mobile CTA
+        'lucide:play',
       ],
     },
   },
@@ -215,7 +229,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'vercel',
     prerender: {
-      routes: ['/', '/for-clinics', '/for-families'],
+      routes: ['/', '/for-clinics', '/for-families', '/security', '/integrations'],
     },
     routeRules: {
       '/_nuxt/**': {

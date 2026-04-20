@@ -29,6 +29,9 @@
 
     <!-- 9. CTA — форма -->
     <LandingClinicCtaSection id="clinic-cta" />
+
+    <!-- Mobile sticky CTA -->
+    <LandingStickyMobileCta />
   </div>
 </template>
 
@@ -48,9 +51,18 @@ const sectionNavItems = [
 ]
 
 useSeoMeta({
-  title: 'UMAI Health для клиник — сопровождение семей от беременности до 2 лет',
-  ogTitle: 'UMAI Health для клиник — сопровождение семей от беременности до 2 лет',
-  description: 'Платформа для сопровождения семей от беременности до 2 лет. Автоматизация маршрутов, уведомления, аналитика удержания.',
-  ogDescription: 'Платформа для сопровождения семей от беременности до 2 лет. Автоматизация маршрутов, уведомления, аналитика удержания.',
+  title: 'UMAI Health для клиник — удержание семей после родов',
+  ogTitle: 'UMAI Health для клиник — удержание семей',
+  description: 'Платформа для частных клиник педиатрии и акушерства: удержание семей после родов, панель координатора, аналитика, white-label.',
+  ogDescription: 'Удержание семей после родов, панель координатора, аналитика, white-label. Без IT-отдела.',
+  ogImage: 'https://umai-health.kz/og-image.png',
+  ogUrl: 'https://umai-health.kz/for-clinics',
+  twitterCard: 'summary_large_image',
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://umai-health.kz/for-clinics' },
+  ],
 })
 </script>

@@ -13,7 +13,8 @@
             <Icon :name="item.icon" size="22" :style="{ color: item.iconColor }" />
           </div>
           <span class="number-value font-display">
-            {{ item.prefix }}{{ displayValues[i] }}{{ item.suffix }}
+            <template v-if="item.customDisplay">{{ item.customDisplay }}</template>
+            <template v-else>{{ item.prefix }}{{ displayValues[i] }}{{ item.suffix }}</template>
           </span>
           <p class="number-label">{{ item.label }}</p>
         </div>
@@ -30,44 +31,46 @@ const cardRefs = ref<HTMLElement[]>([])
 
 const numbers = [
   {
-    value: 40,
-    suffix: '+',
+    value: 104,
+    suffix: '',
     prefix: '',
-    label: 'Недель маршрута беременности',
+    label: 'Недель сопровождения — от зачатия до 2 лет',
     icon: 'lucide:route',
     iconBg: 'var(--color-primary-light)',
     iconColor: 'var(--color-primary)',
   },
   {
+    value: 50,
+    suffix: '+',
+    prefix: '',
+    label: 'Событий маршрута на каждую семью',
+    icon: 'lucide:check-circle',
+    iconBg: '#FEF3C7',
+    iconColor: '#92400E',
+  },
+  {
     value: 18,
     suffix: '+',
     prefix: '',
-    label: 'Прививок в календаре',
+    label: 'Прививок под контролем — нацкалендарь РК',
     icon: 'lucide:shield-check',
     iconBg: 'var(--color-secondary-light)',
     iconColor: 'var(--color-secondary-dark)',
   },
   {
-    value: 365,
+    value: null,
     suffix: '',
     prefix: '',
-    label: 'Дней сопровождения в первый год',
-    icon: 'lucide:calendar-days',
+    customDisplay: 'ежедневно',
+    label: 'Напоминаний семье — витамины, приёмы, анализы',
+    icon: 'lucide:bell',
     iconBg: 'var(--color-accent-blue-light)',
     iconColor: 'var(--color-accent-blue)',
   },
-  {
-    value: 50,
-    suffix: '+',
-    prefix: '',
-    label: 'Точек контроля в маршруте',
-    icon: 'lucide:check-circle',
-    iconBg: '#FEF3C7',
-    iconColor: '#92400E',
-  },
 ]
 
-const displayValues = reactive(numbers.map(() => 0))
+// SSR-safe: start at final values, animate from 80% on viewport entry
+const displayValues = reactive(numbers.map((n) => (n.value ?? 0)))
 
 onMounted(() => {
   if (!gsap || !ScrollTrigger || !sectionRef.value) return
@@ -89,12 +92,13 @@ onMounted(() => {
         ease: 'back.out(1.7)',
       })
 
-      // Count-up animation for each number
+      // Count-up from 80% to 100% — never from 0
       numbers.forEach((item, i) => {
-        const obj = { val: 0 }
+        if (item.value == null) return
+        const obj = { val: Math.round(item.value * 0.8) }
         gsap.to(obj, {
           val: item.value,
-          duration: 1.6,
+          duration: 1.2,
           delay: i * 0.1,
           ease: 'power2.out',
           onUpdate: () => {

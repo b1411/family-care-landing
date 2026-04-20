@@ -81,11 +81,38 @@ html.lenis, html.lenis body {
   --radius-xl: 28px;
   --radius-full: 9999px;
 
-  /* Spacing */
+  /* Spacing (8pt grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-30: 120px;
+
+  /* Section rhythm */
   --section-py: 96px;
+  --section-py-lg: 120px;
+  --section-py-md: 80px;
+  --section-py-sm: 48px;
   --section-py-mobile: 64px;
   --container-max: 1200px;
   --container-px: 24px;
+
+  /* Card internal rhythm (per TZ §0.4) */
+  --card-gap-xxs: 4px;   /* name → role via · */
+  --card-gap-xs: 8px;    /* title → badge */
+  --card-gap-sm: 12px;   /* title → meta */
+  --card-gap-md: 16px;   /* title-block → description */
+  --card-gap-lg: 24px;   /* section → action */
+  --card-padding: 24px;
+  --card-padding-sm: 20px;
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -97,11 +124,32 @@ html.lenis, html.lenis body {
   --text-h1: clamp(2rem, 4vw, 3.5rem);
   --text-h2: clamp(1.5rem, 3vw, 2.5rem);
   --text-h3: clamp(1.25rem, 2vw, 1.75rem);
+  --text-h4: clamp(1.0625rem, 1.2vw, 1.125rem); /* 17–18px card title */
   --text-body-lg: 1.125rem;
   --text-body: 1rem;
   --text-sm: 0.875rem;
+  --text-meta: 0.875rem; /* 14px meta/caption */
   --text-xs: 0.75rem;
   --text-card-title: clamp(1rem, 1.5vw, 1.125rem);
+
+  /* Line-heights per TZ §1.1 */
+  --lh-display: 1.05;
+  --lh-h1: 1.1;
+  --lh-h2: 1.15;
+  --lh-h3: 1.2;
+  --lh-h4: 1.3;
+  --lh-body-lg: 1.55;
+  --lh-body: 1.5;
+  --lh-meta: 1.4;
+
+  /* Font weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Readable text width — TZ §1.6 */
+  --text-measure: 68ch;
 
   /* Content max-widths */
   --content-narrow: 600px;
@@ -135,6 +183,22 @@ body {
   overflow-x: hidden;
 }
 
+/* A11y: visible focus for keyboard users — TZ §5.2 */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Avoid stacking the default outline on buttons/links that do their own focus style */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none;
+}
+
 p {
   text-indent: 0;
 }
@@ -164,6 +228,56 @@ p {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Readable prose — TZ §1.6 (max 68ch width on long paragraphs) */
+.prose-readable p,
+.prose-readable > p {
+  max-width: var(--text-measure);
+  line-height: var(--lh-body);
+}
+
+/* Card rhythm utility — TZ §0.4 & §1.7 */
+.card-rhythm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-sm);
+  padding: var(--card-padding);
+}
+
+.card-rhythm .card-title {
+  font-size: var(--text-h4);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-h4);
+  margin: 0;
+}
+
+.card-rhythm .card-meta {
+  font-size: var(--text-meta);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-meta);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.card-rhythm .card-desc {
+  font-size: 0.9375rem; /* 15px */
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.card-rhythm .card-title + .card-meta {
+  margin-top: calc(var(--card-gap-xxs) * -1 + var(--card-gap-xxs)); /* rely on gap */
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-padding: var(--card-padding-sm);
+    --section-py-lg: 64px;
+    --section-py-md: 48px;
+    --section-py-sm: 32px;
+  }
 }
 
 /* ================================================

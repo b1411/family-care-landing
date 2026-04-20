@@ -1,8 +1,9 @@
 <template>
   <div class="landing-layout">
+    <a href="#main-content" class="skip-to-content">Перейти к содержимому</a>
     <div ref="scrollProgressRef" class="scroll-progress" />
     <LandingNavBar />
-    <main>
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
     <LandingFooterSection />
@@ -64,5 +65,26 @@ onMounted(() => {
 
 main {
   flex: 1;
+}
+
+/* Skip to content — a11y TZ §5.2 */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 1000;
+  padding: 10px 18px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 16px;
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 2px;
 }
 </style>

@@ -59,7 +59,7 @@
                   <span class="chat-time">09:41</span>
                 </div>
                 <div :class="['chat-action', { visible: activeStep >= 2 }]">
-                  <span class="action-icon">📱</span>
+                  <Icon name="lucide:smartphone" size="16" class="action-icon" />
                   <span>Добавить на главный экран</span>
                 </div>
               </div>
@@ -76,7 +76,7 @@
             <div class="step-screen">
               <div class="screen-inner welcome-screen">
                 <div :class="['welcome-block', { visible: activeStep >= 2 }]">
-                  <span class="welcome-emoji">🎉</span>
+                  <Icon name="lucide:party-popper" size="20" class="welcome-emoji" />
                   <strong>Добро пожаловать!</strong>
                   <span class="welcome-sub">Маршрут Алисы — 47 событий</span>
                 </div>

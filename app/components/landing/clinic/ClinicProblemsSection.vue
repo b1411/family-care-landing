@@ -19,14 +19,14 @@
           <!-- Front: problem -->
           <div class="pain-face pain-front">
             <Icon :name="pain.icon" size="24" class="pain-icon pain-icon--danger" />
-            <h4 class="pain-title font-heading">{{ pain.title }}</h4>
+            <h3 class="pain-title font-heading">{{ pain.title }}</h3>
             <p class="pain-desc">{{ pain.desc }}</p>
             <span class="pain-cost font-mono">{{ pain.cost }}</span>
           </div>
           <!-- Back: solution -->
           <div class="pain-face pain-back">
             <Icon :name="pain.solIcon" size="24" class="pain-icon pain-icon--success" />
-            <h4 class="pain-title font-heading">{{ pain.solution }}</h4>
+            <h3 class="pain-title font-heading">{{ pain.solution }}</h3>
             <p class="pain-desc">{{ pain.solDesc }}</p>
           </div>
         </div>
@@ -68,6 +68,10 @@
           </div>
         </div>
       </div>
+
+      <p class="funnel-footnote">
+        По оценкам на основе публичных данных о рынке частной педиатрии в СНГ. Частные клиники редко отслеживают удержание когортно, поэтому потеря «95&nbsp;семей из&nbsp;100» обычно остаётся невидимой в&nbsp;отчётах.
+      </p>
     </div>
 
     <!-- Comparison table: Before vs After -->
@@ -80,7 +84,7 @@
           <div class="ct-after">С UMAI Health</div>
         </div>
         <div v-for="row in compareRows" :key="row.metric" class="ct-row">
-          <div class="ct-metric"><span class="ct-icon">{{ row.icon }}</span> {{ row.metric }}</div>
+          <div class="ct-metric"><Icon :name="row.icon" size="18" class="ct-icon" /> {{ row.metric }}</div>
           <div class="ct-before"><span class="ct-val ct-val--bad">{{ row.before }}</span></div>
           <div class="ct-after">
             <span class="ct-val ct-val--good">{{ row.after }}</span>
@@ -95,13 +99,16 @@
       <h3 class="day-heading font-heading" data-reveal="fade-up">День координатора: до и после</h3>
       <div class="day-split" data-reveal="fade-up">
         <div class="day-column">
-          <div class="day-label day-label--bad"><span class="day-emoji">😫</span> Без платформы</div>
+          <div class="day-label day-label--bad"><Icon name="lucide:frown" size="18" class="day-emoji" /> Без платформы</div>
           <div class="day-timeline">
             <div v-for="ev in dayWithout" :key="ev.time" class="dt-event">
               <span class="dt-time font-mono">{{ ev.time }}</span>
               <div class="dt-card" :class="'dt-' + ev.mood">
-                <span class="dt-icon">{{ ev.icon }}</span>
-                <div><strong class="dt-title">{{ ev.title }}</strong><p class="dt-desc">{{ ev.desc }}</p></div>
+                <Icon :name="ev.icon" size="18" class="dt-icon" />
+                <div class="dt-body">
+                  <strong class="dt-title">{{ ev.title }}</strong>
+                  <p class="dt-desc">{{ ev.desc }}</p>
+                </div>
               </div>
             </div>
             <div class="day-result day-result--bad">
@@ -111,13 +118,16 @@
         </div>
         <div class="day-divider"><div class="dv-line" /><span class="dv-vs font-display">VS</span><div class="dv-line" /></div>
         <div class="day-column">
-          <div class="day-label day-label--good"><span class="day-emoji">😊</span> С платформой</div>
+          <div class="day-label day-label--good"><Icon name="lucide:smile" size="18" class="day-emoji" /> С платформой</div>
           <div class="day-timeline">
             <div v-for="ev in dayWith" :key="ev.time" class="dt-event">
               <span class="dt-time font-mono">{{ ev.time }}</span>
               <div class="dt-card" :class="'dt-' + ev.mood">
-                <span class="dt-icon">{{ ev.icon }}</span>
-                <div><strong class="dt-title">{{ ev.title }}</strong><p class="dt-desc">{{ ev.desc }}</p></div>
+                <Icon :name="ev.icon" size="18" class="dt-icon" />
+                <div class="dt-body">
+                  <strong class="dt-title">{{ ev.title }}</strong>
+                  <p class="dt-desc">{{ ev.desc }}</p>
+                </div>
               </div>
             </div>
             <div class="day-result day-result--good">
@@ -200,30 +210,30 @@ const funnelSteps = [
 ]
 
 const compareRows = [
-  { icon: '👨‍👩‍👦', metric: 'Сопровождение семей', before: 'Ручное, несистемное', after: 'Автоматизированный маршрут', delta: '' },
-  { icon: '📞', metric: 'Работа координатора', before: 'Обзвоны вслепую', after: 'Приоритизированные задачи', delta: '' },
-  { icon: '💉', metric: 'Вакцинация по графику', before: 'Низкое соблюдение', after: 'Автонапоминания + контроль', delta: '' },
-  { icon: '📊', metric: 'Видимость в аналитику', before: 'Excel / нет', after: 'Real-time дашборд', delta: '' },
-  { icon: '⏱', metric: 'Время до первого визита', before: 'Дни', after: 'Часы', delta: '' },
-  { icon: '🔔', metric: 'Пропущенные визиты', before: 'Часто', after: 'Редко', delta: '' },
+  { icon: 'lucide:users', metric: 'Сопровождение семей', before: 'Ручное, несистемное', after: 'Автоматизированный маршрут', delta: '' },
+  { icon: 'lucide:phone', metric: 'Работа координатора', before: 'Обзвоны вслепую', after: 'Приоритизированные задачи', delta: '' },
+  { icon: 'lucide:syringe', metric: 'Вакцинация по графику', before: 'Низкое соблюдение', after: 'Автонапоминания + контроль', delta: '' },
+  { icon: 'lucide:bar-chart-3', metric: 'Видимость в аналитику', before: 'Excel / нет', after: 'Real-time дашборд', delta: '' },
+  { icon: 'lucide:clock', metric: 'Время до первого визита', before: 'Дни', after: 'Часы', delta: '' },
+  { icon: 'lucide:bell', metric: 'Пропущенные визиты', before: 'Часто', after: 'Редко', delta: '' },
 ]
 
 const dayWithout = [
-  { time: '08:00', icon: '📋', title: 'Открывает Excel', desc: 'Ищет кого обзвонить. 142 строки, без фильтров.', mood: 'bad' },
-  { time: '09:00', icon: '📞', title: 'Обзвон вчерашних', desc: '20 номеров. 8 не берут. 3 ушли в другую клинику.', mood: 'bad' },
-  { time: '10:30', icon: '😰', title: 'Вопрос от мамы', desc: '«Когда прививка?» — ищет карту 15 мин.', mood: 'bad' },
-  { time: '12:00', icon: '📝', title: 'Ручная запись', desc: 'Звонит в регистратуру, ждёт окно. 5 мин на 1 запись.', mood: 'bad' },
-  { time: '14:00', icon: '🤷', title: 'Потерянная семья', desc: 'Семья не пришла на УЗИ 3 дня назад. Никто не заметил.', mood: 'bad' },
-  { time: '16:00', icon: '📊', title: 'Отчёт', desc: '«Сколько семей?» — «Нужно посчитать...» Нет данных.', mood: 'bad' },
+  { time: '08:00', icon: 'lucide:clipboard-list', title: 'Открывает Excel', desc: 'Ищет кого обзвонить. 142 строки, без фильтров.', mood: 'bad' },
+  { time: '09:00', icon: 'lucide:phone', title: 'Обзвон вчерашних', desc: '20 номеров. 8 не берут. 3 ушли в другую клинику.', mood: 'bad' },
+  { time: '10:30', icon: 'lucide:message-circle-warning', title: 'Вопрос от мамы', desc: '«Когда прививка?» — ищет карту 15 мин.', mood: 'bad' },
+  { time: '12:00', icon: 'lucide:pencil', title: 'Ручная запись', desc: 'Звонит в регистратуру, ждёт окно. 5 мин на 1 запись.', mood: 'bad' },
+  { time: '14:00', icon: 'lucide:alert-circle', title: 'Потерянная семья', desc: 'Семья не пришла на УЗИ 3 дня назад. Никто не заметил.', mood: 'bad' },
+  { time: '16:00', icon: 'lucide:bar-chart-3', title: 'Отчёт', desc: '«Сколько семей?» — «Нужно посчитать...» Нет данных.', mood: 'bad' },
 ]
 
 const dayWith = [
-  { time: '08:00', icon: '💻', title: 'Открывает панель', desc: '2 просрочено, 4 сегодня, 8 завтра — всё на экране.', mood: 'good' },
-  { time: '08:15', icon: '🔴', title: 'Просроченные', desc: 'Семья А. — клик → звонок. Записана.', mood: 'good' },
-  { time: '09:00', icon: '🔔', title: 'Автоуведомления', desc: '12 семей получили push. 9 подтвердили. 0 звонков.', mood: 'good' },
-  { time: '10:30', icon: '💬', title: 'Ответ маме', desc: 'Карта за 3 сек. Прививка через 2 недели. Ответ быстрый.', mood: 'good' },
-  { time: '12:00', icon: '📅', title: 'Автозапись', desc: 'Клик «Записать» → окно выбрано → готово.', mood: 'good' },
-  { time: '14:00', icon: '📊', title: 'Дашборд', desc: 'Удержание, визиты, NPS — всё на одном экране. Отчёт за 1 клик.', mood: 'good' },
+  { time: '08:00', icon: 'lucide:laptop', title: 'Открывает панель', desc: '2 просрочено, 4 сегодня, 8 завтра — всё на экране.', mood: 'good' },
+  { time: '08:15', icon: 'lucide:alert-circle', title: 'Просроченные', desc: 'Айгерим К. — клик → звонок. Записана.', mood: 'good' },
+  { time: '09:00', icon: 'lucide:bell', title: 'Автоуведомления', desc: '12 семей получили push. 9 подтвердили. 0 звонков.', mood: 'good' },
+  { time: '10:30', icon: 'lucide:message-circle', title: 'Ответ маме', desc: 'Карта за 3 сек. Прививка через 2 недели. Ответ быстрый.', mood: 'good' },
+  { time: '12:00', icon: 'lucide:calendar-check', title: 'Автозапись', desc: 'Клик «Записать» → окно выбрано → готово.', mood: 'good' },
+  { time: '14:00', icon: 'lucide:bar-chart-3', title: 'Дашборд', desc: 'Удержание, визиты, NPS — всё на одном экране. Отчёт за 1 клик.', mood: 'good' },
 ]
 </script>
 
@@ -399,6 +409,16 @@ const dayWith = [
   margin-bottom: 0;
 }
 
+.funnel-footnote {
+  max-width: 640px;
+  margin: 24px auto 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
 .loss-card {
   display: flex;
   align-items: center;
@@ -502,7 +522,7 @@ const dayWith = [
   font-weight: 600;
   color: var(--color-text-primary);
 }
-.ct-icon { font-size: 18px; flex-shrink: 0; }
+.ct-icon { flex-shrink: 0; color: var(--color-text-secondary); vertical-align: middle; margin-right: 6px; }
 .ct-before { background: rgba(212, 114, 124, 0.04); }
 .ct-after { display: flex; align-items: center; gap: 8px; }
 .ct-val { font-weight: 600; }
@@ -540,7 +560,9 @@ const dayWith = [
 }
 .day-label--bad { background: rgba(212, 114, 124, 0.08); color: var(--color-danger); }
 .day-label--good { background: var(--color-primary-light); color: var(--color-primary); }
-.day-emoji { font-size: 20px; }
+.day-emoji { vertical-align: middle; margin-right: 6px; }
+.day-label--bad .day-emoji { color: var(--color-danger); }
+.day-label--good .day-emoji { color: var(--color-primary); }
 .day-timeline { display: flex; flex-direction: column; gap: 10px; }
 .dt-event { display: flex; gap: 10px; align-items: flex-start; }
 .dt-time { flex-shrink: 0; width: 44px; font-size: 11px; color: var(--color-text-muted); padding-top: 10px; }
@@ -551,9 +573,12 @@ const dayWith = [
 }
 .dt-card.dt-bad { border-left: 3px solid var(--color-danger); }
 .dt-card.dt-good { border-left: 3px solid var(--color-success); }
-.dt-icon { font-size: 18px; flex-shrink: 0; padding-top: 2px; }
-.dt-title { font-size: 13px; color: var(--color-text-primary); display: block; margin-bottom: 2px; }
-.dt-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; margin: 0; }
+.dt-icon { flex-shrink: 0; padding-top: 2px; color: var(--color-text-secondary); }
+.dt-card.dt-bad .dt-icon { color: var(--color-danger); }
+.dt-card.dt-good .dt-icon { color: var(--color-primary); }
+.dt-body { display: flex; flex-direction: column; gap: var(--card-gap-xxs); min-width: 0; }
+.dt-title { font-size: 13px; font-weight: var(--fw-semibold); color: var(--color-text-primary); display: block; margin: 0; line-height: var(--lh-h4); }
+.dt-desc { font-size: 12px; color: var(--color-text-secondary); line-height: var(--lh-body); margin: 0; }
 .day-result {
   margin-top: 8px; padding: 12px 16px;
   border-radius: var(--radius-sm); font-size: 13px;

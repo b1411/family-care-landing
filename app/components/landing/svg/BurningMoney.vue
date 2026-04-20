@@ -1,7 +1,7 @@
 <template>
   <div ref="moneyRef" class="burning-wrap">
-    <svg viewBox="0 0 200 260" fill="none" class="burning-svg">
-      <!-- Stack of banknotes -->
+    <svg viewBox="0 0 200 260" fill="none" class="burning-svg" aria-hidden="true">
+      <!-- Stack of "control-point" cards that fall away -->
       <g v-for="(note, i) in 5" :key="i" :class="`banknote banknote-${i}`">
         <rect
           :x="30"
@@ -13,18 +13,42 @@
           :stroke="i < burned ? '#D1D5DB' : 'var(--color-border)'"
           stroke-width="1.5"
         />
-        <text
-          :x="100"
-          :y="185 - i * 16"
-          text-anchor="middle"
-          font-size="16"
-          font-weight="700"
-          :fill="i < burned ? '#D1D5DB' : 'var(--color-text-secondary)'"
-        >₸</text>
+        <!-- checkmark icon inside each card -->
+        <circle
+          :cx="60"
+          :cy="180 - i * 16"
+          r="8"
+          :fill="i < burned ? '#E5E7EB' : 'var(--color-primary-light)'"
+        />
+        <path
+          :d="`M ${56} ${180 - i * 16} l 3 3 l 6 -6`"
+          :stroke="i < burned ? '#D1D5DB' : 'var(--color-primary)'"
+          stroke-width="1.8"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <rect
+          :x="76"
+          :y="174 - i * 16"
+          width="70"
+          height="4"
+          rx="2"
+          :fill="i < burned ? '#E5E7EB' : 'var(--color-border)'"
+        />
+        <rect
+          :x="76"
+          :y="182 - i * 16"
+          width="45"
+          height="3"
+          rx="1.5"
+          :fill="i < burned ? '#F3F4F6' : 'var(--color-border)'"
+        />
       </g>
     </svg>
-    <div class="counter-label">Упущенная выручка:</div>
+    <div class="counter-label">Пропущенных точек контроля:</div>
     <div class="counter-value font-display">{{ formattedAmount }}</div>
+    <div class="counter-hint">анализы, прививки, осмотры, которых клиника не делает</div>
   </div>
 </template>
 
@@ -33,14 +57,14 @@ const { gsap, ScrollTrigger } = useGsap()
 
 const moneyRef = ref<HTMLElement | null>(null)
 const burned = ref(0)
-const amount = ref(0)
+// SSR-safe: initialize with final value so crawlers/slow loads never see "0"
+const amount = ref(1200)
 
-const targetAmount = 43_000_000
+// Target: ~1 200 missed events/year for a 30-family/month clinic (per TZ 0.2)
+const targetAmount = 1200
 const formattedAmount = computed(() => {
   const val = Math.round(amount.value)
-  if (val >= 1_000_000) return `${(val / 1_000_000).toFixed(0)} млн ₸/год`
-  if (val >= 1_000) return `${(val / 1_000).toFixed(0)} тыс ₸/год`
-  return `${val} ₸/год`
+  return `${val.toLocaleString('ru-RU')}+ в год`
 })
 
 onMounted(() => {
@@ -66,6 +90,9 @@ onMounted(() => {
     return
   }
 
+  // Desktop: start from ~80% of target so the number is already readable
+  amount.value = Math.round(targetAmount * 0.8)
+
   ScrollTrigger.create({
     trigger: moneyRef.value,
     start: 'top 70%',
@@ -73,11 +100,11 @@ onMounted(() => {
     scrub: 1,
     onUpdate(self: any) {
       const progress = self.progress
-      // Burn banknotes one by one
+      // Burn events one by one
       const burnIndex = Math.floor(progress * 5)
       burned.value = burnIndex
 
-      // Animate banknote flying away
+      // Animate card flying away
       banknotes.forEach((note, i) => {
         if (i < burnIndex) {
           gsap.set(note, { y: -80 - i * 20, opacity: 0, rotation: (Math.random() - 0.5) * 30 })
@@ -86,8 +113,8 @@ onMounted(() => {
         }
       })
 
-      // Counter
-      amount.value = progress * targetAmount
+      // Counter animates from 80% → 100%
+      amount.value = targetAmount * (0.8 + progress * 0.2)
     },
   })
 })
@@ -119,5 +146,15 @@ onMounted(() => {
   font-weight: 700;
   color: var(--color-danger);
   font-variant-numeric: tabular-nums;
+}
+
+.counter-hint {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 8px;
+  max-width: 240px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
 }
 </style>

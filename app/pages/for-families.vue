@@ -29,8 +29,17 @@ definePageMeta({ layout: 'landing' })
 
 useSeoMeta({
   title: 'UMAI Health для родителей — всё о малыше в одном приложении',
-  ogTitle: 'UMAI Health для родителей — всё о малыше в одном приложении',
-  description: 'Маршрут ребёнка, напоминания о витаминах, прививки, анализы — бесплатно от вашей клиники.',
-  ogDescription: 'Маршрут ребёнка, напоминания о витаминах, прививки, анализы — бесплатно от вашей клиники.',
+  ogTitle: 'UMAI Health для родителей',
+  description: 'Приложение от вашей клиники с маршрутом ребёнка: напоминания о витаминах, календарь прививок, хранение документов. Работает оффлайн.',
+  ogDescription: 'Маршрут ребёнка, напоминания, прививки, документы. Работает оффлайн. Бесплатно от вашей клиники.',
+  ogImage: 'https://umai-health.kz/og-image.png',
+  ogUrl: 'https://umai-health.kz/for-families',
+  twitterCard: 'summary_large_image',
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://umai-health.kz/for-families' },
+  ],
 })
 </script>
