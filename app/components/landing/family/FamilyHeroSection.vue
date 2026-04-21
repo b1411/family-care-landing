@@ -13,7 +13,7 @@
         <div class="hero-text">
           <span class="landing-badge badge-secondary" data-reveal="blur-in">ДЛЯ МАМЫ И ПАПЫ</span>
           <h1 ref="familyTitleRef" class="hero-title font-display">
-            Один маршрут.<br />Ноль забытых прививок.<br />Спокойные ночи.
+            Один маршрут. Ноль забытых прививок. Спокойные ночи.
           </h1>
           <p class="hero-subtitle" data-reveal="fade-up" data-reveal-delay="500">
             Приложение от вашей клиники, которое помнит всё за вас:<br />

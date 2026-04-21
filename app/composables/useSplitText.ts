@@ -44,8 +44,10 @@ export function useSplitText(
 
     const { gsap, ScrollTrigger } = useGsap()
 
-    // Store original HTML
-    const text = el.textContent || ''
+    // Store original text — collapse whitespace so markup like <br> or
+    // multi-line indentation inside the element doesn't leak as stray spaces
+    // or glue sentences together after textContent strips tags.
+    const text = (el.textContent || '').replace(/\s+/g, ' ').trim()
 
     let elements: HTMLElement[] = []
 

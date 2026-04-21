@@ -12,8 +12,10 @@ export default defineNuxtConfig({
   ],
 
   fonts: {
+    // Satoshi is declared only in CSS font-family fallback (system-ui fallback).
+    // It is not fetched through @nuxt/fonts because Fontshare's network is
+    // unreliable during Vercel build — see failed deploy dpl_jpKt7WHgrTgcfWjr5WnCmPBjaErQ.
     families: [
-      { name: 'Satoshi', provider: 'fontshare', weights: [500, 700, 900] },
       { name: 'Inter', provider: 'google', weights: [400, 500, 600, 700] },
       { name: 'JetBrains Mono', provider: 'google', weights: [400, 500, 600] },
     ],

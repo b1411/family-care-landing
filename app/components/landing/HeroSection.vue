@@ -19,8 +19,8 @@
         </h1>
 
         <p ref="heroSubRef" class="hero-subtitle font-body">
-          Названа в честь Умай&nbsp;— тюркской богини-покровительницы матерей и&nbsp;детей.
-          Цифровой оберег семьи от&nbsp;зачатия до&nbsp;2&nbsp;лет
+          Цифровая платформа сопровождения здоровья матери и&nbsp;ребёнка&nbsp;— от&nbsp;беременности до&nbsp;2&nbsp;лет.
+          Объединяет клинику и&nbsp;семью в&nbsp;едином маршруте наблюдения.
           <span class="hero-typewriter" :class="{ 'typewriter-active': isTyping, 'typewriter-done': isDone }">{{ displayText }}</span>
         </p>
 
