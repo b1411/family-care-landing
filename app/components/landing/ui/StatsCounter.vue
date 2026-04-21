@@ -4,7 +4,7 @@
       <Icon :name="icon" class="icon" />
     </div>
     <div class="counter-value font-display" ref="valueEl">
-      {{ prefix }}0{{ suffix }}
+      {{ displayValue }}
     </div>
     <p v-if="label" class="counter-label">{{ label }}</p>
     <p v-if="sublabel" class="counter-sublabel">{{ sublabel }}</p>
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<{
 
 const valueEl = ref<HTMLElement | null>(null)
 
-useCountUp(valueEl, props.target, {
+const { displayValue } = useCountUp(valueEl, props.target, {
   duration: props.duration,
   delay: props.delay,
   prefix: props.prefix,

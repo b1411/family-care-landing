@@ -109,32 +109,38 @@ const statusLabel = computed(() => {
 }
 
 .apt-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-xxs);
   flex: 1;
   min-width: 0;
 }
 
 .apt-reason {
+  margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text-primary);
-  margin-bottom: 2px;
+  line-height: 1.3;
 }
 
 .apt-details {
+  margin: 0;
   font-size: 0.8rem;
   color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   gap: 4px;
+  line-height: 1.3;
 }
 
 .apt-status-badge {
+  align-self: flex-start;
   display: inline-block;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 4px;
-  margin-top: 4px;
 }
 
 .apt-status-badge.confirmed { background: rgba(124, 184, 212, 0.15); color: var(--color-success); }

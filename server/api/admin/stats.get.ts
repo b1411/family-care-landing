@@ -1,32 +1,25 @@
-// GET /api/admin/stats — admin dashboard KPIs
-import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
+// GET /api/admin/stats — admin dashboard KPIs (scoped to clinic unless platform admin)
+import { serverSupabaseClient } from '#supabase/server'
+import { requireAdmin } from '~~/server/utils/admin-auth'
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-
+  const ctx = await requireAdmin(event)
   const supabase = await serverSupabaseClient(event)
 
-  // Verify admin role
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role, clinic_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !['admin', 'clinic_admin', 'platform_admin', 'superadmin'].includes(profile.role)) {
-    throw createError({ statusCode: 403, statusMessage: 'Admin access required' })
-  }
-
-  // Parallel fetch counts
   const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10)
+
+  const scope = <T extends { eq: (c: string, v: string) => T }>(q: T): T =>
+    ctx.isPlatform ? q : q.eq('clinic_id', ctx.clinicId as string)
+
   const [usersResult, familiesResult, doctorsResult, appointmentsResult] = await Promise.all([
-    supabase.from('users').select('id', { count: 'exact', head: true }),
-    supabase.from('families').select('id', { count: 'exact', head: true }),
-    supabase.from('doctors').select('id', { count: 'exact', head: true }),
-    supabase.from('appointments')
-      .select('id', { count: 'exact', head: true })
-      .gte('appointment_date', firstOfMonth),
+    scope(supabase.from('users').select('id', { count: 'exact', head: true })),
+    scope(supabase.from('families').select('id', { count: 'exact', head: true })),
+    scope(supabase.from('doctors').select('id', { count: 'exact', head: true })),
+    scope(
+      supabase.from('appointments')
+        .select('id', { count: 'exact', head: true })
+        .gte('appointment_date', firstOfMonth)
+    ),
   ])
 
   return {

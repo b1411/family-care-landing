@@ -1,22 +1,10 @@
-// GET /api/admin/users — list users (admin only)
-import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
+// GET /api/admin/users — list users (admin only, scoped to clinic unless platform admin)
+import { serverSupabaseClient } from '#supabase/server'
+import { requireAdmin } from '~~/server/utils/admin-auth'
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-
+  const ctx = await requireAdmin(event)
   const supabase = await serverSupabaseClient(event)
-
-  // Verify admin role
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role, clinic_id')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !['admin', 'clinic_admin', 'platform_admin', 'superadmin'].includes(profile.role)) {
-    throw createError({ statusCode: 403, statusMessage: 'Admin access required' })
-  }
 
   const query = getQuery(event)
   const page = Math.max(1, Number(query.page) || 1)
@@ -30,9 +18,8 @@ export default defineEventHandler(async (event) => {
     .order('created_at', { ascending: false })
     .range((page - 1) * perPage, page * perPage - 1)
 
-  // Scope to clinic for clinic_admin
-  if (profile.role === 'clinic_admin' && profile.clinic_id) {
-    q = q.eq('clinic_id', profile.clinic_id)
+  if (!ctx.isPlatform) {
+    q = q.eq('clinic_id', ctx.clinicId as string)
   }
 
   if (role) q = q.eq('role', role)

@@ -53,12 +53,12 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Неизвестная роль' })
   }
 
-  // Get demo password from env or use default
-  const password = process.env.DEMO_PASSWORD || 'DemoPass123!'
+  const password = process.env.DEMO_PASSWORD
   const supabaseUrl = process.env.SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  if (!supabaseUrl || !supabaseKey) {
+  if (!password || !supabaseUrl || !supabaseKey) {
+    if (!password) console.error('DEMO_PASSWORD env var is not set')
     throw createError({ statusCode: 500, message: 'Сервер не настроен' })
   }
 

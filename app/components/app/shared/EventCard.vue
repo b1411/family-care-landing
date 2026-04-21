@@ -94,11 +94,15 @@ const eventTypeLabel = computed(() => {
 .today .event-status-dot { background: var(--color-primary); }
 
 .event-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-xxs);
   flex: 1;
   min-width: 0;
 }
 
 .event-type-badge {
+  align-self: flex-start;
   display: inline-block;
   font-size: 0.7rem;
   font-weight: 600;
@@ -106,29 +110,30 @@ const eventTypeLabel = computed(() => {
   background: var(--color-primary-ultralight);
   padding: 2px 8px;
   border-radius: 4px;
-  margin-bottom: 4px;
 }
 
 .event-title {
+  margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text-primary);
-  margin-bottom: 2px;
+  line-height: 1.3;
 }
 
 .event-desc {
+  margin: 0;
   font-size: 0.8rem;
   color: var(--color-text-secondary);
   line-height: 1.4;
 }
 
 .event-date {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.3;
 }
 
 .event-actions {

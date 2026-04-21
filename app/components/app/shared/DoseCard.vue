@@ -79,19 +79,26 @@ const formattedTime = computed(() => formatDateTime(props.dose.scheduled_at))
 }
 
 .dose-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-xxs);
   flex: 1;
   min-width: 0;
 }
 
 .dose-medication {
+  margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text-primary);
+  line-height: 1.3;
 }
 
 .dose-time {
+  display: block;
   font-size: 0.75rem;
   color: var(--color-text-muted);
+  line-height: 1.3;
 }
 
 .dose-actions {

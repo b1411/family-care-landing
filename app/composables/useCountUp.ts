@@ -24,10 +24,6 @@ export function useCountUp(
   const decimals = options?.decimals ?? 0
   const enablePulse = options?.enablePulse ?? true
 
-  const displayValue = ref(`${prefix}0${suffix}`)
-  const hasAnimated = ref(false)
-  let observer: IntersectionObserver | null = null
-
   function formatNumber(val: number): string {
     const fixed = val.toFixed(decimals)
     const [intPart, decPart] = fixed.split('.')
@@ -35,17 +31,34 @@ export function useCountUp(
     return `${prefix}${decPart ? `${formatted}.${decPart}` : formatted}${suffix}`
   }
 
+  // Render final value by default — ensures SSR output and fallback behavior
+  // always show the real number. If the counter scrolls into view from below,
+  // animation replaces it with a 0→target tween.
+  const displayValue = ref(formatNumber(target))
+  const hasAnimated = ref(false)
+  let observer: IntersectionObserver | null = null
+
   onMounted(() => {
     if (!elRef.value) return
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      displayValue.value = formatNumber(target)
+      hasAnimated.value = true
+      return
+    }
+
+    // If the element is already visible on mount, don't bother animating —
+    // the target value is already displayed, and flashing back to 0 looks worse
+    // than skipping the animation. Only animate when the user scrolls into it.
+    const rect = elRef.value.getBoundingClientRect()
+    const alreadyInView = rect.top < window.innerHeight && rect.bottom > 0
+    if (alreadyInView) {
       hasAnimated.value = true
       return
     }
 
     const { gsap } = useGsap()
     const obj = { val: 0 }
+    displayValue.value = formatNumber(0)
 
     observer = new IntersectionObserver(
       (entries) => {
@@ -60,16 +73,12 @@ export function useCountUp(
             ease: 'power2.out',
             onUpdate: () => {
               displayValue.value = formatNumber(obj.val)
-              if (elRef.value) elRef.value.textContent = displayValue.value
             },
             onComplete: () => {
               displayValue.value = formatNumber(target)
-              if (elRef.value) {
-                elRef.value.textContent = displayValue.value
-                if (enablePulse) {
-                  elRef.value.classList.add('number-pulse')
-                  setTimeout(() => elRef.value?.classList.remove('number-pulse'), 600)
-                }
+              if (enablePulse && elRef.value) {
+                elRef.value.classList.add('number-pulse')
+                setTimeout(() => elRef.value?.classList.remove('number-pulse'), 600)
               }
             },
           })

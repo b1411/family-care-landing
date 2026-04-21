@@ -1139,6 +1139,9 @@ onBeforeUnmount(() => {
 .s-item-icon--vaccine { background: var(--color-success); }
 
 .s-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-xxs);
   flex: 1;
   min-width: 0;
 }
@@ -1152,8 +1155,10 @@ onBeforeUnmount(() => {
 }
 
 .s-item-meta {
+  display: block;
   font-size: 9.5px;
   color: var(--color-text-muted);
+  line-height: 1.3;
 }
 
 .s-item-tag {

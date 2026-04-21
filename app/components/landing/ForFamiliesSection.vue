@@ -228,6 +228,9 @@ const benefits = [
 }
 
 .item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap-xxs);
   flex: 1;
   min-width: 0;
 }
@@ -243,8 +246,10 @@ const benefits = [
 }
 
 .item-sub {
+  display: block;
   font-size: 11px;
   color: var(--color-text-muted);
+  line-height: 1.3;
 }
 
 .item-badge {

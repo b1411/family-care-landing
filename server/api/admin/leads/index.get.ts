@@ -1,7 +1,9 @@
-// GET /api/admin/leads — List leads with filters
+// GET /api/admin/leads — List leads with filters (admin only, scoped to clinic)
 import { serverSupabaseClient } from '#supabase/server'
+import { requireAdmin } from '~~/server/utils/admin-auth'
 
 export default defineEventHandler(async (event) => {
+  const ctx = await requireAdmin(event)
   const client = await serverSupabaseClient(event)
   const query = getQuery(event)
 
@@ -21,6 +23,10 @@ export default defineEventHandler(async (event) => {
     `, { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(from, to)
+
+  if (!ctx.isPlatform) {
+    q = q.eq('clinic_id', ctx.clinicId as string)
+  }
 
   if (query.stage && query.stage !== 'all') {
     q = q.eq('stage', query.stage)

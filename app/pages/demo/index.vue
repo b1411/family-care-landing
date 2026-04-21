@@ -6,7 +6,15 @@
       <div class="blob blob-2" />
     </div>
 
-    <div class="demo-container landing-container">
+    <!-- Full-page auto-entry loader (hides selector until redirect or error) -->
+    <div v-if="deeplinkBooting" class="demo-boot" role="status" aria-live="polite">
+      <span class="demo-boot-spinner" />
+      <p class="demo-boot-label font-heading">
+        Входим как {{ activeRoleLabel || 'пользователь' }}…
+      </p>
+    </div>
+
+    <div v-else class="demo-container landing-container">
       <div class="demo-header">
         <NuxtLink to="/" class="demo-back font-heading">
           <Icon name="lucide:arrow-left" size="16" />
@@ -102,6 +110,9 @@ const authStore = useAuthStore()
 const route = useRoute()
 const loadingRole = ref<string | null>(null)
 const error = ref('')
+// True while we're auto-entering via ?role=... deeplink — hides the selector
+// to avoid a flash of the role grid before the redirect lands.
+const deeplinkBooting = ref(false)
 
 const DEMO_HOME: Record<string, string> = {
   mom: '/family',
@@ -232,7 +243,7 @@ async function enterDemo(roleKey: string) {
 }
 
 // Deeplink auto-entry: /demo?role=mom|coordinator|doctor|admin|director
-onMounted(() => {
+onMounted(async () => {
   // Log invalid values to console (per TZ 0.3) but never break the page
   if (rawRoleParam.value && !deeplinkRole.value) {
     // eslint-disable-next-line no-console
@@ -240,7 +251,15 @@ onMounted(() => {
     return
   }
   if (deeplinkRole.value) {
-    enterDemo(deeplinkRole.value)
+    deeplinkBooting.value = true
+    try {
+      await enterDemo(deeplinkRole.value)
+    }
+    finally {
+      // If enterDemo succeeds, navigateTo has already moved us away; if it
+      // errors, drop back to the selector so the user can retry manually.
+      deeplinkBooting.value = false
+    }
   }
 })
 </script>
@@ -251,6 +270,37 @@ onMounted(() => {
   min-height: 100vh;
   padding: 120px 0 80px;
   overflow: hidden;
+}
+
+.demo-boot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 60vh;
+}
+
+.demo-boot-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid var(--color-primary-ultralight);
+  border-top-color: var(--color-primary);
+  animation: demo-spin 0.9s linear infinite;
+}
+
+.demo-boot-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+@keyframes demo-spin {
+  to { transform: rotate(360deg); }
 }
 
 .demo-ambient {

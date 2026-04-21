@@ -49,6 +49,14 @@
   --app-gap-md: 16px;
   --app-gap-lg: 24px;
   --app-gap-xl: 32px;
+
+  /* Card content gap tokens — use on flex-column wrappers to prevent
+     title/meta visual collisions. Match landing.css scale. */
+  --card-gap-xxs: 4px;
+  --card-gap-xs: 8px;
+  --card-gap-sm: 12px;
+  --card-gap-md: 16px;
+  --card-gap-lg: 24px;
 }
 
 @media (max-width: 768px) {

@@ -1,6 +1,7 @@
-// PUT /api/admin/users/[id] — update user role/status (admin only)
+// PUT /api/admin/users/[id] — update user role/status (admin only, scoped to clinic)
 import { z } from 'zod'
-import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
+import { serverSupabaseClient } from '#supabase/server'
+import { requireAdmin } from '~~/server/utils/admin-auth'
 
 const schema = z.object({
   role: z.enum(['mother', 'father', 'coordinator', 'doctor', 'gynecologist', 'pediatrician', 'nurse', 'admin', 'clinic_admin', 'clinic_manager']).optional(),
@@ -9,31 +10,37 @@ const schema = z.object({
 }).refine(obj => Object.keys(obj).length > 0, { message: 'At least one field is required' })
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  const ctx = await requireAdmin(event)
 
   const targetId = getRouterParam(event, 'id')
   if (!targetId) throw createError({ statusCode: 400, statusMessage: 'User ID required' })
 
   const supabase = await serverSupabaseClient(event)
 
-  // Verify admin role
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || !['admin', 'clinic_admin', 'platform_admin', 'superadmin'].includes(profile.role)) {
-    throw createError({ statusCode: 403, statusMessage: 'Admin access required' })
-  }
-
-  // Prevent self-demotion
-  if (targetId === user.id && profile.role !== 'superadmin') {
+  // Prevent self-demotion (only superadmin can change own role)
+  if (targetId === ctx.userId && ctx.role !== 'superadmin') {
     throw createError({ statusCode: 400, statusMessage: 'Cannot modify own role' })
   }
 
   const body = await readValidatedBody(event, schema.parse)
+
+  // Non-platform admins can only modify users within their own clinic,
+  // and cannot reassign a user to a different clinic.
+  if (!ctx.isPlatform) {
+    const { data: target } = await supabase
+      .from('users')
+      .select('clinic_id')
+      .eq('id', targetId)
+      .single()
+
+    if (!target || target.clinic_id !== ctx.clinicId) {
+      throw createError({ statusCode: 404, statusMessage: 'User not found' })
+    }
+
+    if (body.clinic_id && body.clinic_id !== ctx.clinicId) {
+      throw createError({ statusCode: 403, statusMessage: 'Cannot move user to another clinic' })
+    }
+  }
 
   const { data, error } = await supabase
     .from('users')
