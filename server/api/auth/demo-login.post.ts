@@ -58,7 +58,12 @@ export default defineEventHandler(async (event) => {
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!password || !supabaseUrl || !supabaseKey) {
-    if (!password) console.error('DEMO_PASSWORD env var is not set')
+    const missing = [
+      !password && 'DEMO_PASSWORD',
+      !supabaseUrl && 'SUPABASE_URL',
+      !supabaseKey && 'SUPABASE_SERVICE_ROLE_KEY',
+    ].filter(Boolean).join(', ')
+    console.error(`[demo-login] Missing env vars: ${missing}`)
     throw createError({ statusCode: 500, message: 'Сервер не настроен' })
   }
 
