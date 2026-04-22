@@ -6,12 +6,13 @@ const DEMO_ACCOUNTS: Record<string, { email: string; dbRole: string; firstName: 
   coordinator: { email: 'dinara@demo.kz', dbRole: 'coordinator', firstName: 'Динара', lastName: 'Демо' },
   admin: { email: 'admin@demo.kz', dbRole: 'admin', firstName: 'Аскар', lastName: 'Демо' },
   doctor: { email: 'doctor@demo.kz', dbRole: 'doctor', firstName: 'Сауле', lastName: 'Демо' },
+  chief: { email: 'chief@demo.kz', dbRole: 'chief_doctor', firstName: 'Марат', lastName: 'Демо' },
 }
 
 const DEMO_CLINIC_ID = '10000000-0000-0000-0000-000000000001'
 
 const schema = z.object({
-  role: z.enum(['mom', 'coordinator', 'admin', 'doctor']),
+  role: z.enum(['mom', 'coordinator', 'admin', 'doctor', 'chief']),
 })
 
 // Simple per-IP rate limit for demo login: 10 requests per minute
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
   const parsed = schema.safeParse(body)
 
   if (!parsed.success) {
-    throw createError({ statusCode: 400, message: 'Укажите корректную роль: mom, coordinator, admin или doctor' })
+    throw createError({ statusCode: 400, message: 'Укажите корректную роль: mom, coordinator, admin, doctor или chief' })
   }
 
   const { role } = parsed.data
@@ -119,7 +120,7 @@ export default defineEventHandler(async (event) => {
     // Ensure public.users record exists
     const userId = created?.user?.id
     if (userId) {
-      await supabase.from('users').upsert({
+      const { error: upsertErr } = await supabase.from('users').upsert({
         id: userId,
         email: account.email,
         role: account.dbRole,
@@ -130,6 +131,21 @@ export default defineEventHandler(async (event) => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       }, { onConflict: 'id' })
+      if (upsertErr) {
+        console.error(`[demo-login] public.users upsert failed for role=${role} (${account.dbRole}):`, upsertErr.message, upsertErr.details)
+        // Most common cause: CHECK constraint — the role is not yet allowed
+        // because migrations adding it haven't been applied.
+        if (upsertErr.message?.includes('users_role_check')) {
+          throw createError({
+            statusCode: 503,
+            message: `Роль ${account.dbRole} ещё не добавлена в БД. Примените миграции 019–025.`,
+          })
+        }
+        throw createError({
+          statusCode: 500,
+          message: `Не удалось создать профиль: ${upsertErr.message}`,
+        })
+      }
     }
 
     // Retry sign in after provisioning
@@ -142,10 +158,10 @@ export default defineEventHandler(async (event) => {
   }
 
   if (error || !data.session) {
-    console.error('Demo login failed:', error?.message)
+    console.error(`[demo-login] sign-in failed for role=${role} email=${account.email}:`, error?.message)
     throw createError({
       statusCode: 500,
-      message: 'Демо-аккаунт недоступен. Попробуйте позже.',
+      message: `Не удалось войти: ${error?.message ?? 'неизвестная ошибка'}`,
     })
   }
 

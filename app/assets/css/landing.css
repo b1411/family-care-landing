@@ -36,6 +36,8 @@ html.lenis, html.lenis body {
   --color-secondary: #E8A0BF;
   --color-secondary-dark: #D47EA5;
   --color-secondary-light: #FDE8F0;
+  /* Alias — legacy code uses --color-accent-rose in 9 places */
+  --color-accent-rose: #E8A0BF;
 
   /* Accent */
   --color-accent-warm: #F2C4A0;

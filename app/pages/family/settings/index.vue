@@ -83,6 +83,27 @@
       </div>
     </section>
 
+    <!-- Contact chief doctor -->
+    <section v-if="authStore.familyId" class="settings-section">
+      <h2 class="section-title">Обратная связь с клиникой</h2>
+      <div class="settings-card">
+        <p class="settings-desc">
+          Есть вопросы по лечению, замечания к врачу или предложение?
+          Мы передадим обращение главврачу — он разберёт ситуацию лично.
+        </p>
+        <button class="btn-contact" @click="complaintOpen = true">
+          <Icon name="lucide:message-square" size="16" /> Написать главврачу
+        </button>
+      </div>
+    </section>
+
+    <AppFamilyComplaintModal
+      v-if="authStore.familyId"
+      :open="complaintOpen"
+      :family-id="authStore.familyId"
+      @close="complaintOpen = false"
+    />
+
     <!-- Add Child Modal -->
     <Teleport to="body">
       <div v-if="showAddChild" class="modal-overlay" @click.self="showAddChild = false">
@@ -125,6 +146,7 @@ const familyComposable = useFamily()
 const saving = ref(false)
 const showAddChild = ref(false)
 const inviteCode = ref('')
+const complaintOpen = ref(false)
 
 const profileForm = reactive({
   first_name: authStore.profile?.first_name || '',
@@ -219,12 +241,14 @@ async function toggleConsent(type: ConsentType, granted: boolean) {
 }
 .btn-save:disabled { opacity: 0.6; }
 
-.btn-add, .btn-invite {
-  display: flex; align-items: center; gap: 6px; padding: 8px 14px;
+.btn-add, .btn-invite, .btn-contact {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
   background: var(--color-primary-ultralight); color: var(--color-primary);
   border: 1px solid var(--color-primary); border-radius: var(--radius-sm);
   font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: var(--font-body);
+  transition: all 0.2s;
 }
+.btn-contact:hover { background: var(--color-primary); color: white; }
 
 .children-list { display: flex; flex-direction: column; gap: 8px; }
 .child-card {

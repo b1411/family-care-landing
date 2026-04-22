@@ -74,11 +74,17 @@
       </div>
       <div v-for="rx in prescriptions" :key="rx.id" class="rx-row">
         <div class="rx-info">
-          <h4>{{ rx.medication }}</h4>
+          <h4>
+            {{ rx.medication }}
+            <span v-if="rx.inn" class="rx-inn">({{ rx.inn }})</span>
+          </h4>
           <p>{{ rx.dosage }} · {{ rx.frequency }}</p>
           <span class="rx-dates">{{ rx.startDate }} — {{ rx.endDate || 'бессрочно' }}</span>
         </div>
-        <span class="rx-badge" :class="{ active: rx.active }">{{ rx.active ? 'Активно' : 'Завершено' }}</span>
+        <div class="rx-badges">
+          <span v-if="!rx.inn" class="rx-flag">без МНН</span>
+          <span class="rx-badge" :class="{ active: rx.active }">{{ rx.active ? 'Активно' : 'Завершено' }}</span>
+        </div>
       </div>
     </div>
 
@@ -105,14 +111,65 @@
 
     <!-- Prescription modal -->
     <Teleport to="body">
-      <div v-if="showRx" class="modal-overlay" @click.self="showRx = false">
+      <div v-if="showRx" class="modal-overlay" @click.self="closeRx">
         <div class="modal-card">
           <h2 class="modal-title">Новое назначение</h2>
-          <div class="fg"><label class="fl">Препарат</label><input v-model="rxForm.medication" class="fi" placeholder="Витамин D3" /></div>
+
+          <div class="fg">
+            <label class="fl">Препарат (торговое название)</label>
+            <input v-model="rxForm.medication" class="fi" placeholder="Аквадетрим" />
+          </div>
+
+          <div class="fg">
+            <label class="fl">МНН (международное непатентованное)</label>
+            <input v-model="rxForm.inn_name" class="fi" placeholder="Холекальциферол" />
+            <p class="fh">Без МНН назначение не попадает в аудит главврача.</p>
+          </div>
+
           <div class="fg-row">
-            <div class="fg"><label class="fl">Дозировка</label><input v-model="rxForm.dosage" class="fi" placeholder="1000 МЕ" /></div>
+            <div class="fg">
+              <label class="fl">Доза</label>
+              <input v-model.number="rxForm.dose_value" class="fi" type="number" step="0.001" placeholder="1000" />
+            </div>
+            <div class="fg">
+              <label class="fl">Ед.</label>
+              <select v-model="rxForm.dose_unit" class="fi">
+                <option value="">—</option>
+                <option value="mg">мг</option>
+                <option value="mcg">мкг</option>
+                <option value="g">г</option>
+                <option value="ml">мл</option>
+                <option value="IU">МЕ</option>
+                <option value="drop">кап</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label class="fl">Путь</label>
+              <select v-model="rxForm.route" class="fi">
+                <option value="">—</option>
+                <option value="per_os">внутрь</option>
+                <option value="im">в/м</option>
+                <option value="iv">в/в</option>
+                <option value="sc">п/к</option>
+                <option value="topical">наружно</option>
+                <option value="inhaled">ингал.</option>
+                <option value="pr">ректально</option>
+                <option value="ophthalmic">в глаз</option>
+                <option value="otic">в ухо</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="fg-row">
+            <div class="fg"><label class="fl">Дозировка (текст)</label><input v-model="rxForm.dosage" class="fi" placeholder="1000 МЕ" /></div>
             <div class="fg"><label class="fl">Частота</label><input v-model="rxForm.frequency" class="fi" placeholder="1 раз в день" /></div>
           </div>
+
+          <div class="fg">
+            <label class="fl">Показание (МКБ-10)</label>
+            <AppSharedIcdAutocomplete v-model="rxForm.icd10_indication" placeholder="Код или название показания" />
+          </div>
+
           <div class="fg">
             <label class="fl">Время приёма</label>
             <div class="time-grid">
@@ -121,14 +178,22 @@
               </label>
             </div>
           </div>
+
           <div class="fg-row">
             <div class="fg"><label class="fl">Начало</label><input v-model="rxForm.startDate" type="date" class="fi" /></div>
             <div class="fg"><label class="fl">Конец</label><input v-model="rxForm.endDate" type="date" class="fi" /></div>
           </div>
+
           <div class="fg"><label class="fl">Примечания</label><textarea v-model="rxForm.instructions" class="fi" rows="2" placeholder="Принимать после еды" /></div>
+
+          <div v-if="rxError" class="rx-err">{{ rxError }}</div>
+
           <div class="modal-actions">
-            <button class="btn-cancel" @click="showRx = false">Отмена</button>
-            <button class="btn-submit" @click="showRx = false">Назначить</button>
+            <button class="btn-cancel" :disabled="rxSubmitting" @click="closeRx">Отмена</button>
+            <button class="btn-submit" :disabled="rxSubmitting || !canSubmitRx" @click="submitRx">
+              <Icon v-if="rxSubmitting" name="lucide:loader-2" size="14" class="spin" />
+              Назначить
+            </button>
           </div>
         </div>
       </div>
@@ -142,7 +207,112 @@ definePageMeta({ layout: 'app' })
 const route = useRoute()
 const sb = useSupabaseClient()
 const showRx = ref(false)
-const rxForm = reactive({ medication: '', dosage: '', frequency: '', times: [] as string[], startDate: '', endDate: '', instructions: '' })
+const rxSubmitting = ref(false)
+const rxError = ref('')
+const rxForm = reactive<{
+  medication: string
+  inn_name: string
+  dose_value: number | null
+  dose_unit: string
+  route: string
+  icd10_indication: string | null
+  dosage: string
+  frequency: string
+  times: string[]
+  startDate: string
+  endDate: string
+  instructions: string
+}>({
+  medication: '',
+  inn_name: '',
+  dose_value: null,
+  dose_unit: '',
+  route: '',
+  icd10_indication: null,
+  dosage: '',
+  frequency: '',
+  times: [],
+  startDate: new Date().toISOString().slice(0, 10),
+  endDate: '',
+  instructions: '',
+})
+
+const canSubmitRx = computed(() =>
+  rxForm.medication.trim().length > 0
+    && rxForm.dosage.trim().length > 0
+    && rxForm.frequency.trim().length > 0
+    && rxForm.times.length > 0
+    && rxForm.startDate.length === 10,
+)
+
+function resetRxForm() {
+  rxForm.medication = ''
+  rxForm.inn_name = ''
+  rxForm.dose_value = null
+  rxForm.dose_unit = ''
+  rxForm.route = ''
+  rxForm.icd10_indication = null
+  rxForm.dosage = ''
+  rxForm.frequency = ''
+  rxForm.times = []
+  rxForm.startDate = new Date().toISOString().slice(0, 10)
+  rxForm.endDate = ''
+  rxForm.instructions = ''
+  rxError.value = ''
+}
+function closeRx() {
+  if (rxSubmitting.value) return
+  showRx.value = false
+}
+async function submitRx() {
+  rxError.value = ''
+  if (!canSubmitRx.value) {
+    rxError.value = 'Заполните препарат, дозировку, частоту, время приёма и дату начала.'
+    return
+  }
+  const familyId = route.params.id as string
+  rxSubmitting.value = true
+  try {
+    const res: any = await $fetch('/api/prescriptions', {
+      method: 'POST',
+      body: {
+        family_id: familyId,
+        medication: rxForm.medication.trim(),
+        inn_name: rxForm.inn_name.trim() || undefined,
+        dose_value: rxForm.dose_value ?? undefined,
+        dose_unit: rxForm.dose_unit || undefined,
+        route: rxForm.route || undefined,
+        icd10_indication: rxForm.icd10_indication || undefined,
+        dosage: rxForm.dosage.trim(),
+        frequency: rxForm.frequency.trim(),
+        time_of_day: rxForm.times,
+        start_date: rxForm.startDate,
+        end_date: rxForm.endDate || undefined,
+        instructions: rxForm.instructions.trim() || undefined,
+      },
+    })
+    prescriptions.value = [
+      {
+        id: res.id,
+        medication: res.medication,
+        dosage: res.dosage,
+        frequency: res.frequency,
+        startDate: res.start_date ? formatDate(res.start_date) : '',
+        endDate: res.end_date ? formatDate(res.end_date) : '',
+        active: res.is_active !== false,
+      },
+      ...prescriptions.value,
+    ]
+    showRx.value = false
+    resetRxForm()
+  }
+  catch (err: any) {
+    rxError.value = err?.data?.statusMessage || err?.message || 'Не удалось сохранить назначение'
+  }
+  finally {
+    rxSubmitting.value = false
+  }
+}
 const activeTab = ref('all')
 const loading = ref(true)
 const patientName = ref('Пациент')
@@ -228,10 +398,20 @@ onMounted(async () => {
   }
 
   // Prescriptions
-  const { data: rxData } = await sb.from('prescriptions').select('id, medication, dosage, frequency, start_date, end_date, is_active').eq('family_id', familyId)
+  const { data: rxData } = await sb
+    .from('prescriptions')
+    .select('id, medication, inn_name, dosage, frequency, start_date, end_date, is_active')
+    .eq('family_id', familyId)
+    .order('start_date', { ascending: false })
   prescriptions.value = (rxData || []).map(r => ({
-    id: r.id, medication: r.medication, dosage: r.dosage, frequency: r.frequency,
-    startDate: r.start_date ? formatDate(r.start_date) : '', endDate: r.end_date ? formatDate(r.end_date) : '', active: r.is_active !== false,
+    id: r.id,
+    medication: r.medication,
+    inn: r.inn_name || '',
+    dosage: r.dosage,
+    frequency: r.frequency,
+    startDate: r.start_date ? formatDate(r.start_date) : '',
+    endDate: r.end_date ? formatDate(r.end_date) : '',
+    active: r.is_active !== false,
   }))
 
   // Vaccinations (for first child)
@@ -326,6 +506,9 @@ onMounted(async () => {
 .rx-dates { font-size: 0.72rem; color: var(--color-text-muted); }
 .rx-badge { font-size: 0.68rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; background: rgba(139,126,200,0.06); color: var(--color-text-muted); }
 .rx-badge.active { background: rgba(124,184,212,0.1); color: var(--color-success); }
+.rx-badges { display: flex; gap: 6px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+.rx-flag { font-size: 0.62rem; font-weight: 700; padding: 3px 7px; border-radius: 6px; background: rgba(210, 140, 50, 0.12); color: #b27100; text-transform: uppercase; letter-spacing: 0.04em; }
+.rx-inn { font-weight: 500; font-size: 0.75rem; color: var(--color-primary); margin-left: 4px; }
 .btn-add { display: flex; align-items: center; gap: 4px; padding: 5px 12px; background: rgba(139,126,200,0.06); color: var(--color-primary); border: 1px solid var(--color-primary); border-radius: 10px; font-size: 0.75rem; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
 
 /* Vaccinations */
@@ -360,7 +543,13 @@ onMounted(async () => {
 .time-check input { accent-color: var(--color-primary); }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .btn-cancel { padding: 8px 16px; background: none; border: 1px solid var(--color-border-light); border-radius: 10px; cursor: pointer; font-family: var(--font-body); }
-.btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); }
+.btn-cancel:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-submit { padding: 8px 20px; background: var(--gradient-cta); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: var(--font-body); display: inline-flex; align-items: center; gap: 6px; }
+.btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+.fh { font-size: 0.72rem; color: var(--color-text-muted); margin: 2px 0 0; }
+.rx-err { padding: 10px 12px; background: rgba(200, 90, 106, 0.08); color: var(--color-danger); border-radius: 8px; font-size: 0.8rem; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 768px) {
   .pd-page { max-width: 100%; gap: 12px; }

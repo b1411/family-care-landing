@@ -46,10 +46,27 @@
             <span class="apt-name">{{ a.reason }}</span>
             <span class="apt-meta">{{ a.doctor_name }} · {{ a.specialty }}</span>
           </div>
-          <span class="apt-badge apt-badge--completed">Завершён</span>
+          <div class="apt-actions-col">
+            <span class="apt-badge apt-badge--completed">Завершён</span>
+            <button class="apt-feedback" @click="openFeedback(a)" aria-label="Оставить отзыв">
+              <Icon name="lucide:message-square" size="12" />
+              Отзыв
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+    <AppFamilyComplaintModal
+      v-if="authStore.familyId"
+      :open="feedbackOpen"
+      :family-id="authStore.familyId"
+      :appointment-id="selectedAppt?.id ?? null"
+      :doctor-id="selectedAppt?.doctor_id ?? null"
+      :appointment-label="selectedApptLabel"
+      @close="feedbackOpen = false"
+      @submitted="onSubmitted"
+    />
   </div>
 </template>
 
@@ -57,10 +74,28 @@
 definePageMeta({ layout: 'app' })
 
 const appData = useAppData()
+const authStore = useAuthStore()
 const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 
 const upcoming = computed(() => appData.appointments.filter(a => a.status !== 'completed' && a.status !== 'cancelled'))
 const past = computed(() => appData.appointments.filter(a => a.status === 'completed'))
+
+const feedbackOpen = ref(false)
+const selectedAppt = ref<any | null>(null)
+const selectedApptLabel = computed(() => {
+  if (!selectedAppt.value) return ''
+  const a = selectedAppt.value
+  return `${a.doctor_name ?? ''} · ${dayOf(a.appointment_date)} ${monthOf(a.appointment_date)}`.trim()
+})
+
+function openFeedback(a: any) {
+  selectedAppt.value = a
+  feedbackOpen.value = true
+}
+function onSubmitted() {
+  feedbackOpen.value = false
+  selectedAppt.value = null
+}
 
 function dayOf(iso: string) { return new Date(iso).getDate() }
 function monthOf(iso: string) { return months[new Date(iso).getMonth()] }
@@ -114,6 +149,36 @@ function statusLabel(s: string) {
 .apt-badge--confirmed { background: rgba(124,184,212,0.1); color: var(--color-success); }
 .apt-badge--requested { background: rgba(233,196,106,0.1); color: var(--color-warning); }
 .apt-badge--completed { background: rgba(139,126,200,0.08); color: var(--color-text-muted); }
+
+.apt-actions-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.apt-row--past { opacity: 1; }
+.apt-row--past .apt-info { opacity: 0.7; }
+.apt-feedback {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 10px;
+  background: none;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.apt-feedback:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(139, 126, 200, 0.04);
+}
 .apt-badge--cancelled { background: rgba(212,114,124,0.1); color: var(--color-danger); }
 
 @media (max-width: 380px) {

@@ -12,6 +12,14 @@ const schema = z.object({
   start_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   end_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   instructions: z.string().max(500).optional(),
+  // Structured clinical fields (added in migration 020)
+  inn_name: z.string().max(120).optional(),
+  dose_value: z.number().positive().max(100000).optional(),
+  dose_unit: z.string().max(16).optional(),
+  route: z.enum(['per_os', 'im', 'iv', 'sc', 'topical', 'inhaled', 'pr', 'ophthalmic', 'otic']).optional(),
+  icd10_indication: z.string().min(2).max(10).optional(),
+  appointment_id: z.string().uuid().optional(),
+  doctor_id: z.string().uuid().optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -46,6 +54,13 @@ export default defineEventHandler(async (event) => {
       end_date: body.end_date || null,
       instructions: body.instructions || null,
       is_active: true,
+      inn_name: body.inn_name || null,
+      dose_value: body.dose_value ?? null,
+      dose_unit: body.dose_unit || null,
+      route: body.route || null,
+      icd10_indication: body.icd10_indication || null,
+      appointment_id: body.appointment_id || null,
+      doctor_id: body.doctor_id || null,
     })
     .select()
     .single()

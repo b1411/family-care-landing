@@ -12,14 +12,18 @@ export const DOCTOR_ROLES: UserRole[] = ['gynecologist', 'pediatrician', 'doctor
 // Roles that access the admin panel
 export const ADMIN_ROLES: UserRole[] = ['clinic_admin', 'clinic_manager', 'platform_admin', 'admin', 'superadmin']
 
+// Roles that access the chief-doctor (медицинское качество) panel
+export const CHIEF_DOCTOR_ROLES: UserRole[] = ['chief_doctor']
+
 // All staff roles (web console)
-export const STAFF_ROLES: UserRole[] = [...COORDINATOR_ROLES, ...DOCTOR_ROLES, ...ADMIN_ROLES]
+export const STAFF_ROLES: UserRole[] = [...COORDINATOR_ROLES, ...DOCTOR_ROLES, ...CHIEF_DOCTOR_ROLES, ...ADMIN_ROLES]
 
 // Route prefix → required roles mapping
 export const ROUTE_ROLE_MAP: Record<string, UserRole[]> = {
   '/family': FAMILY_ROLES,
   '/coordinator': [...COORDINATOR_ROLES, ...ADMIN_ROLES],
   '/doctor': [...DOCTOR_ROLES, ...ADMIN_ROLES],
+  '/chief': [...CHIEF_DOCTOR_ROLES, ...ADMIN_ROLES],
   '/admin': ADMIN_ROLES,
 }
 
@@ -32,6 +36,7 @@ export const ROLE_HOME_MAP: Record<string, string> = {
   pediatrician: '/doctor',
   doctor: '/doctor',
   nurse: '/doctor',
+  chief_doctor: '/chief',
   clinic_admin: '/admin',
   clinic_manager: '/admin',
   platform_admin: '/admin',

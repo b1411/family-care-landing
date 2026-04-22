@@ -33,7 +33,13 @@ export const useAppointmentStore = defineStore('appointments', {
         const supabase = useSupabaseClient()
         const { data } = await supabase
           .from('appointments')
-          .select('*')
+          .select(`
+            *,
+            doctor:doctors!doctor_id (
+              id, specialty,
+              user:users!doctors_user_id_fkey ( first_name, last_name )
+            )
+          `)
           .eq('family_id', familyId)
           .order('scheduled_at', { ascending: false })
           .limit(50)

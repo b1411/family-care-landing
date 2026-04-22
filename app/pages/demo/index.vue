@@ -118,6 +118,7 @@ const DEMO_HOME: Record<string, string> = {
   mom: '/family',
   coordinator: '/coordinator',
   doctor: '/doctor',
+  chief: '/chief',
   admin: '/admin',
   // TZ alias: ?role=director → admin dashboard
   director: '/admin',
@@ -173,6 +174,15 @@ const roles = [
     gradient: 'linear-gradient(135deg, #10b981, #059669)',
     features: ['Расписание на сегодня', 'Карточки пациентов', 'KPI приёма', 'Свободные слоты'],
     actionLabel: 'врач',
+  },
+  {
+    key: 'chief',
+    icon: 'lucide:activity',
+    title: 'Главный врач',
+    description: 'Аудит качества медицинской практики, отклонения от протоколов, разбор случаев.',
+    gradient: 'linear-gradient(135deg, var(--color-primary-dark), var(--color-secondary-dark))',
+    features: ['Реестр врачей и качество ведения', 'Аудит всех назначений', 'Отклонения от протоколов', 'Разбор кейсов и юр-риски'],
+    actionLabel: 'главный врач',
   },
   {
     key: 'admin',

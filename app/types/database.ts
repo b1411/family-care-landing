@@ -1,6 +1,6 @@
 // UMAI Health — Database Types (mirrors Supabase schema)
 
-export type UserRole = 'mother' | 'father' | 'grandmother' | 'coordinator' | 'gynecologist' | 'pediatrician' | 'clinic_admin' | 'clinic_manager' | 'platform_admin' | 'doctor' | 'nurse' | 'admin' | 'superadmin'
+export type UserRole = 'mother' | 'father' | 'grandmother' | 'coordinator' | 'gynecologist' | 'pediatrician' | 'chief_doctor' | 'clinic_admin' | 'clinic_manager' | 'platform_admin' | 'doctor' | 'nurse' | 'admin' | 'superadmin'
 
 export type JourneyType = 'pregnancy' | 'postpartum' | 'infant' | 'toddler'
 export type JourneyStatus = 'active' | 'completed' | 'cancelled'
@@ -180,6 +180,16 @@ export interface Appointment {
   notes: string | null
   pre_visit_answers: Record<string, unknown> | null
   created_at: string | null
+  icd10_primary: string | null
+  icd10_secondary: string[] | null
+  completion_checklist: Record<string, boolean> | null
+}
+
+export interface ICD10Code {
+  code: string
+  name_ru: string
+  category: string | null
+  is_active: boolean
 }
 
 export interface Document {
@@ -198,6 +208,10 @@ export interface Document {
   created_at: string
 }
 
+export type PrescriptionRoute =
+  | 'per_os' | 'im' | 'iv' | 'sc' | 'topical'
+  | 'inhaled' | 'pr' | 'ophthalmic' | 'otic'
+
 export interface Prescription {
   id: string
   family_id: string
@@ -213,6 +227,13 @@ export interface Prescription {
   instructions: string | null
   created_at: string | null
   updated_at: string | null
+  inn_name: string | null
+  dose_value: number | null
+  dose_unit: string | null
+  route: PrescriptionRoute | null
+  icd10_indication: string | null
+  appointment_id: string | null
+  doctor_id: string | null
 }
 
 export interface DoseLog {

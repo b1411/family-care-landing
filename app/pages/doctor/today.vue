@@ -42,6 +42,11 @@
               <span class="tl-chip"><Icon name="lucide:stethoscope" size="11" /> {{ specLabel(a.doctor_specialty) }}</span>
               <span class="tl-chip"><Icon name="lucide:clock" size="11" /> {{ a.time }}–{{ a.end_time }}</span>
             </div>
+            <div v-if="canComplete(a)" class="tl-actions">
+              <button class="btn-complete" @click="openComplete(a)">
+                <Icon name="lucide:check-circle-2" size="14" /> Завершить приём
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -52,6 +57,16 @@
       icon="lucide:calendar-check"
       title="Нет записей на сегодня"
       description="Все слоты свободны — отличный день для документации"
+    />
+
+    <AppDoctorCompleteAppointmentModal
+      :open="modalOpen"
+      :appointment-id="selected?.id ?? null"
+      :patient-name="selected?.patient_name ?? ''"
+      :time="selected?.time ?? ''"
+      :default-end-time="selected?.end_time ?? null"
+      @close="modalOpen = false"
+      @completed="onCompleted"
     />
   </div>
 </template>
@@ -73,9 +88,25 @@ interface Appointment {
   doctor_specialty: string | null
 }
 
-const { data, pending } = await useFetch<{ appointments: Appointment[]; date: string }>('/api/appointments/today')
+const { data, pending, refresh } = await useFetch<{ appointments: Appointment[]; date: string }>('/api/appointments/today')
 
 const appointments = computed(() => data.value?.appointments ?? [])
+
+const modalOpen = ref(false)
+const selected = ref<Appointment | null>(null)
+
+function canComplete(a: Appointment) {
+  return ['confirmed', 'requested'].includes(a.status)
+}
+function openComplete(a: Appointment) {
+  selected.value = a
+  modalOpen.value = true
+}
+async function onCompleted() {
+  modalOpen.value = false
+  selected.value = null
+  await refresh()
+}
 const confirmedCount = computed(() => appointments.value.filter(a => a.status === 'confirmed').length)
 
 const formattedDate = computed(() => {
@@ -151,6 +182,18 @@ function isNow(a: Appointment) {
 .tl-reason { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 4px; }
 
 .tl-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+.tl-actions { margin-top: 12px; display: flex; justify-content: flex-end; }
+.btn-complete {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 10px;
+  background: var(--color-primary); color: white;
+  font-size: 0.78rem; font-weight: 600;
+  border: none; cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.btn-complete:hover { background: var(--color-primary-dark); box-shadow: 0 4px 12px rgba(139, 126, 200, 0.3); }
 .tl-chip {
   display: inline-flex; align-items: center; gap: 3px;
   padding: 2px 8px; border-radius: 8px; font-size: 0.68rem; font-weight: 500;

@@ -397,20 +397,27 @@ export function useAppData() {
   // ── Appointments ──
   const appointments = computed(() => {
     if (hasRealAppointmentData.value) {
-      return appointmentsStore.appointments.slice(0, 10).map((a: Appointment) => ({
-        id: a.id,
-        reason: a.notes || 'Плановый приём',
-        doctor_name: '', // enriched via join or separate fetch
-        specialty: '',
-        appointment_date: a.scheduled_at?.split('T')[0] || '',
-        start_time: a.scheduled_at ? new Date(a.scheduled_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '',
-        status: a.status as 'confirmed' | 'requested' | 'completed' | 'cancelled',
-      }))
+      return appointmentsStore.appointments.slice(0, 10).map((a: any) => {
+        const doc = Array.isArray(a.doctor) ? a.doctor[0] : a.doctor
+        const docUser = doc?.user
+          ? (Array.isArray(doc.user) ? doc.user[0] : doc.user)
+          : null
+        return {
+          id: a.id,
+          doctor_id: a.doctor_id ?? doc?.id ?? null,
+          reason: a.notes || 'Плановый приём',
+          doctor_name: docUser ? `${docUser.last_name ?? ''} ${docUser.first_name ?? ''}`.trim() : '',
+          specialty: doc?.specialty || '',
+          appointment_date: a.scheduled_at?.split('T')[0] || '',
+          start_time: a.scheduled_at ? new Date(a.scheduled_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '',
+          status: a.status as 'confirmed' | 'requested' | 'completed' | 'cancelled',
+        }
+      })
     }
     return [
-      { id: 'a1', reason: 'Плановый осмотр гинеколога', doctor_name: 'Алия Касымова', specialty: 'Гинеколог', appointment_date: '2026-04-11', start_time: '10:00', status: 'confirmed' as const },
-      { id: 'a2', reason: 'УЗИ 3 триместра', doctor_name: 'Марат Ибрагимов', specialty: 'УЗИ-специалист', appointment_date: '2026-04-18', start_time: '14:30', status: 'requested' as const },
-      { id: 'a3', reason: 'Консультация педиатра', doctor_name: 'Динара Жумабаева', specialty: 'Педиатр', appointment_date: '2026-03-28', start_time: '11:00', status: 'completed' as const },
+      { id: 'a1', doctor_id: null, reason: 'Плановый осмотр гинеколога', doctor_name: 'Алия Касымова', specialty: 'Гинеколог', appointment_date: '2026-04-11', start_time: '10:00', status: 'confirmed' as const },
+      { id: 'a2', doctor_id: null, reason: 'УЗИ 3 триместра', doctor_name: 'Марат Ибрагимов', specialty: 'УЗИ-специалист', appointment_date: '2026-04-18', start_time: '14:30', status: 'requested' as const },
+      { id: 'a3', doctor_id: null, reason: 'Консультация педиатра', doctor_name: 'Динара Жумабаева', specialty: 'Педиатр', appointment_date: '2026-03-28', start_time: '11:00', status: 'completed' as const },
     ]
   })
 

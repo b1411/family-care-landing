@@ -303,6 +303,7 @@ const roleLabel = computed(() => {
     platform_admin: 'Platform Admin',
     doctor: 'Врач',
     nurse: 'Медсестра',
+    chief_doctor: 'Главный врач',
     admin: 'Администратор',
     superadmin: 'Суперадмин',
   }
@@ -400,8 +401,30 @@ const navGroups = computed<NavGroup[]>(() => {
           { to: '/doctor/today', label: 'Сегодня', icon: 'lucide:calendar-clock' },
           { to: '/doctor/care-plans', label: 'Маршруты', icon: 'lucide:route' },
           { to: '/doctor/prescriptions', label: 'Назначения', icon: 'lucide:pill' },
+          { to: '/doctor/deviations', label: 'Отклонения', icon: 'lucide:alert-triangle', badge: doctorDeviationCount.value || undefined },
           { to: '/doctor/documents', label: 'Документы', icon: 'lucide:folder-open' },
           { to: '/doctor/settings', label: 'Настройки', icon: 'lucide:settings' },
+        ],
+      },
+    ]
+  }
+  if (role === 'chief_doctor') {
+    return [
+      {
+        items: [
+          { to: '/chief', label: 'Качество клиники', icon: 'lucide:activity' },
+          { to: '/chief/doctors', label: 'Врачи', icon: 'lucide:stethoscope' },
+          { to: '/chief/rx-audit', label: 'Аудит назначений', icon: 'lucide:pill' },
+          { to: '/chief/case-reviews', label: 'Разбор случаев', icon: 'lucide:file-search' },
+        ],
+      },
+      {
+        label: 'Далее',
+        items: [
+          { to: '/chief/deviations', label: 'Отклонения от протоколов', icon: 'lucide:alert-triangle' },
+          { to: '/chief/risks', label: 'Клинические риски', icon: 'lucide:shield-alert' },
+          { to: '/chief/complaints', label: 'Жалобы', icon: 'lucide:message-square-warning' },
+          { to: '/chief/protocols', label: 'Протоколы', icon: 'lucide:book-marked' },
         ],
       },
     ]
@@ -496,11 +519,12 @@ const demoRoles = [
   { key: 'mom', label: 'Мама', icon: 'lucide:heart', route: '/family' },
   { key: 'coordinator', label: 'Координатор', icon: 'lucide:clipboard-list', route: '/coordinator' },
   { key: 'doctor', label: 'Врач', icon: 'lucide:stethoscope', route: '/doctor' },
+  { key: 'chief', label: 'Главный врач', icon: 'lucide:activity', route: '/chief' },
   { key: 'admin', label: 'Руководитель', icon: 'lucide:bar-chart-3', route: '/admin' },
 ]
 
 function isDemoRoleActive(key: string): boolean {
-  const mapping: Record<string, string> = { mom: '/family', coordinator: '/coordinator', doctor: '/doctor', admin: '/admin' }
+  const mapping: Record<string, string> = { mom: '/family', coordinator: '/coordinator', doctor: '/doctor', chief: '/chief', admin: '/admin' }
   return route.path.startsWith(mapping[key] ?? '')
 }
 
@@ -535,6 +559,30 @@ async function exitDemo() {
   navigateTo('/demo')
 }
 
+// ─── Doctor deviations badge ───
+const doctorDeviationCount = ref(0)
+async function refreshDoctorDeviations() {
+  const isDoctorRole = ['doctor', 'gynecologist', 'pediatrician', 'nurse'].includes(userRole.value)
+  if (!isDoctorRole) { doctorDeviationCount.value = 0; return }
+  try {
+    const sb = useSupabaseClient()
+    const { data: me } = await sb.auth.getUser()
+    if (!me.user?.id) return
+    const { data: doc } = await sb.from('doctors').select('id').eq('user_id', me.user.id).maybeSingle()
+    if (!doc) return
+    const { count } = await sb
+      .from('protocol_deviations')
+      .select('id', { count: 'exact', head: true })
+      .eq('doctor_id', doc.id)
+      .eq('justified', false)
+      .eq('resolved', false)
+    doctorDeviationCount.value = count ?? 0
+  }
+  catch {
+    doctorDeviationCount.value = 0
+  }
+}
+
 onMounted(async () => {
   await authStore.initialize()
   // Fetch all role-specific data in one call
@@ -542,12 +590,20 @@ onMounted(async () => {
   if (isFamily.value) {
     notifStore.subscribeToNotifications()
   }
+  refreshDoctorDeviations()
   // Show onboarding for new users (skip demo accounts)
   const isDemoAccount = authStore.profile?.email?.endsWith('@demo.kz')
   if (authStore.profile && !isDemoAccount && !(authStore.profile as any).onboarding_completed) {
     showOnboarding.value = true
   }
   document.addEventListener('click', onClickOutside)
+})
+
+// Refresh badge when user navigates away from /doctor/deviations (likely justified something)
+watch(() => route.path, (p, prev) => {
+  if (prev?.startsWith('/doctor/deviations') && !p.startsWith('/doctor/deviations')) {
+    refreshDoctorDeviations()
+  }
 })
 
 onUnmounted(() => {

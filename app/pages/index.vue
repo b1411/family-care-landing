@@ -21,6 +21,9 @@
     <!-- 7. Ключевые модули -->
     <LandingModulesShowcase />
 
+    <!-- 7.5 Вторая воронка — для главного врача -->
+    <LandingChiefTrackSection />
+
     <!-- 8. CTA-разделитель -->
     <LandingCtaSplitSection />
 
