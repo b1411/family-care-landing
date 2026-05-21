@@ -12,16 +12,20 @@ export default defineNuxtConfig({
   ],
 
   fonts: {
-    // Premium type stack — 2025 redesign (Phase 1)
-    // - Bricolage Grotesque: display headings (variable opt-size axis)
-    // - Instrument Serif: italic accent words inside headings
-    // - Inter: body and UI text
-    // - Geist Mono: tabular metrics, KPI numbers, code, status labels
-    // All four fetched via Google Fonts CDN for build reliability.
-    // Satoshi removed — Fontshare was unreliable on Vercel (deploy dpl_jpKt7WHgrTgcfWjr5WnCmPBjaErQ).
+    // Premium type stack — Warm Editorial (2026 refresh)
+    // - Fraunces: serif/sans hybrid for display + accent italic
+    //   (variable: opsz 9-144, wght 100-900, soft 0-100, ital 0/1).
+    //   Replaces Bricolage Grotesque (industrial) + Instrument Serif
+    //   (single-weight) — one expressive variable face does both jobs.
+    // - Inter: body and UI text (best Cyrillic readability).
+    // - Geist Mono: tabular metrics, KPI numbers, status labels.
     families: [
-      { name: 'Bricolage Grotesque', provider: 'google', weights: [500, 600, 700, 800] },
-      { name: 'Instrument Serif', provider: 'google', weights: [400], styles: ['italic', 'normal'] },
+      {
+        name: 'Fraunces',
+        provider: 'google',
+        weights: [300, 400, 500, 600, 700, 800, 900],
+        styles: ['normal', 'italic'],
+      },
       { name: 'Inter', provider: 'google', weights: [400, 500, 600, 700] },
       { name: 'Geist Mono', provider: 'google', weights: [400, 500, 600] },
     ],

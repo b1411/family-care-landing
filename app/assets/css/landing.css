@@ -239,22 +239,22 @@ html.lenis, html.lenis body {
   --text-tiny: 0.6875rem;                          /* 11px eyebrow */
   --text-card-title: clamp(1.0625rem, 1.5vw, 1.1875rem);
 
-  /* Line-heights — tightened for display, generous for body */
-  --lh-mega: 0.95;
-  --lh-display: 1.02;
-  --lh-h1: 1.05;
-  --lh-h2: 1.1;
-  --lh-h3: 1.2;
-  --lh-h4: 1.3;
-  --lh-body-lg: 1.55;
-  --lh-body: 1.55;
-  --lh-meta: 1.4;
+  /* Line-heights — tuned for Cyrillic descenders (ф, р, у, ц, щ) */
+  --lh-mega: 1.05;
+  --lh-display: 1.08;
+  --lh-h1: 1.12;
+  --lh-h2: 1.18;
+  --lh-h3: 1.25;
+  --lh-h4: 1.35;
+  --lh-body-lg: 1.6;
+  --lh-body: 1.6;
+  --lh-meta: 1.45;
 
-  /* Letter-spacing — premium tracking system */
-  --tracking-mega: -0.04em;       /* huge headings -4% */
-  --tracking-display: -0.03em;    /* H1/H2 -3% */
-  --tracking-tight: -0.02em;
-  --tracking-snug: -0.01em;
+  /* Letter-spacing — softer for Cyrillic (wider м, ш, щ, ю) */
+  --tracking-mega: -0.025em;      /* huge headings −2.5% */
+  --tracking-display: -0.018em;   /* H1/H2 −1.8% */
+  --tracking-tight: -0.012em;
+  --tracking-snug: -0.005em;
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
   --tracking-eyebrow: 0.12em;     /* uppercase labels 12% */
@@ -266,11 +266,20 @@ html.lenis, html.lenis body {
   --fw-bold: 700;
   --fw-black: 800;
 
-  /* Variable axes (Bricolage Grotesque) */
-  --bricolage-opt-display: 96;    /* big headings axis position */
-  --bricolage-opt-h2: 48;
-  --bricolage-opt-h3: 24;
-  --bricolage-opt-h4: 14;
+  /* Variable axes (Fraunces) — opsz drives optical-size, SOFT softens edges.
+     Legacy --bricolage-opt-* aliases retained so existing components still
+     compile until they're migrated to --fraunces-opsz-*. */
+  --fraunces-opsz-display: 144;   /* hero — fully expressive */
+  --fraunces-opsz-h2: 96;
+  --fraunces-opsz-h3: 48;
+  --fraunces-opsz-h4: 24;
+  --fraunces-soft: 50;            /* mid-softness for warm-but-defined edges */
+
+  /* Legacy aliases (do not remove — referenced by existing .t-* classes) */
+  --bricolage-opt-display: var(--fraunces-opsz-display);
+  --bricolage-opt-h2: var(--fraunces-opsz-h2);
+  --bricolage-opt-h3: var(--fraunces-opsz-h3);
+  --bricolage-opt-h4: var(--fraunces-opsz-h4);
 
   /* Readable text width */
   --text-measure: 64ch;
@@ -285,9 +294,11 @@ html.lenis, html.lenis body {
   --leading-normal: 1.6;
   --leading-relaxed: 1.75;
 
-  /* Font families — Premium Stack 2025 */
-  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-accent: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  /* Font families — Warm Editorial Stack (2026 refresh)
+     Fraunces handles both display headings AND accent italics; one expressive
+     variable face replaces the previous two-font display layer. */
+  --font-display: 'Fraunces', 'Bricolage Grotesque', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-accent: 'Fraunces', 'Instrument Serif', 'Times New Roman', Georgia, serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, SF Mono, Menlo, monospace;
 }
@@ -303,8 +314,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  font-feature-settings: "cv11", "ss01", "kern";
+  /* Full OpenType pipeline: kerning, ligatures, contextual alternates,
+     and locl (locale-aware shapes for Cyrillic а, г, к, т, ш). */
+  font-feature-settings: "kern", "liga", "calt", "locl", "cv11", "ss01";
   text-rendering: optimizeLegibility;
+  /* Slightly looser word-spacing — Cyrillic needs more breathing room
+     between long compound words. */
+  word-spacing: 0.01em;
 }
 
 /* Headings get the display font by default — no className required */
@@ -346,7 +362,8 @@ p {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: var(--tracking-display);
-  font-feature-settings: "ss01", "ss02", "cv11";
+  font-feature-settings: "kern", "liga", "calt", "locl";
+  font-variation-settings: "opsz" var(--fraunces-opsz-h2), "SOFT" var(--fraunces-soft);
 }
 
 .font-heading {
@@ -377,7 +394,7 @@ p {
   font-weight: 700;
   line-height: var(--lh-mega);
   letter-spacing: var(--tracking-mega);
-  font-variation-settings: "opsz" var(--bricolage-opt-display);
+  font-variation-settings: "opsz" var(--fraunces-opsz-display), "SOFT" var(--fraunces-soft);
   color: var(--color-text-primary);
 }
 
@@ -388,9 +405,9 @@ p {
   font-weight: 700;
   line-height: var(--lh-display);
   letter-spacing: var(--tracking-display);
-  font-variation-settings: "opsz" var(--bricolage-opt-display);
+  font-variation-settings: "opsz" var(--fraunces-opsz-display), "SOFT" var(--fraunces-soft);
   color: var(--color-text-primary);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* Display Section — H2 (28-48px) */
@@ -400,9 +417,9 @@ p {
   font-weight: 700;
   line-height: var(--lh-h2);
   letter-spacing: var(--tracking-display);
-  font-variation-settings: "opsz" var(--bricolage-opt-h2);
+  font-variation-settings: "opsz" var(--fraunces-opsz-h2), "SOFT" var(--fraunces-soft);
   color: var(--color-text-primary);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* H3 — sub-section (22-32px) */
@@ -412,9 +429,9 @@ p {
   font-weight: 600;
   line-height: var(--lh-h3);
   letter-spacing: var(--tracking-tight);
-  font-variation-settings: "opsz" var(--bricolage-opt-h3);
+  font-variation-settings: "opsz" var(--fraunces-opsz-h3), "SOFT" var(--fraunces-soft);
   color: var(--color-text-primary);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 /* H4 — card title (18-20px) */
@@ -424,31 +441,34 @@ p {
   font-weight: 600;
   line-height: var(--lh-h4);
   letter-spacing: var(--tracking-snug);
-  font-variation-settings: "opsz" var(--bricolage-opt-h4);
+  font-variation-settings: "opsz" var(--fraunces-opsz-h4), "SOFT" var(--fraunces-soft);
   color: var(--color-text-primary);
 }
 
-/* Eyebrow — section badge / overline (11-13px UPPERCASE) */
+/* Eyebrow — section badge / overline (11-13px UPPERCASE)
+   Uses Inter (not Fraunces) — small uppercase needs a true sans for legibility. */
 .t-eyebrow {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: var(--text-tiny);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   color: var(--color-primary);
 }
 
-/* Accent serif — italicised highlight word inside displays */
+/* Accent serif — italicised highlight word inside displays (Fraunces italic)
+   Lighter weight (400) gives the soft handwritten warmth without competing
+   with the heavier display roman weight (700) around it. */
 .t-accent-serif {
   font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
-  letter-spacing: -0.01em;
-  /* Optical compensation — serif italics read slightly larger */
-  font-size: 1.02em;
-  /* Subtle vertical alignment fix */
+  letter-spacing: -0.005em;
+  /* Optical compensation — italic strokes read slightly thinner */
+  font-size: 1.04em;
   vertical-align: baseline;
+  font-variation-settings: "opsz" 36, "SOFT" 60;
 }
 
 /* Gradient variant for accent serif */
@@ -456,8 +476,9 @@ p {
   font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
-  letter-spacing: -0.01em;
-  font-size: 1.02em;
+  letter-spacing: -0.005em;
+  font-size: 1.04em;
+  font-variation-settings: "opsz" 36, "SOFT" 60;
   background: var(--gradient-cta);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
