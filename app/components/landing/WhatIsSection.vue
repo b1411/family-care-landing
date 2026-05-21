@@ -3,18 +3,23 @@
     id="what-is"
     badge="Платформа"
     title="Что такое UMAI Health"
+    accent="UMAI Health"
     subtitle="Три ключевых возможности, которые меняют работу клиники с семьями"
-    alternate
+    surface="pearl"
   >
     <div class="cards-grid" data-stagger="fade-up">
       <div
-        v-for="card in cards"
+        v-for="(card, i) in cards"
         :key="card.title"
-        class="product-card landing-card"
+        class="product-card"
         data-tilt
+        :style="{ '--card-accent': card.color }"
         @mouseenter="card.onEnter"
         @mouseleave="card.onLeave"
       >
+        <span class="product-card-border" aria-hidden="true" />
+        <span class="product-card-num" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}</span>
+
         <div class="card-svg-wrap" :ref="(el) => (card.svgRef.value = el as HTMLElement)">
           <!-- Journey Engine — path with running marker -->
           <svg v-if="card.id === 'journey'" viewBox="0 0 220 60" fill="none" class="card-svg">
@@ -210,7 +215,160 @@ function resetApp() {
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 22px;
+}
+
+.product-card {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+  isolation: isolate;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 126, 200, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 6px rgba(139, 126, 200, 0.04),
+    0 16px 36px -20px rgba(139, 126, 200, 0.24);
+  transition:
+    transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.42s ease,
+    border-color 0.32s ease;
+}
+
+/* Gradient border (hover-revealed) */
+.product-card-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--card-accent, var(--color-primary)) 0%, transparent 65%);
+  -webkit-mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.32s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Decorative number watermark — Instrument Serif italic */
+.product-card-num {
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  font-family: var(--font-serif, 'Instrument Serif'), serif;
+  font-style: italic;
+  font-size: 42px;
+  font-weight: 400;
+  color: var(--card-accent, var(--color-primary));
+  opacity: 0.14;
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+  z-index: 1;
+  transition: opacity 0.3s ease, transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  border-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 8px 22px rgba(139, 126, 200, 0.12),
+    0 28px 60px -22px rgba(139, 126, 200, 0.35);
+}
+
+.product-card:hover .product-card-border {
+  opacity: 1;
+}
+
+.product-card:hover .product-card-num {
+  opacity: 0.28;
+  transform: translateX(-4px) scale(1.06);
+}
+
+.card-svg-wrap {
+  position: relative;
+  background:
+    radial-gradient(ellipse at center, rgba(139, 126, 200, 0.04) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(254, 252, 255, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 22px 28px;
+  border-bottom: 1px solid rgba(139, 126, 200, 0.06);
+  min-height: 170px;
+}
+
+.card-svg-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(139, 126, 200, 0.06) 1px,
+    transparent 1px
+  );
+  background-size: 18px 18px;
+  mask-image: radial-gradient(ellipse 70% 60% at center, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at center, black 30%, transparent 100%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.card-svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 220px;
+  height: 140px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(139, 126, 200, 0.08));
+}
+
+.card-icon {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 22px 22px 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 6px 14px -4px rgba(139, 126, 200, 0.2);
+  isolation: isolate;
+}
+
+.product-card:hover .card-icon {
+  transform: scale(1.04);
+  transition: transform 0.3s ease;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 22px 8px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.card-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0 22px 24px;
 }
 
 @media (max-width: 1024px) {
@@ -219,62 +377,41 @@ function resetApp() {
   }
 }
 
-.product-card {
-  padding: 0;
-  overflow: hidden;
-  cursor: default;
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-.card-svg-wrap {
-  background: var(--color-bg-alt);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
-  border-bottom: 1px solid var(--color-border-light);
-  min-height: 160px;
-}
-
-.card-svg {
-  width: 100%;
-  max-width: 220px;
-  height: 140px;
-  object-fit: contain;
-}
-
-.card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 24px 24px 12px;
-}
-
-.card-title {
-  font-size: var(--text-card-title);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin: 0 24px 8px;
-}
-
-.card-desc {
-  font-size: var(--text-sm);
-  line-height: 1.55;
-  color: var(--color-text-secondary);
-  margin: 0 24px 24px;
-}
-
 @media (max-width: 768px) {
   .cards-grid {
     grid-template-columns: 1fr;
+  }
+  .product-card-num {
+    font-size: 36px;
+    top: 12px;
+    right: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-svg-wrap {
+    min-height: 140px;
+    padding: 28px 16px 22px;
+  }
+  .card-svg {
+    max-width: 180px;
+    height: 120px;
+  }
+  .card-icon {
+    margin: 18px 18px 8px;
+  }
+  .card-title {
+    margin: 0 18px 6px;
+    font-size: 17px;
+  }
+  .card-desc {
+    margin: 0 18px 20px;
+    font-size: 13px;
+  }
+  .product-card-num {
+    font-size: 32px;
+    top: 10px;
+    right: 14px;
   }
 }
 </style>

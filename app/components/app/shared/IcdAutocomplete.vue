@@ -77,18 +77,27 @@ const loading = ref(false)
 const chosenName = ref('')
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let fetchAbort: AbortController | null = null
+let resolveAbort: AbortController | null = null
 
 async function fetchItems() {
+  // Cancel any in-flight search; latest typing wins
+  if (fetchAbort) fetchAbort.abort()
+  fetchAbort = new AbortController()
+  const signal = fetchAbort.signal
+
   loading.value = true
   try {
     const params: Record<string, string> = { limit: '20' }
     if (query.value.trim()) params.q = query.value.trim()
     if (props.category) params.category = props.category
-    const res = await $fetch<{ items: IcdCode[] }>('/api/icd10', { query: params })
+    const res = await $fetch<{ items: IcdCode[] }>('/api/icd10', { query: params, signal })
+    if (signal.aborted) return
     items.value = res.items
     activeIdx.value = 0
   }
-  catch {
+  catch (err: any) {
+    if (err?.name === 'AbortError' || signal.aborted) return
     items.value = []
   }
   finally {
@@ -108,16 +117,30 @@ watch(
     // Resolve display name once if not in local items
     const found = items.value.find(i => i.code === code)
     if (found) { chosenName.value = found.name_ru; return }
+    // Cancel previous resolve fetch — latest model wins
+    if (resolveAbort) resolveAbort.abort()
+    resolveAbort = new AbortController()
+    const signal = resolveAbort.signal
     try {
-      const res = await $fetch<{ items: IcdCode[] }>('/api/icd10', { query: { q: code, limit: 5 } })
+      const res = await $fetch<{ items: IcdCode[] }>('/api/icd10', { query: { q: code, limit: 5 }, signal })
+      if (signal.aborted) return
       chosenName.value = res.items.find(i => i.code === code)?.name_ru ?? ''
     }
-    catch { chosenName.value = '' }
+    catch (err: any) {
+      if (err?.name === 'AbortError' || signal.aborted) return
+      chosenName.value = ''
+    }
   },
   { immediate: true },
 )
 
 onMounted(() => { fetchItems() })
+
+onBeforeUnmount(() => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  if (fetchAbort) fetchAbort.abort()
+  if (resolveAbort) resolveAbort.abort()
+})
 
 function move(dir: number) {
   if (!items.value.length) return

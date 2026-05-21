@@ -44,6 +44,30 @@ html.lenis, html.lenis body {
   --color-accent-blue: #A8C8E8;
   --color-accent-blue-light: #E4EFF8;
 
+  /* ============================================
+     Phase 2: Deep Ink Family — for full-bleed dark sections.
+     Used in: ChiefTrack, UnitEconomics, ClinicSecurity (and any "command-centre" feel).
+     ============================================ */
+  --color-ink: #1B1330;            /* Deepest plum-navy — section background */
+  --color-ink-elevated: #251A40;   /* One step lighter — cards on ink */
+  --color-ink-card: #2A1E47;       /* Card surface on dark */
+  --color-ink-border: rgba(255, 255, 255, 0.08);
+  --color-ink-border-hover: rgba(255, 255, 255, 0.16);
+
+  /* Text on ink */
+  --color-ink-text-primary: #F3EEFA;    /* High contrast white-lavender */
+  --color-ink-text-secondary: #B8AED1;
+  --color-ink-text-muted: #7B6E96;
+
+  /* ============================================
+     Phase 2: Mint-teal — medical "healing" success.
+     Replaces the confusing blue-success in marketing surfaces.
+     ============================================ */
+  --color-mint: #5BC0BE;
+  --color-mint-dark: #3FA5A3;
+  --color-mint-light: #D6F1F0;
+  --color-mint-ultralight: #ECF8F7;
+
   /* Text */
   --color-text-primary: #4A4458;
   --color-text-secondary: #7B7394;
@@ -69,12 +93,82 @@ html.lenis, html.lenis body {
   --gradient-accent: linear-gradient(135deg, #E8E4F5 0%, #FDE8F0 100%);
   --gradient-blue: linear-gradient(135deg, #E4EFF8 0%, #F5F3FA 100%);
 
+  /* ============================================
+     Phase 2: Pearl gradients — premium off-white backgrounds.
+     Multi-stop radial gradients add depth without darkening.
+     Apply on .section-pearl or use as backgrounds directly.
+     ============================================ */
+  --gradient-pearl: radial-gradient(
+    ellipse at top left,
+    #FBF6FF 0%,
+    #FEFCFF 35%,
+    #FAF7FD 70%,
+    #FDF8FB 100%
+  );
+  --gradient-pearl-alt: radial-gradient(
+    ellipse at bottom right,
+    #FDF4F8 0%,
+    #FEFCFF 40%,
+    #F7F3FC 100%
+  );
+  --gradient-pearl-cool: radial-gradient(
+    ellipse at top right,
+    #F0F5FC 0%,
+    #FBF6FF 50%,
+    #FEFCFF 100%
+  );
+
+  /* Ink gradients */
+  --gradient-ink: linear-gradient(180deg, #1B1330 0%, #2A1E47 100%);
+  --gradient-ink-radial: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    #2D2154 0%,
+    #1B1330 50%,
+    #110823 100%
+  );
+  --gradient-mint: linear-gradient(135deg, #5BC0BE 0%, #8B7EC8 100%);
+
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(139, 126, 200, 0.08);
   --shadow-md: 0 4px 12px rgba(139, 126, 200, 0.1);
   --shadow-lg: 0 8px 30px rgba(139, 126, 200, 0.12);
   --shadow-card: 0 2px 16px rgba(139, 126, 200, 0.08);
   --shadow-hover: 0 8px 32px rgba(139, 126, 200, 0.16);
+
+  /* ============================================
+     Phase 2: Triple-stack premium shadows.
+     The "Linear/Stripe look": three layers — micro outline,
+     short close shadow, soft long shadow.
+     ============================================ */
+  --shadow-pearl:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 1px 2px rgba(75, 50, 130, 0.04),
+    0 0 0 1px rgba(139, 126, 200, 0.05),
+    0 12px 32px -8px rgba(139, 126, 200, 0.10);
+
+  --shadow-luxury:
+    0 0 0 1px rgba(139, 126, 200, 0.06),
+    0 2px 4px rgba(75, 50, 130, 0.04),
+    0 12px 24px -4px rgba(139, 126, 200, 0.10),
+    0 32px 64px -16px rgba(139, 126, 200, 0.18);
+
+  --shadow-luxury-hover:
+    0 0 0 1px rgba(139, 126, 200, 0.10),
+    0 4px 8px rgba(75, 50, 130, 0.06),
+    0 16px 32px -4px rgba(139, 126, 200, 0.16),
+    0 40px 80px -16px rgba(139, 126, 200, 0.24);
+
+  /* Cards on dark ink background */
+  --shadow-ink-card:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 16px 40px -8px rgba(0, 0, 0, 0.40);
+
+  /* Coloured glows for CTAs and active states */
+  --shadow-glow-primary: 0 0 32px -4px rgba(139, 126, 200, 0.40);
+  --shadow-glow-rose: 0 0 32px -4px rgba(232, 160, 191, 0.40);
+  --shadow-glow-mint: 0 0 32px -4px rgba(91, 192, 190, 0.40);
+  --shadow-glow-soft: 0 8px 48px -12px rgba(139, 126, 200, 0.25);
 
   /* Radius */
   --radius-sm: 10px;
@@ -121,55 +215,81 @@ html.lenis, html.lenis body {
   --transition-base: 250ms ease;
   --transition-smooth: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Typography — fluid scale */
-  --text-hero: clamp(2.5rem, 5vw, 4.5rem);
-  --text-h1: clamp(2rem, 4vw, 3.5rem);
-  --text-h2: clamp(1.5rem, 3vw, 2.5rem);
-  --text-h3: clamp(1.25rem, 2vw, 1.75rem);
-  --text-h4: clamp(1.0625rem, 1.2vw, 1.125rem); /* 17–18px card title */
-  --text-body-lg: 1.125rem;
-  --text-body: 1rem;
-  --text-sm: 0.875rem;
-  --text-meta: 0.875rem; /* 14px meta/caption */
-  --text-xs: 0.75rem;
-  --text-card-title: clamp(1rem, 1.5vw, 1.125rem);
+  /* ============================================
+     Typography — Premium Stack (Phase 1, 2025)
+     ============================================
+     - Display: Bricolage Grotesque Variable (700-800)
+     - Accent serif: Instrument Serif Italic (for highlighted words)
+     - Body: Inter (400-700)
+     - Mono: Geist Mono (tabular metrics)
+     ============================================ */
 
-  /* Line-heights per TZ §1.1 */
-  --lh-display: 1.05;
-  --lh-h1: 1.1;
-  --lh-h2: 1.15;
+  /* Fluid scale — expanded ceiling for hero impact */
+  --text-mega: clamp(3.5rem, 8vw, 7rem);          /* /demo landing hero */
+  --text-hero: clamp(3rem, 6.5vw, 6rem);          /* Main hero H1 */
+  --text-h1: clamp(2.25rem, 4.5vw, 4rem);         /* Section H1 */
+  --text-h2: clamp(1.75rem, 3.4vw, 3rem);         /* Section H2 */
+  --text-h3: clamp(1.375rem, 2.2vw, 2rem);        /* Sub-section */
+  --text-h4: clamp(1.125rem, 1.4vw, 1.25rem);     /* Card title 18-20px */
+  --text-body-lg: 1.1875rem;                       /* 19px lead */
+  --text-body: 1rem;
+  --text-sm: 0.9375rem;                            /* 15px (was 14px — easier reading) */
+  --text-meta: 0.875rem;                           /* 14px meta */
+  --text-xs: 0.75rem;
+  --text-tiny: 0.6875rem;                          /* 11px eyebrow */
+  --text-card-title: clamp(1.0625rem, 1.5vw, 1.1875rem);
+
+  /* Line-heights — tightened for display, generous for body */
+  --lh-mega: 0.95;
+  --lh-display: 1.02;
+  --lh-h1: 1.05;
+  --lh-h2: 1.1;
   --lh-h3: 1.2;
   --lh-h4: 1.3;
   --lh-body-lg: 1.55;
-  --lh-body: 1.5;
+  --lh-body: 1.55;
   --lh-meta: 1.4;
+
+  /* Letter-spacing — premium tracking system */
+  --tracking-mega: -0.04em;       /* huge headings -4% */
+  --tracking-display: -0.03em;    /* H1/H2 -3% */
+  --tracking-tight: -0.02em;
+  --tracking-snug: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-eyebrow: 0.12em;     /* uppercase labels 12% */
 
   /* Font weights */
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
+  --fw-black: 800;
 
-  /* Readable text width — TZ §1.6 */
-  --text-measure: 68ch;
+  /* Variable axes (Bricolage Grotesque) */
+  --bricolage-opt-display: 96;    /* big headings axis position */
+  --bricolage-opt-h2: 48;
+  --bricolage-opt-h3: 24;
+  --bricolage-opt-h4: 14;
+
+  /* Readable text width */
+  --text-measure: 64ch;
 
   /* Content max-widths */
   --content-narrow: 600px;
   --content-medium: 760px;
   --content-wide: 900px;
 
+  /* Legacy leading aliases (some legacy components reference these) */
   --leading-tight: 1.15;
   --leading-normal: 1.6;
   --leading-relaxed: 1.75;
 
-  --tracking-tight: -0.02em;
-  --tracking-normal: 0;
-  --tracking-wide: 0.02em;
-
-  /* Font families */
-  --font-display: 'Satoshi', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Font families — Premium Stack 2025 */
+  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-accent: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, SF Mono, Menlo, monospace;
 }
 
 /* ================================================
@@ -177,12 +297,22 @@ html.lenis, html.lenis body {
    ================================================ */
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-body);
   color: var(--color-text-primary);
   background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  font-feature-settings: "cv11", "ss01", "kern";
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings get the display font by default — no className required */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-snug);
+  font-optical-sizing: auto;
 }
 
 /* A11y: visible focus for keyboard users — TZ §5.2 */
@@ -205,23 +335,174 @@ p {
   text-indent: 0;
 }
 
-/* Typography helpers */
+/* ================================================
+   Typography helpers — Phase 1 Premium Stack
+   ================================================
+   Legacy .font-display/.font-heading/.font-body/.font-mono
+   remain for backwards-compat; new code uses .t-* tokens.
+   ================================================ */
+
 .font-display {
-  font-family: 'Satoshi', system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: var(--tracking-display);
+  font-feature-settings: "ss01", "ss02", "cv11";
 }
 
 .font-heading {
-  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-snug);
 }
 
 .font-body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-body);
+  font-feature-settings: "cv11", "ss01";
 }
 
 .font-mono {
-  font-family: 'JetBrains Mono', monospace;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "ss01", "ss02", "cv11";
+}
+
+/* ============================================
+   New T-tokens — the official type language
+   ============================================ */
+
+/* Mega — for demo landing hero, big numbers (96-112px) */
+.t-mega {
+  font-family: var(--font-display);
+  font-size: var(--text-mega);
+  font-weight: 700;
+  line-height: var(--lh-mega);
+  letter-spacing: var(--tracking-mega);
+  font-variation-settings: "opsz" var(--bricolage-opt-display);
+  color: var(--color-text-primary);
+}
+
+/* Display Hero — main landing H1 (56-96px) */
+.t-display-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: 700;
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+  font-variation-settings: "opsz" var(--bricolage-opt-display);
+  color: var(--color-text-primary);
+  text-wrap: balance;
+}
+
+/* Display Section — H2 (28-48px) */
+.t-display-section {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  line-height: var(--lh-h2);
+  letter-spacing: var(--tracking-display);
+  font-variation-settings: "opsz" var(--bricolage-opt-h2);
+  color: var(--color-text-primary);
+  text-wrap: balance;
+}
+
+/* H3 — sub-section (22-32px) */
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 600;
+  line-height: var(--lh-h3);
+  letter-spacing: var(--tracking-tight);
+  font-variation-settings: "opsz" var(--bricolage-opt-h3);
+  color: var(--color-text-primary);
+  text-wrap: balance;
+}
+
+/* H4 — card title (18-20px) */
+.t-h4 {
+  font-family: var(--font-display);
+  font-size: var(--text-h4);
+  font-weight: 600;
+  line-height: var(--lh-h4);
+  letter-spacing: var(--tracking-snug);
+  font-variation-settings: "opsz" var(--bricolage-opt-h4);
+  color: var(--color-text-primary);
+}
+
+/* Eyebrow — section badge / overline (11-13px UPPERCASE) */
+.t-eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--text-tiny);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+/* Accent serif — italicised highlight word inside displays */
+.t-accent-serif {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  /* Optical compensation — serif italics read slightly larger */
+  font-size: 1.02em;
+  /* Subtle vertical alignment fix */
+  vertical-align: baseline;
+}
+
+/* Gradient variant for accent serif */
+.t-accent-serif-gradient {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 1.02em;
+  background: var(--gradient-cta);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Lead — large intro paragraph below hero/section title */
+.t-lead {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  font-weight: 400;
+  line-height: var(--lh-body-lg);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-text-secondary);
+  max-width: var(--text-measure);
+  text-wrap: pretty;
+}
+
+/* Body — default paragraph */
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  color: var(--color-text-secondary);
+  text-wrap: pretty;
+}
+
+/* Meta — captions, timestamps, descriptors */
+.t-meta {
+  font-family: var(--font-body);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: var(--lh-meta);
+  color: var(--color-text-muted);
+}
+
+/* KPI number — big tabular figure (32-64px) */
+.t-kpi {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  font-feature-settings: "ss01", "cv11";
+  color: var(--color-text-primary);
 }
 
 /* Gradient text */
@@ -230,6 +511,34 @@ p {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Underline-on-hover for inline links inside body */
+.t-link {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: background-size 0.25s ease, color 0.2s ease;
+}
+.t-link:hover {
+  background-size: 100% 2px;
+  color: var(--color-primary-dark);
+}
+
+/* Optical kerning + variant features for all type */
+.t-display-hero,
+.t-display-section,
+.t-mega,
+.t-h3,
+.t-h4 {
+  font-kerning: normal;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Readable prose — TZ §1.6 (max 68ch width on long paragraphs) */
@@ -646,6 +955,23 @@ p {
   border-color: rgba(139, 126, 200, 0.15);
 }
 
+/* Phase 5.2: boost glass-card opacity on mobile for legibility */
+@media (max-width: 768px) {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+  }
+
+  /* Phase 5.3: long-pill-content fallback */
+  .badge-mint,
+  .section-badge,
+  .t-eyebrow {
+    word-break: break-word;
+    max-width: 100%;
+  }
+}
+
 /* ================================================
    Section badge animation
    ================================================ */
@@ -813,4 +1139,194 @@ p {
 /* White-label demo variables */
 :root {
   --demo-primary: #2A9D8F;
+}
+
+/* ================================================
+   Phase 2 — Section surface modifiers
+   ================================================
+   Drop these on .landing-section (or any section) to switch
+   the background language. Designed so all child .t-* tokens
+   automatically adjust their colours via .section-ink scope.
+   ================================================ */
+
+/* ---- INK: full-bleed dark "command-centre" section ----
+   Use on: ChiefTrackSection, UnitEconomicsSection, ClinicSecurity.
+   Auto-inverts text/headings, dims dividers, brightens accents. */
+.section-ink {
+  position: relative;
+  background: var(--gradient-ink-radial);
+  color: var(--color-ink-text-primary);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Soft glow overlay — gives the dark section a "premium screen" feel.
+   Lavender + rose radial bloom from above. */
+.section-ink::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(139, 126, 200, 0.18), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 90%, rgba(232, 160, 191, 0.12), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle film-grain over ink for cinematic depth */
+.section-ink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+}
+
+/* Promote container above the overlay layers */
+.section-ink > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Auto-invert all typography tokens inside ink sections */
+.section-ink :where(
+  .t-display-hero,
+  .t-display-section,
+  .t-mega,
+  .t-h3,
+  .t-h4,
+  h1, h2, h3, h4, h5, h6,
+  .section-title
+) {
+  color: var(--color-ink-text-primary);
+}
+
+.section-ink :where(
+  .t-lead,
+  .t-body,
+  .section-subtitle,
+  p
+) {
+  color: var(--color-ink-text-secondary);
+}
+
+.section-ink :where(.t-meta, .t-eyebrow) {
+  color: var(--color-ink-text-muted);
+}
+
+/* Eyebrow pill on ink — turn into glass with light border */
+.section-ink :where(.section-badge) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--color-secondary);
+}
+
+/* Cards on ink — flip to dark glass */
+.section-ink :where(.landing-card, .glass-card) {
+  background: var(--color-ink-card);
+  border-color: var(--color-ink-border);
+  box-shadow: var(--shadow-ink-card);
+  color: var(--color-ink-text-primary);
+}
+
+.section-ink :where(.landing-card:hover, .glass-card:hover) {
+  background: var(--color-ink-elevated);
+  border-color: var(--color-ink-border-hover);
+}
+
+/* Mint accent inside ink — for KPIs, badges */
+.section-ink :where(.accent-mint) {
+  color: var(--color-mint);
+}
+
+.section-ink :where(.accent-rose) {
+  color: var(--color-secondary);
+}
+
+/* Section accent serif in ink uses gradient text differently — pure white serif
+   reads more premium than gradient on dark background */
+.section-ink :where(.t-accent-serif, .t-accent-serif-gradient) {
+  background: none;
+  -webkit-text-fill-color: var(--color-ink-text-primary);
+  color: var(--color-ink-text-primary);
+  /* Subtle glow on the italic accent */
+  text-shadow: 0 0 28px rgba(232, 160, 191, 0.35);
+}
+
+/* Make Ink section full-bleed even when nested in container */
+.section-ink.full-bleed {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding-left: var(--container-px);
+  padding-right: var(--container-px);
+}
+
+/* ---- PEARL: premium off-white with multi-stop radial ----
+   Use on hero zones, featured CTA blocks, or instead of plain bg-alt. */
+.section-pearl {
+  background: var(--gradient-pearl);
+  position: relative;
+}
+
+.section-pearl-alt {
+  background: var(--gradient-pearl-alt);
+  position: relative;
+}
+
+.section-pearl-cool {
+  background: var(--gradient-pearl-cool);
+  position: relative;
+}
+
+/* ---- LUXURY card surface ---- */
+.card-luxury {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-luxury);
+  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-luxury:hover {
+  box-shadow: var(--shadow-luxury-hover);
+  transform: translateY(-2px);
+}
+
+/* ---- Mint badge utility ---- */
+.badge-mint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-mint-light);
+  color: var(--color-mint-dark);
+  font-family: var(--font-display);
+  font-size: var(--text-tiny);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .section-ink::after { animation: none; }
+}
+
+/* ============================================
+   Perf — GPU containment for blurred decorative orbs
+   Prevents blur recompositing from leaking across layout
+   ============================================ */
+.orb,
+.case-bloom,
+.track-orb,
+.cta-decor,
+.phone-aura,
+.ff-bloom {
+  contain: layout style paint;
+  will-change: filter, transform;
 }

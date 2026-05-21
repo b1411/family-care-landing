@@ -1,75 +1,86 @@
-# Nuxt 3 Minimal Starter
+# UMAI Health Platform
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Цифровая платформа сопровождения здоровья мамы и ребёнка для частных клиник Казахстана. Объединяет роль семьи (паспорт здоровья, journey-маршрут наблюдения, AI-ассистент), клиники (координатор, врач, главный врач) и платформенного администратора в едином мультитенантном продукте на Nuxt 4 + Supabase.
 
-## Setup
+## Стек
 
-Make sure to install the dependencies:
+- **Frontend:** Nuxt 4.4 · Vue 3.5 · @nuxt/ui 4 · Pinia · Tailwind/UnoCSS
+- **Анимации/визуализация:** GSAP · Lenis · Three.js · ECharts · Lottie
+- **Бэкенд:** Nuxt server routes (Nitro) · Supabase (Postgres + Auth + Realtime) · Edge Functions
+- **AI:** OpenAI API (Care Assistant с медицинскими safety-rails)
+- **Email:** Resend
+- **Observability:** Sentry · PostHog
+- **Деплой:** Vercel
+
+## Роли и маршруты
+
+| Роль | Префикс | Назначение |
+|---|---|---|
+| `mother` / `father` | `/family` | Паспорт здоровья ребёнка, прививки, рост, AI-чат, SOS |
+| `doctor` / `pediatrician` / `gynecologist` / `nurse` | `/doctor` | Расписание, пациенты, рецепты, care-plans |
+| `coordinator` | `/coordinator` | Семьи, задачи, outreach |
+| `chief_doctor` | `/chief` | Жалобы, протоколы, аудит врачей, rx-alerts |
+| `clinic_admin` / `platform_admin` / `superadmin` | `/admin` | Аналитика, CRM, настройки клиники |
+
+Изоляция ролей реализована тремя слоями: Supabase RLS → Nuxt middleware (`role.global.ts`) → e2e RBAC-матрица в `tests/e2e/rbac-matrix.spec.ts`.
+
+## Требования
+
+- Node.js ≥ 20
+- pnpm 10
+- Supabase проект (локальный через `supabase start` или облачный)
+
+## Запуск
 
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+cp .env.example .env   # заполнить Supabase / OpenAI / Resend ключи
+pnpm dev               # http://localhost:3000
 ```
 
-## Development Server
+Демо-режим: `/demo` — четыре пред-настроенных роли (mom / doctor / coordinator / admin), вход через `DEMO_PASSWORD`.
 
-Start the development server on `http://localhost:3000`:
+## Скрипты
+
+| Команда | Что делает |
+|---|---|
+| `pnpm dev` | Dev-сервер с HMR |
+| `pnpm build` | Production-бандл |
+| `pnpm preview` | Локальный preview production-сборки |
+| `pnpm test` | Unit-тесты (Vitest) |
+| `pnpm test:integration` | Integration-тесты против запущенного dev-сервера |
+| `pnpm test:e2e` | Playwright e2e (requires dev-server) |
+| `pnpm test:visual` | Visual-regression snapshots |
+
+## База данных
+
+33 миграции в `supabase/migrations/` покрывают 77 таблиц. Все таблицы под Row-Level Security; helper-функции (`is_family_member`, `is_staff`, `get_user_clinic_id`) — `SECURITY DEFINER STABLE` с pinned `search_path`. Audit-триггеры пишут изменения `appointments` и `prescriptions` в `doctor_audit_log`.
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+supabase start              # локальный стек
+supabase db reset           # применить все миграции с нуля
+supabase migration new <name>  # новая миграция
 ```
 
-## Production
+## CI/CD
 
-Build the application for production:
+GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) запускает: lint+typecheck → unit+integration+e2e параллельно. Все стадии **обязательны**, без `continue-on-error`. Деплой — Vercel git integration на push в `main`.
 
-```bash
-# npm
-npm run build
+## Документация
 
-# pnpm
-pnpm run build
+- `docs/UMAI_HEALTH_DEV_KB.md` — knowledge base разработчика
+- `docs/UMAI_HEALTH_IMPLEMENTATION_GUIDE.md` — архитектура и решения
+- `docs/UMAI_HEALTH_LANDING_BLUEPRINT.md` — спецификация лендинга
+- `docs/UMAI_HEALTH_SITE_STRUCTURE.md` — IA сайта
+- `UMAI_Health_Platform_Passport.docx` — функциональные требования
 
-# yarn
-yarn build
+## Безопасность
 
-# bun
-bun run build
-```
+- RLS на всех PHI-таблицах
+- CSP + HSTS в [`nuxt.config.ts`](./nuxt.config.ts)
+- Rate-limit middleware на API
+- Sentry с `beforeSend` redaction (email/phone/UUID + ключи `name|child|family|patient|diagnosis|...`)
+- Replay с `maskAllText: true` и `blockAllMedia: true`
+- `service_role` ключ используется только в server-only endpoints
 
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Уязвимости отправлять на security@umai.health (приватный канал).

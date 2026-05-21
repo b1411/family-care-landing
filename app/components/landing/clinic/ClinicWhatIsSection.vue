@@ -3,6 +3,7 @@
     id="clinic-platform"
     badge="Платформа"
     title="Как платформа это решает"
+    accent="это решает"
   >
     <!-- Tab switcher -->
     <div class="tab-bar" data-reveal="fade-up">

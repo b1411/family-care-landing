@@ -15,10 +15,15 @@ const schema = z.object({
   role: z.enum(['mom', 'coordinator', 'admin', 'doctor', 'chief']),
 })
 
-// Simple per-IP rate limit for demo login: 10 requests per minute
+// Per-IP rate limit for demo login: env-tunable, defaults to 30 per minute.
+// Higher default accommodates investor demos / office NAT where many users
+// share an IP. Override via DEMO_LOGIN_RATE_PER_MIN.
 const demoRateMap = new Map<string, { count: number; resetAt: number }>()
 const DEMO_WINDOW_MS = 60_000
-const DEMO_MAX_REQUESTS = 10
+const DEMO_MAX_REQUESTS = Math.max(
+  1,
+  Number(process.env.DEMO_LOGIN_RATE_PER_MIN) || 30,
+)
 
 export default defineEventHandler(async (event) => {
   const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'

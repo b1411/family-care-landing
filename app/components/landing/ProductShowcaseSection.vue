@@ -2,9 +2,11 @@
   <section id="product" ref="sectionRef" class="product-showcase-section landing-section">
     <div class="landing-container">
       <div class="section-header">
-        <span class="section-badge font-heading" data-reveal="scale-in">Продукт</span>
-        <h2 ref="titleRef" class="section-title font-display">Три интерфейса — одна платформа</h2>
-        <p class="section-subtitle" data-reveal="fade-up" data-reveal-delay="200">Каждый участник процесса видит то, что нужно именно ему</p>
+        <span class="section-badge t-eyebrow" data-reveal="scale-in">Продукт</span>
+        <h2 ref="titleRef" class="section-title t-display-section">
+          Три интерфейса — <span class="t-accent-serif">одна платформа</span>
+        </h2>
+        <p class="section-subtitle t-lead" data-reveal="fade-up" data-reveal-delay="200">Каждый участник процесса видит то, что нужно именно ему</p>
       </div>
 
       <div class="showcase-tabs" data-reveal="fade-up" data-reveal-delay="300">

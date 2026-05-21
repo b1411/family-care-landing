@@ -149,7 +149,7 @@ function journeyLabel(type: string) {
 .fam-avatar.toddler { background: rgba(233,196,106,0.1); color: var(--color-warning); }
 
 .fam-info { flex: 1; min-width: 0; }
-.fam-name { font-size: 0.85rem; font-weight: 600; display: block; }
+.fam-name { font-size: 0.85rem; font-weight: 600; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fam-meta { font-size: 0.7rem; color: var(--color-text-muted); display: flex; align-items: center; gap: 6px; margin-top: 2px; flex-wrap: wrap; }
 
 .adherence-bar-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }

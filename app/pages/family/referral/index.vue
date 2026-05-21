@@ -6,7 +6,7 @@
         <h1 class="ref-hero-title">Реферальная программа</h1>
         <p class="ref-hero-sub">Приглашайте друзей — получайте бонусы</p>
       </div>
-      <div class="tier-chip" :class="appData.referral.tier.toLowerCase()">{{ appData.referral.tier }}</div>
+      <div class="tier-chip" :class="tierClass">{{ appData.referral.tier }}</div>
     </div>
 
     <!-- Stats strip -->
@@ -17,7 +17,7 @@
       </div>
       <div class="stat-item">
         <span class="stat-val">{{ appData.referral.registered }}</span>
-        <span class="stat-lbl">Зареистрировались</span>
+        <span class="stat-lbl">Зарегистрировались</span>
       </div>
       <div class="stat-item">
         <span class="stat-val">{{ appData.referral.bonus }}</span>
@@ -96,6 +96,14 @@ definePageMeta({ layout: 'app' })
 const appData = useAppData()
 const copied = ref(false)
 
+const tierClass = computed(() => {
+  const t = (appData.referral.tier || '').toLowerCase()
+  if (t.startsWith('сереб') || t === 'silver') return 'silver'
+  if (t.startsWith('золот') || t === 'gold') return 'gold'
+  if (t.startsWith('бронз') || t === 'bronze') return 'bronze'
+  return 'silver'
+})
+
 const bonusHistory = [
   { id: 1, type: 'earn', description: 'Регистрация Камилы Б.', date: '12 мая', amount: '5 000 ₸' },
   { id: 2, type: 'earn', description: 'Регистрация Даны Н.', date: '8 мая', amount: '5 000 ₸' },
@@ -130,9 +138,9 @@ function shareWhatsApp() {
 .ref-hero-title { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; }
 .ref-hero-sub { font-size: 0.82rem; color: var(--color-text-muted); margin-top: 4px; }
 .tier-chip { padding: 6px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
-.tier-chip.серебро { background: rgba(192,192,192,0.15); color: #888; }
-.tier-chip.золото { background: rgba(255,215,0,0.15); color: #B8860B; }
-.tier-chip.бронза { background: rgba(205,127,50,0.15); color: #CD7F32; }
+.tier-chip.silver { background: rgba(192,192,192,0.15); color: #888; }
+.tier-chip.gold { background: rgba(255,215,0,0.15); color: #B8860B; }
+.tier-chip.bronze { background: rgba(205,127,50,0.15); color: #CD7F32; }
 
 .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 @media (max-width: 500px) { .stats-strip { grid-template-columns: repeat(2, 1fr); } }

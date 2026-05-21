@@ -94,6 +94,8 @@ const events = [
   },
 ]
 
+const triggers: Array<{ kill: () => void }> = []
+
 onMounted(() => {
   if (typeof window === 'undefined' || !timelineRef.value) return
 
@@ -108,7 +110,7 @@ onMounted(() => {
   const rows = timelineRef.value!.querySelectorAll('.tl-row')
   gsap.set(rows, { opacity: 0, x: -30 })
 
-  ScrollTrigger.create({
+  triggers.push(ScrollTrigger.create({
     trigger: timelineRef.value,
     start: 'top 70%',
     end: 'bottom 40%',
@@ -135,17 +137,22 @@ onMounted(() => {
         }
       }
     },
-  })
+  }))
 
   // Initial entrance for first row
-  ScrollTrigger.create({
+  triggers.push(ScrollTrigger.create({
     trigger: timelineRef.value,
     start: 'top 80%',
     once: true,
     onEnter() {
       gsap.to(rows[0], { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' })
     },
-  })
+  }))
+})
+
+onBeforeUnmount(() => {
+  triggers.forEach((t) => t.kill())
+  triggers.length = 0
 })
 </script>
 

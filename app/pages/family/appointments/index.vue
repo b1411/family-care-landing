@@ -142,8 +142,8 @@ function statusLabel(s: string) {
 .apt-month { font-size: 0.62rem; color: var(--color-text-muted); text-transform: uppercase; }
 
 .apt-info { flex: 1; min-width: 0; }
-.apt-name { display: block; font-size: 0.85rem; font-weight: 500; }
-.apt-meta { display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 2px; }
+.apt-name { display: block; font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.apt-meta { display: block; font-size: 0.72rem; color: var(--color-text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .apt-badge { font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-full); flex-shrink: 0; }
 .apt-badge--confirmed { background: rgba(124,184,212,0.1); color: var(--color-success); }

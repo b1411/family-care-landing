@@ -1,4 +1,4 @@
-import { onMounted, type Ref } from 'vue'
+import { onMounted, onBeforeUnmount, type Ref } from 'vue'
 import { useGsap } from './useGsap'
 
 interface SplitTextOptions {
@@ -34,6 +34,10 @@ export function useSplitText(
     scroll = true,
     scrollStart = 'top 85%',
   } = options
+
+  // Hold ScrollTrigger instance for cleanup on unmount (prevents leak when
+  // user navigates away mid-animation or component re-mounts during HMR).
+  let trigger: { kill: () => void } | null = null
 
   onMounted(() => {
     if (!import.meta.client) return
@@ -130,7 +134,7 @@ export function useSplitText(
     }
 
     if (scroll) {
-      ScrollTrigger.create({
+      trigger = ScrollTrigger.create({
         trigger: el,
         start: scrollStart,
         once: true,
@@ -140,6 +144,13 @@ export function useSplitText(
       })
     } else {
       gsap.to(elements, to)
+    }
+  })
+
+  onBeforeUnmount(() => {
+    if (trigger) {
+      trigger.kill()
+      trigger = null
     }
   })
 }

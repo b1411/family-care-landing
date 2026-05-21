@@ -2,17 +2,27 @@
   <section id="modules" ref="sectionRef" class="modules-section">
     <div class="landing-container">
       <div class="section-header">
-        <span class="section-badge font-heading">Платформа</span>
-        <h2 ref="titleRef" class="section-title font-display">Ключевые модули</h2>
-        <p class="section-subtitle">Четыре модуля, которые формируют ядро платформы. Всего в системе 8 модулей — полный список на странице для клиник.</p>
+        <span class="section-badge t-eyebrow">Платформа</span>
+        <h2 ref="titleRef" class="section-title t-display-section">
+          Ключевые <span class="t-accent-serif">модули</span>
+        </h2>
+        <p class="section-subtitle t-lead">Четыре модуля, которые формируют ядро платформы. Всего в системе 8 модулей — полный список на странице для клиник.</p>
       </div>
 
       <div ref="gridRef" class="modules-grid">
-        <div v-for="(mod, i) in modules" :key="i" class="module-card">
+        <div
+          v-for="(mod, i) in modules"
+          :key="i"
+          class="module-card"
+          :style="{ '--mod-accent': mod.iconColor }"
+        >
+          <span class="module-border" aria-hidden="true" />
+          <span class="module-num" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}</span>
+
           <div class="module-icon-wrap" :style="{ background: mod.iconBg, color: mod.iconColor }">
-            <Icon :name="mod.icon" size="24" />
+            <Icon :name="mod.icon" size="22" />
           </div>
-          <h3 class="module-headline font-heading">{{ mod.title }}</h3>
+          <h3 class="module-headline">{{ mod.title }}</h3>
           <p class="module-label font-mono">{{ mod.label }}</p>
           <p class="module-body">{{ mod.body }}</p>
 
@@ -157,6 +167,8 @@ useSplitText(titleRef, {
   scrollStart: 'top 80%',
 })
 
+const cleanups: Array<() => void> = []
+
 onMounted(() => {
   if (!gsap || !ScrollTrigger || !sectionRef.value || !gridRef.value) return
 
@@ -164,7 +176,7 @@ onMounted(() => {
 
   gsap.set(cells, { opacity: 0, y: 50, scale: 0.92 })
 
-  ScrollTrigger.create({
+  const entranceTrigger = ScrollTrigger.create({
     trigger: sectionRef.value,
     start: 'top 65%',
     once: true,
@@ -275,25 +287,38 @@ onMounted(() => {
     },
   })
 
+  cleanups.push(() => entranceTrigger.kill())
+
   // Hover lift
   cells.forEach((cell) => {
-    cell.addEventListener('mouseenter', () => {
+    const onEnter = () => {
       gsap.to(cell, {
         y: -6,
         duration: 0.3,
         ease: 'power2.out',
         boxShadow: '0 12px 40px rgba(139, 126, 200, 0.18), 0 0 0 1px rgba(139, 126, 200, 0.12)',
       })
-    })
-    cell.addEventListener('mouseleave', () => {
+    }
+    const onLeave = () => {
       gsap.to(cell, {
         y: 0,
         duration: 0.4,
         ease: 'power2.out',
         boxShadow: '0 0 0 0 transparent, 0 0 0 0 transparent',
       })
+    }
+    cell.addEventListener('mouseenter', onEnter)
+    cell.addEventListener('mouseleave', onLeave)
+    cleanups.push(() => {
+      cell.removeEventListener('mouseenter', onEnter)
+      cell.removeEventListener('mouseleave', onLeave)
     })
   })
+})
+
+onBeforeUnmount(() => {
+  cleanups.forEach((fn) => fn())
+  cleanups.length = 0
 })
 </script>
 
@@ -344,38 +369,107 @@ onMounted(() => {
 }
 
 .module-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  position: relative;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 126, 200, 0.08);
   border-radius: var(--radius-lg);
-  padding: 28px 24px;
+  padding: 26px 26px 24px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  isolation: isolate;
   will-change: transform, opacity;
-  transition: border-color 0.25s;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 2px 6px rgba(139, 126, 200, 0.04),
+    0 16px 38px -22px rgba(139, 126, 200, 0.24);
+  transition:
+    transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.42s ease,
+    border-color 0.32s ease;
+}
+
+/* Gradient border on hover */
+.module-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--mod-accent, var(--color-primary)) 0%, transparent 65%);
+  -webkit-mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.32s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Number watermark */
+.module-num {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-family: var(--font-serif, 'Instrument Serif'), serif;
+  font-style: italic;
+  font-size: 38px;
+  font-weight: 400;
+  color: var(--mod-accent, var(--color-primary));
+  opacity: 0.14;
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+  transition: opacity 0.3s ease, transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .module-card:hover {
-  border-color: var(--color-primary-light);
+  border-color: transparent;
+}
+
+.module-card:hover .module-border {
+  opacity: 1;
+}
+
+.module-card:hover .module-num {
+  opacity: 0.28;
+  transform: translateX(-4px) scale(1.06);
 }
 
 .module-icon-wrap {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
   flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 6px 14px -4px rgba(139, 126, 200, 0.2);
+  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.module-card:hover .module-icon-wrap {
+  transform: scale(1.06) rotate(-3deg);
 }
 
 .module-headline {
-  font-size: var(--text-card-title);
+  font-family: var(--font-display);
+  font-size: 17px;
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0 0 4px;
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .module-label {
@@ -578,5 +672,24 @@ onMounted(() => {
   .modules-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 480px) {
+  .module-card {
+    padding: 22px 22px 20px;
+  }
+  .module-headline {
+    font-size: 16px;
+  }
+  .module-body {
+    font-size: 13.5px;
+  }
+  .module-num {
+    font-size: 32px;
+    top: 14px;
+    right: 16px;
+  }
+  .illust-chart { height: 60px; }
+  .illust-bar-col { gap: 2px; }
 }
 </style>

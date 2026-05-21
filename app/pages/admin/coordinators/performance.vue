@@ -149,7 +149,7 @@ onMounted(async () => {
 .perf-table th { text-align: left; font-size: 0.68rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.03em; padding: 8px 10px; border-bottom: 2px solid var(--color-border-light); }
 .perf-table td { padding: 10px; border-bottom: 1px solid var(--color-border-light); }
 .th-num, .td-num { text-align: center; }
-.td-name { font-weight: 600; }
+.td-name { font-weight: 600; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .warn-text { color: var(--color-danger); font-weight: 600; }
 
 .sla-badge { padding: 2px 10px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; }

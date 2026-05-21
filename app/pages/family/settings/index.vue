@@ -35,7 +35,7 @@
       <div v-if="authStore.children.length" class="children-list">
         <div v-for="child in authStore.children" :key="child.id" class="child-card">
           <div class="child-avatar">
-            <Icon :name="child.gender === 'male' ? 'lucide:baby' : 'lucide:baby'" size="20" />
+            <Icon name="lucide:baby" size="20" />
           </div>
           <div class="child-info">
             <h3>{{ child.name }}</h3>

@@ -3,9 +3,11 @@
     <div class="landing-container">
       <div ref="cardRef" class="cta-card landing-card">
         <div class="cta-content">
-          <span class="cta-badge font-heading">Начните сейчас</span>
-          <h2 ref="titleRef" class="cta-title font-display">Изучите платформу самостоятельно</h2>
-          <p ref="descRef" class="cta-desc">Попробуйте демо прямо сейчас или оставьте заявку — мы свяжемся и обсудим подключение.</p>
+          <span class="cta-badge t-eyebrow">Начните сейчас</span>
+          <h2 ref="titleRef" class="cta-title t-display-section">
+            Изучите платформу <span class="t-accent-serif">самостоятельно</span>
+          </h2>
+          <p ref="descRef" class="cta-desc t-lead">Попробуйте демо прямо сейчас или оставьте заявку — мы свяжемся и обсудим подключение.</p>
 
           <form ref="formRef" class="cta-form" @submit.prevent="handleSubmit">
             <div class="form-row">
@@ -39,7 +41,12 @@
               />
             </div>
             <div class="form-actions">
-              <button type="submit" class="cta-submit btn-shimmer" :disabled="submitted">
+              <button
+                type="submit"
+                class="cta-submit btn-shimmer"
+                :disabled="submitted"
+                :aria-label="submitted ? 'Заявка отправлена' : 'Отправить заявку на подключение'"
+              >
                 <template v-if="!submitted">
                   Обсудить подключение
                   <Icon name="lucide:arrow-right" size="18" />
@@ -87,13 +94,16 @@ useSplitText(titleRef, {
   scrollStart: 'top 80%',
 })
 
+// Cleanup registry: ScrollTrigger + blob tweens
+const cleanups: Array<() => void> = []
+
 onMounted(() => {
   if (!gsap || !ScrollTrigger || !sectionRef.value) return
 
   // Card entrance with clip reveal
   gsap.set(cardRef.value, { clipPath: 'inset(8% 8% 8% 8% round 24px)', opacity: 0, scale: 0.95 })
-  
-  ScrollTrigger.create({
+
+  const entranceTrigger = ScrollTrigger.create({
     trigger: sectionRef.value,
     start: 'top 75%',
     once: true,
@@ -113,12 +123,13 @@ onMounted(() => {
       )
     },
   })
+  cleanups.push(() => entranceTrigger.kill())
 
   // Floating blob animation
   const decors = cardRef.value?.querySelectorAll('.cta-decor')
   if (decors?.length) {
     decors.forEach((blob, i) => {
-      gsap.to(blob, {
+      const tween = gsap.to(blob, {
         x: `random(-20, 20)`,
         y: `random(-20, 20)`,
         duration: 4 + i * 0.5,
@@ -126,8 +137,14 @@ onMounted(() => {
         repeat: -1,
         yoyo: true,
       })
+      cleanups.push(() => tween.kill())
     })
   }
+})
+
+onBeforeUnmount(() => {
+  cleanups.forEach((fn) => fn())
+  cleanups.length = 0
 })
 
 async function handleSubmit() {
@@ -251,6 +268,11 @@ async function handleSubmit() {
   color: var(--color-text-muted);
 }
 
+/* Phase 5.3: prevent iOS zoom-on-focus (font >= 16px on mobile) */
+@media (max-width: 768px) {
+  .cta-input { font-size: 16px; }
+}
+
 .cta-submit {
   display: inline-flex;
   align-items: center;
@@ -334,5 +356,14 @@ async function handleSubmit() {
     width: 100%;
     justify-content: center;
   }
+
+  /* Phase 5.2: reduce heavy blurs on mobile for perf */
+  .cta-decor--1 { filter: blur(28px); }
+  .cta-decor--2 { filter: blur(24px); }
+  .cta-decor--3 { filter: blur(20px); }
+}
+
+@media (max-width: 480px) {
+  .cta-decor--3 { display: none; }
 }
 </style>

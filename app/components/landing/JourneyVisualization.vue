@@ -2,8 +2,9 @@
   <LandingUiSectionWrapper
     badge="Маршрут"
     title="От зачатия до 2 лет — один маршрут"
+    accent="один маршрут"
     subtitle="Каждый этап автоматически рассчитывается. Система знает, что должно произойти следующим"
-    alternate
+    surface="pearl-cool"
   >
     <div class="journey-wrapper">
       <!-- Stage tabs -->

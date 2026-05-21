@@ -176,7 +176,16 @@
 
       <!-- ═══════ TAB: Journey ═══════ -->
       <template v-if="activeTab === 'journey'">
-        <div v-if="!data.journey" class="card"><AppSharedEmptyState size="sm" icon="lucide:route" title="Активный маршрут не найден" /></div>
+        <div v-if="!data.journey" class="card">
+          <AppSharedEmptyState
+            icon="lucide:route"
+            title="Активный маршрут не найден"
+            description="Создайте маршрут заботы — система сгенерирует события на основе типа маршрута и опорной даты."
+            action-label="Создать маршрут"
+            action-icon="lucide:route"
+            @action="showCreateJourney = true"
+          />
+        </div>
         <template v-else>
           <div class="card">
             <h2 class="card-title"><Icon name="lucide:route" size="16" /> {{ journeyTypeLabel(data.journey.type) }} — События</h2>
@@ -304,6 +313,14 @@
       </div>
     </Teleport>
 
+    <!-- Journey create modal -->
+    <AppSharedJourneyCreateModal
+      :open="showCreateJourney"
+      :family-id="familyId"
+      @close="showCreateJourney = false"
+      @created="onJourneyCreated"
+    />
+
     <!-- Task modal -->
     <Teleport to="body">
       <div v-if="showTask" class="modal-overlay" @click.self="showTask = false">
@@ -364,6 +381,12 @@ const tabs = [
 const showActivity = ref(false)
 const showNote = ref(false)
 const showTask = ref(false)
+const showCreateJourney = ref(false)
+
+async function onJourneyCreated() {
+  showCreateJourney.value = false
+  await load360()
+}
 const actForm = reactive({ type: 'call', summary: '' })
 const noteForm = reactive({ title: '', body: '', pinned: false })
 const taskForm = reactive({ title: '', desc: '', priority: 'medium', type: 'custom', due: '' })

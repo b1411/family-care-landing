@@ -117,7 +117,6 @@ const kpis = computed(() => [
 const crmNavItems = [
   { to: '/admin/leads', icon: 'lucide:user-plus', name: 'Лиды', desc: 'Воронка входящих', bg: 'rgba(139,126,200,0.1)' },
   { to: '/admin/deals', icon: 'lucide:handshake', name: 'Сделки', desc: 'Pipeline продаж', bg: 'rgba(168,200,232,0.12)' },
-  { to: '/admin/family-360', icon: 'lucide:heart', name: 'Семья 360°', desc: 'Полный профиль', bg: 'rgba(232,160,191,0.1)' },
   { to: '/admin/campaigns', icon: 'lucide:megaphone', name: 'Кампании', desc: 'Массовые рассылки', bg: 'rgba(242,196,160,0.1)' },
   { to: '/admin/segments', icon: 'lucide:filter', name: 'Сегменты', desc: 'Целевые аудитории', bg: 'rgba(124,184,212,0.1)' },
   { to: '/admin/templates', icon: 'lucide:file-text', name: 'Шаблоны', desc: 'Сообщения и e-mail', bg: 'rgba(233,196,106,0.1)' },

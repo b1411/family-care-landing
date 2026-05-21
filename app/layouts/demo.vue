@@ -34,16 +34,33 @@
         </NuxtLink>
       </nav>
 
-      <NuxtLink to="/" class="demo-back">
-        <Icon name="lucide:arrow-left" size="16" />
-        <span>На главную</span>
-      </NuxtLink>
+      <div class="demo-topbar-right">
+        <!-- Phase 4.7: ⌘K palette trigger -->
+        <button
+          type="button"
+          class="demo-cmdk-trigger"
+          aria-label="Открыть командную палитру"
+          @click="cmdkRef?.open()"
+        >
+          <Icon name="lucide:command" size="14" />
+          <span class="cmdk-trigger-label">Команды</span>
+          <kbd class="cmdk-trigger-kbd font-mono">{{ cmdkHint }}</kbd>
+        </button>
+
+        <NuxtLink to="/" class="demo-back">
+          <Icon name="lucide:arrow-left" size="16" />
+          <span>На главную</span>
+        </NuxtLink>
+      </div>
     </header>
 
     <!-- Content -->
     <main class="demo-main">
       <slot />
     </main>
+
+    <!-- Phase 4.7: Global Command Palette — listens to ⌘K / Ctrl+K -->
+    <AppCommandPalette ref="cmdkRef" />
   </div>
 </template>
 
@@ -55,6 +72,17 @@ const tabs = [
   { to: '/demo/coordinator', label: 'Координатор', icon: 'lucide:clipboard-list' },
   { to: '/demo/doctor', label: 'Врач', icon: 'lucide:stethoscope' },
 ]
+
+// Phase 4.7: Cmd+K palette trigger
+const cmdkRef = ref<{ open: () => void; close: () => void; toggle: () => void } | null>(null)
+const cmdkHint = ref('⌘K')
+
+onMounted(() => {
+  if (typeof navigator !== 'undefined') {
+    const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform || navigator.userAgent)
+    cmdkHint.value = isMac ? '⌘K' : 'Ctrl K'
+  }
+})
 </script>
 
 <style scoped>
@@ -173,6 +201,57 @@ const tabs = [
   font-weight: 600;
 }
 
+.demo-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* Phase 4.7 — ⌘K trigger pill */
+.demo-cmdk-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(139, 126, 200, 0.06);
+  border: 1px solid rgba(139, 126, 200, 0.16);
+  color: var(--color-text-secondary);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.demo-cmdk-trigger:hover {
+  background: rgba(139, 126, 200, 0.12);
+  border-color: rgba(139, 126, 200, 0.28);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(139, 126, 200, 0.30);
+}
+
+.cmdk-trigger-label {
+  letter-spacing: var(--tracking-snug);
+}
+
+.cmdk-trigger-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid rgba(139, 126, 200, 0.16);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.04em;
+  box-shadow: 0 1px 0 rgba(75, 50, 130, 0.04);
+}
+
 .demo-back {
   display: flex;
   align-items: center;
@@ -225,6 +304,15 @@ const tabs = [
     display: none;
   }
 
+  .cmdk-trigger-label,
+  .cmdk-trigger-kbd {
+    display: none;
+  }
+
+  .demo-cmdk-trigger {
+    padding: 6px 10px;
+  }
+
   .demo-main {
     padding: 16px;
   }
@@ -233,6 +321,27 @@ const tabs = [
 @media (max-width: 480px) {
   .demo-logo-text {
     display: none;
+  }
+  /* Phase 5.3: tighter top-bar */
+  .demo-topbar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .demo-tab {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+  .demo-banner {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .demo-cmdk-trigger {
+    min-width: 36px;
+    min-height: 36px;
+    justify-content: center;
+  }
+  .demo-main {
+    padding: 12px;
   }
 }
 </style>

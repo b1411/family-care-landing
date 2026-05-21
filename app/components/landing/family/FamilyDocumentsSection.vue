@@ -2,6 +2,7 @@
   <LandingUiSectionWrapper
     badge="Документы"
     title="Все документы — в одном месте"
+    accent="в одном месте"
     subtitle="Больше никаких потерянных бумажек и фото в галерее"
     alternate
   >

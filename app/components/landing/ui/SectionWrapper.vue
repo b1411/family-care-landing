@@ -3,15 +3,23 @@
     :class="[
       'landing-section',
       alternate ? 'bg-alt' : '',
+      surface ? `surface-${surface}` : '',
     ]"
     :style="bgStyle"
     v-bind="$attrs"
   >
     <div class="landing-container">
       <div v-if="title || subtitle" class="section-header">
-        <span v-if="badge" class="section-badge" data-reveal="scale-in">{{ badge }}</span>
-        <h2 v-if="title" ref="titleRef" class="section-title font-display">{{ title }}</h2>
-        <p v-if="subtitle" class="section-subtitle font-heading" data-reveal="fade-up" data-reveal-delay="300">{{ subtitle }}</p>
+        <span v-if="badge" class="section-badge t-eyebrow" data-reveal="scale-in">{{ badge }}</span>
+        <h2 v-if="title" ref="titleRef" class="section-title t-display-section">
+          <template v-if="accent">
+            <span>{{ titleBeforeAccent }}</span><span class="t-accent-serif"> {{ accent }}</span><span>{{ titleAfterAccent }}</span>
+          </template>
+          <template v-else>
+            {{ title }}
+          </template>
+        </h2>
+        <p v-if="subtitle" class="section-subtitle t-lead" data-reveal="fade-up" data-reveal-delay="300">{{ subtitle }}</p>
       </div>
       <div>
         <slot />
@@ -25,10 +33,30 @@ const props = defineProps<{
   title?: string
   subtitle?: string
   badge?: string
+  accent?: string
   alternate?: boolean
   gradient?: string
   customGradient?: string
+  /** Phase 2: premium background surface modifier — 'pearl' | 'pearl-alt' | 'pearl-cool' | 'ink' */
+  surface?: 'pearl' | 'pearl-alt' | 'pearl-cool' | 'ink'
 }>()
+
+/* Auto-split title around the `accent` substring so callers can mark
+ * an italic-serif highlight without writing markup. Falls back gracefully
+ * when accent is missing or not found in the title. */
+const titleBeforeAccent = computed(() => {
+  if (!props.accent || !props.title) return props.title || ''
+  const idx = props.title.toLowerCase().indexOf(props.accent.toLowerCase())
+  if (idx === -1) return props.title
+  return props.title.slice(0, idx).trimEnd()
+})
+
+const titleAfterAccent = computed(() => {
+  if (!props.accent || !props.title) return ''
+  const idx = props.title.toLowerCase().indexOf(props.accent.toLowerCase())
+  if (idx === -1) return ''
+  return props.title.slice(idx + props.accent.length)
+})
 
 defineOptions({ inheritAttrs: false })
 
@@ -58,36 +86,48 @@ const bgStyle = computed(() => {
   background-color: var(--color-bg-alt);
 }
 
+/* Phase 2: premium surface modifiers — pearl radial gradients */
+.surface-pearl { background: var(--gradient-pearl); }
+.surface-pearl-alt { background: var(--gradient-pearl-alt); }
+.surface-pearl-cool { background: var(--gradient-pearl-cool); }
+.surface-ink {
+  background: var(--gradient-ink-radial);
+  color: var(--color-ink-text-primary);
+}
+
 .section-header {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 64px;
 }
 
+/* .section-badge: now styled by .t-eyebrow token in landing.css
+ * Local rules below add the pill background + spacing wrapper.
+ * Token sets font/letter-spacing/color. */
 .section-badge {
   display: inline-block;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: var(--radius-full);
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 16px;
+  background: rgba(139, 126, 200, 0.08);
+  border: 1px solid rgba(139, 126, 200, 0.12);
+  margin-bottom: 20px;
 }
 
+/* .section-title now inherits from .t-display-section.
+ * Only override margin here for header rhythm. */
 .section-title {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--color-text-primary);
-  margin: 0 0 16px;
+  margin: 0 0 20px;
 }
 
+/* .section-subtitle now inherits from .t-lead.
+ * Override centering for hero-style centred subheaders. */
 .section-subtitle {
-  font-size: clamp(16px, 2vw, 18px);
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  max-width: 640px;
   margin: 0 auto;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    margin-bottom: 44px;
+  }
 }
 </style>

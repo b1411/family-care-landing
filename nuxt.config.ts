@@ -12,12 +12,18 @@ export default defineNuxtConfig({
   ],
 
   fonts: {
-    // Satoshi is declared only in CSS font-family fallback (system-ui fallback).
-    // It is not fetched through @nuxt/fonts because Fontshare's network is
-    // unreliable during Vercel build — see failed deploy dpl_jpKt7WHgrTgcfWjr5WnCmPBjaErQ.
+    // Premium type stack — 2025 redesign (Phase 1)
+    // - Bricolage Grotesque: display headings (variable opt-size axis)
+    // - Instrument Serif: italic accent words inside headings
+    // - Inter: body and UI text
+    // - Geist Mono: tabular metrics, KPI numbers, code, status labels
+    // All four fetched via Google Fonts CDN for build reliability.
+    // Satoshi removed — Fontshare was unreliable on Vercel (deploy dpl_jpKt7WHgrTgcfWjr5WnCmPBjaErQ).
     families: [
+      { name: 'Bricolage Grotesque', provider: 'google', weights: [500, 600, 700, 800] },
+      { name: 'Instrument Serif', provider: 'google', weights: [400], styles: ['italic', 'normal'] },
       { name: 'Inter', provider: 'google', weights: [400, 500, 600, 700] },
-      { name: 'JetBrains Mono', provider: 'google', weights: [400, 500, 600] },
+      { name: 'Geist Mono', provider: 'google', weights: [400, 500, 600] },
     ],
     defaults: {
       preload: true,
@@ -282,7 +288,7 @@ export default defineNuxtConfig({
       },
     },
     optimizeDeps: {
-      include: ['echarts'],
+      include: ['echarts/core', 'echarts/charts', 'echarts/components', 'echarts/renderers'],
     },
     ssr: {
       noExternal: [],

@@ -2,28 +2,52 @@
   <section id="how-it-works" ref="sectionRef" class="how-it-works-section landing-section">
     <div class="landing-container">
       <div class="section-header">
-        <span class="section-badge font-heading">Маршрут</span>
-        <h2 ref="titleRef" class="section-title font-display">Полный маршрут: от зачатия до 2 лет</h2>
-        <p class="section-subtitle">5 этапов, 50+ событий — платформа ведёт каждую семью автоматически</p>
+        <span class="section-badge t-eyebrow">Маршрут</span>
+        <h2 ref="titleRef" class="section-title t-display-section">
+          Полный маршрут: от зачатия до <span class="t-accent-serif">двух лет</span>
+        </h2>
+        <p class="section-subtitle t-lead">5 этапов, 50+ событий — платформа ведёт каждую семью автоматически</p>
+      </div>
+
+      <!-- Mini progress indicator -->
+      <div class="timeline-progress" aria-hidden="true">
+        <span
+          v-for="(stage, i) in stages"
+          :key="`p-${i}`"
+          class="progress-pip"
+          :class="{ 'is-active': expandedStage === i }"
+        />
+        <span class="progress-label font-mono">
+          Этап {{ String(expandedStage + 1).padStart(2, '0') }} / {{ stages.length }}
+        </span>
       </div>
 
       <!-- Connecting timeline line -->
-      <div class="timeline-connector" ref="connectorRef">
+      <div class="timeline-connector" ref="connectorRef" aria-hidden="true">
         <div class="timeline-connector-fill" ref="connectorFillRef" />
       </div>
 
       <!-- 5 stage cards - all visible -->
-      <div ref="cardsRef" class="stage-cards">
+      <div
+        ref="cardsRef"
+        class="stage-cards"
+        @mouseenter="pauseAutoAdvance"
+        @mouseleave="resumeAutoAdvance"
+      >
         <div
           v-for="(stage, i) in stages"
           :key="stage.label"
           class="stage-card"
           :class="{ 'is-expanded': expandedStage === i }"
-          @click="expandedStage = expandedStage === i ? -1 : i"
-          @mouseenter="expandedStage = i"
+          :style="{ '--stage-color': stage.iconColor }"
+          @click="setStage(i)"
+          @mouseenter="setStage(i)"
         >
-          <!-- Number watermark -->
-          <span class="stage-num font-display">{{ String(i + 1).padStart(2, '0') }}</span>
+          <!-- Gradient border on active -->
+          <span class="stage-border" aria-hidden="true" />
+
+          <!-- Big numeric watermark -->
+          <span class="stage-num">{{ String(i + 1).padStart(2, '0') }}</span>
 
           <!-- Icon -->
           <div class="stage-icon-wrap" :style="{ background: stage.iconBg }">
@@ -31,7 +55,7 @@
           </div>
 
           <!-- Title & period -->
-          <h3 class="stage-label font-heading">{{ stage.label }}</h3>
+          <h3 class="stage-label">{{ stage.label }}</h3>
           <span v-if="stage.period" class="stage-period font-mono">{{ stage.period }}</span>
 
           <!-- Summary stat -->
@@ -41,14 +65,15 @@
           <Transition name="stage-expand">
             <div v-if="expandedStage === i" class="stage-events-wrap">
               <ul class="stage-events">
-                <li v-for="event in stage.events" :key="event">{{ event }}</li>
+                <li v-for="event in stage.events" :key="event">
+                  <span class="event-bullet" aria-hidden="true" />
+                  <span>{{ event }}</span>
+                </li>
               </ul>
             </div>
           </Transition>
         </div>
       </div>
-
-      <!-- Mobile: vertical stack (same cards but stacked) -->
     </div>
   </section>
 </template>
@@ -62,6 +87,41 @@ const cardsRef = ref<HTMLElement | null>(null)
 const connectorRef = ref<HTMLElement | null>(null)
 const connectorFillRef = ref<HTMLElement | null>(null)
 const expandedStage = ref(0)
+
+let autoAdvanceTimer: ReturnType<typeof setInterval> | null = null
+let visibilityHandler: (() => void) | null = null
+let hovering = false
+
+function setStage(i: number) {
+  expandedStage.value = expandedStage.value === i ? -1 : i
+  // Reset auto-advance on manual interaction
+  if (!hovering) resumeAutoAdvance()
+}
+
+function startAutoAdvance() {
+  if (autoAdvanceTimer || hovering) return
+  autoAdvanceTimer = setInterval(() => {
+    expandedStage.value = (expandedStage.value + 1) % 5
+  }, 6000)
+}
+
+function stopAutoAdvance() {
+  if (autoAdvanceTimer) {
+    clearInterval(autoAdvanceTimer)
+    autoAdvanceTimer = null
+  }
+}
+
+function pauseAutoAdvance() {
+  hovering = true
+  stopAutoAdvance()
+}
+
+function resumeAutoAdvance() {
+  hovering = false
+  stopAutoAdvance()
+  startAutoAdvance()
+}
 
 const stages = [
   {
@@ -188,6 +248,27 @@ onMounted(() => {
       },
     })
   }
+
+  // Auto-advance every 6s; pause when tab hidden (Page Visibility API)
+  if (typeof window !== 'undefined') {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!reducedMotion) {
+      if (!document.hidden) startAutoAdvance()
+      visibilityHandler = () => {
+        if (document.hidden) stopAutoAdvance()
+        else if (!hovering) startAutoAdvance()
+      }
+      document.addEventListener('visibilitychange', visibilityHandler)
+    }
+  }
+})
+
+onBeforeUnmount(() => {
+  stopAutoAdvance()
+  if (visibilityHandler) {
+    document.removeEventListener('visibilitychange', visibilityHandler)
+    visibilityHandler = null
+  }
 })
 </script>
 
@@ -227,14 +308,47 @@ onMounted(() => {
   margin: 0;
 }
 
+/* Progress indicator (pip strip + label) */
+.timeline-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 18px;
+  max-width: 90%;
+}
+
+.progress-pip {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(139, 126, 200, 0.15);
+  transition: width 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), background 0.3s ease;
+}
+
+.progress-pip.is-active {
+  width: 44px;
+  background: var(--gradient-cta);
+}
+
+.progress-label {
+  margin-left: 12px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
 /* Timeline connector line */
 .timeline-connector {
   position: relative;
-  height: 3px;
-  background: var(--color-border-light);
+  height: 2px;
+  background: rgba(139, 126, 200, 0.1);
   border-radius: 2px;
-  margin: 0 auto 32px;
+  margin: 0 auto 28px;
   max-width: 90%;
+  overflow: hidden;
 }
 
 .timeline-connector-fill {
@@ -245,96 +359,166 @@ onMounted(() => {
   transform: scaleX(0);
   transform-origin: left;
   will-change: transform;
+  box-shadow: 0 0 8px rgba(139, 126, 200, 0.4);
 }
 
 /* Stage cards — 5 in a row */
 .stage-cards {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 .stage-card {
   position: relative;
-  padding: 24px 18px;
+  padding: 22px 18px 18px;
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(139, 126, 200, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 2px 6px rgba(139, 126, 200, 0.04),
+    0 14px 32px -20px rgba(139, 126, 200, 0.22);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.45s ease,
+    border-color 0.32s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  isolation: isolate;
+}
+
+/* Animated gradient border (active state) */
+.stage-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--stage-color, var(--color-primary)) 0%, transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.32s ease;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .stage-card:hover {
-  border-color: var(--color-primary-light);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 6px 18px rgba(139, 126, 200, 0.1),
+    0 22px 48px -22px rgba(139, 126, 200, 0.32);
+}
+
+.stage-card:hover .stage-border {
+  opacity: 1;
 }
 
 .stage-card.is-expanded {
-  background: var(--color-primary-ultralight);
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-hover);
-  grid-column: span 1;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: transparent;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    0 8px 22px rgba(139, 126, 200, 0.14),
+    0 28px 60px -22px rgba(139, 126, 200, 0.38);
 }
 
-/* Number watermark */
+.stage-card.is-expanded .stage-border {
+  opacity: 1;
+}
+
+/* Number watermark — bigger, Instrument Serif italic */
 .stage-num {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 48px;
-  font-weight: 900;
-  color: var(--color-text-primary);
-  opacity: 0.04;
+  top: 10px;
+  right: 14px;
+  font-family: var(--font-serif, 'Instrument Serif'), serif;
+  font-style: italic;
+  font-size: 44px;
+  font-weight: 400;
+  color: var(--stage-color, var(--color-primary));
+  opacity: 0.1;
   line-height: 1;
   pointer-events: none;
-  transition: opacity 0.3s;
+  letter-spacing: -0.02em;
+  transition: opacity 0.32s ease, transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .stage-card.is-expanded .stage-num {
-  opacity: 0.08;
+  opacity: 0.28;
+  transform: translateX(-4px) scale(1.08);
 }
 
 /* Icon */
 .stage-icon-wrap {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 4px 12px -3px rgba(139, 126, 200, 0.18);
+  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+  margin-bottom: 4px;
+}
+
+.stage-card.is-expanded .stage-icon-wrap,
+.stage-card:hover .stage-icon-wrap {
+  transform: scale(1.06) rotate(-3deg);
 }
 
 /* Labels */
 .stage-label {
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0;
   line-height: 1.2;
+  letter-spacing: -0.005em;
 }
 
 .stage-period {
-  font-size: var(--text-xs);
+  font-size: 10px;
   color: var(--color-text-muted);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .stage-stat {
-  font-size: 10px;
-  color: var(--color-primary);
-  font-weight: 500;
+  font-size: 11px;
+  color: var(--stage-color, var(--color-primary));
+  font-weight: 600;
   letter-spacing: 0.01em;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(139, 126, 200, 0.06);
+  align-self: flex-start;
+  margin-top: 4px;
 }
 
 /* Expanded events */
 .stage-events-wrap {
-  padding-top: 4px;
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(139, 126, 200, 0.08);
 }
 
 .stage-events {
@@ -343,7 +527,7 @@ onMounted(() => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .stage-events li {
@@ -355,12 +539,14 @@ onMounted(() => {
   color: var(--color-text-secondary);
 }
 
-.stage-events li::before {
-  content: '─';
-  color: var(--color-primary);
+.event-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--stage-color, var(--color-primary));
   flex-shrink: 0;
-  font-size: 10px;
-  margin-top: 2px;
+  margin-top: 6px;
+  box-shadow: 0 0 6px var(--stage-color, var(--color-primary));
 }
 
 /* Expand/collapse transition */

@@ -2,15 +2,18 @@
   <header class="navbar" :class="{ scrolled: isScrolled }">
     <div class="navbar-inner landing-container">
       <!-- Logo -->
-      <NuxtLink to="/" class="navbar-logo">
+      <NuxtLink to="/" class="navbar-logo" aria-label="UMAI Health — на главную">
         <span class="logo-icon">
-          <Icon name="lucide:heart-pulse" size="24" />
+          <Icon name="lucide:heart-pulse" size="22" />
+          <span class="logo-icon-pulse" aria-hidden="true" />
         </span>
-        <span class="logo-text font-display">UMAI Health</span>
+        <span class="logo-text font-display">
+          <span class="logo-text-gradient">UMAI</span>&nbsp;Health
+        </span>
       </NuxtLink>
 
       <!-- Desktop Navigation — page tabs -->
-      <nav class="navbar-tabs">
+      <nav class="navbar-tabs" aria-label="Основная навигация">
         <NuxtLink
           v-for="tab in tabs"
           :key="tab.to"
@@ -18,16 +21,28 @@
           class="nav-tab font-heading"
           :class="{ active: isActiveTab(tab.to) }"
         >
-          {{ tab.label }}
+          <span class="nav-tab-label">{{ tab.label }}</span>
+          <span class="nav-tab-underline" aria-hidden="true" />
         </NuxtLink>
       </nav>
 
       <!-- Auth + CTA -->
       <div class="navbar-actions">
-        <NuxtLink to="/demo" class="navbar-demo font-heading">
-          Попробовать демо
+        <NuxtLink
+          to="/demo"
+          class="navbar-demo font-heading"
+          aria-label="Попробовать демо платформы"
+        >
+          <span>Попробовать демо</span>
+          <Icon name="lucide:arrow-right" size="14" class="navbar-demo-arrow" />
         </NuxtLink>
-        <a href="#contact" class="navbar-cta font-heading">Обсудить подключение</a>
+        <a
+          href="#contact"
+          class="navbar-cta font-heading btn-shimmer"
+          aria-label="Перейти к форме обсуждения подключения"
+        >
+          Обсудить подключение
+        </a>
       </div>
 
       <!-- Mobile burger -->
@@ -77,12 +92,16 @@ function isActiveTab(path: string) {
   return route.path === path
 }
 
+const onScroll = () => {
+  isScrolled.value = window.scrollY > 100
+}
+
 onMounted(() => {
-  const onScroll = () => {
-    isScrolled.value = window.scrollY > 100
-  }
   window.addEventListener('scroll', onScroll, { passive: true })
-  onUnmounted(() => window.removeEventListener('scroll', onScroll))
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll)
 })
 </script>
 
@@ -139,6 +158,7 @@ onMounted(() => {
 }
 
 .logo-icon {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,12 +167,45 @@ onMounted(() => {
   border-radius: var(--radius-sm);
   background: var(--gradient-cta);
   color: white;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 14px rgba(139, 126, 200, 0.32);
+  isolation: isolate;
+}
+
+.logo-icon-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--gradient-cta);
+  z-index: -1;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo-icon-pulse {
+    animation: logo-icon-pulse 3.2s ease-out infinite;
+  }
+}
+
+@keyframes logo-icon-pulse {
+  0% { opacity: 0.55; transform: scale(1); }
+  70% { opacity: 0; transform: scale(1.55); }
+  100% { opacity: 0; transform: scale(1.55); }
 }
 
 .logo-text {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+.logo-text-gradient {
+  background: linear-gradient(115deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
 }
 
 /* Desktop tabs */
@@ -175,6 +228,26 @@ onMounted(() => {
   transition: color var(--transition-fast), background var(--transition-fast);
   position: relative;
   white-space: nowrap;
+  overflow: hidden;
+}
+
+.nav-tab-label {
+  position: relative;
+  z-index: 1;
+}
+
+.nav-tab-underline {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .nav-tab:hover {
@@ -182,11 +255,21 @@ onMounted(() => {
   background: rgba(139, 126, 200, 0.08);
 }
 
+.nav-tab:hover .nav-tab-underline {
+  width: 60%;
+  opacity: 1;
+}
+
 .nav-tab.active {
   color: var(--color-primary);
   background: white;
   font-weight: 600;
   box-shadow: 0 1px 6px rgba(139, 126, 200, 0.15);
+}
+
+.nav-tab.active .nav-tab-underline {
+  width: 0;
+  opacity: 0;
 }
 
 /* Auth + CTA group */
@@ -218,9 +301,9 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 20px;
+  padding: 10px 18px 10px 20px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-primary);
+  border: 1px solid rgba(139, 126, 200, 0.32);
   background: transparent;
   color: var(--color-primary);
   font-size: 14px;
@@ -228,10 +311,22 @@ onMounted(() => {
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  text-decoration: none;
+}
+
+.navbar-demo-arrow {
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .navbar-demo:hover {
   background: var(--color-primary-ultralight);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 14px -4px rgba(139, 126, 200, 0.35);
+  transform: translateY(-1px);
+}
+
+.navbar-demo:hover .navbar-demo-arrow {
+  transform: translateX(3px);
 }
 
 /* Mobile demo button */
@@ -257,20 +352,28 @@ onMounted(() => {
 
 /* CTA button */
 .navbar-cta {
-  padding: 10px 24px;
+  position: relative;
+  padding: 10px 22px;
   border-radius: var(--radius-full);
   background: var(--gradient-cta);
   color: white;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
   white-space: nowrap;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 4px 16px -2px rgba(139, 126, 200, 0.42);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .navbar-cta:hover {
-  opacity: 0.9;
-  transform: scale(1.02);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 28px -4px rgba(139, 126, 200, 0.55);
 }
 
 /* Burger */
@@ -440,6 +543,23 @@ onMounted(() => {
 
   .navbar.scrolled .navbar-inner {
     height: 46px;
+  }
+  /* Phase 5.3: reduce backdrop-filter blur on iOS for perf */
+  .navbar-inner {
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+  }
+}
+
+@media (max-width: 360px) {
+  .navbar-burger {
+    padding: 10px;
+  }
+  .navbar-inner {
+    padding: 0 8px 0 12px;
+  }
+  .logo-text {
+    font-size: 16px;
   }
 }
 </style>

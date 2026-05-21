@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
 import { createSupabaseAdmin, jsonResponse, errorResponse, corsHeaders } from '../_shared/supabase.ts'
+import { loadServiceAccount, sendFcmV1 } from '../_shared/fcm.ts'
 
 /**
  * send-notification
@@ -103,7 +104,9 @@ serve(async (req: Request) => {
 })
 
 /**
- * Send Firebase Cloud Messaging push notification.
+ * Send push via FCM HTTP v1.
+ * Requires FCM_SERVICE_ACCOUNT_JSON env (service-account JSON contents).
+ * Legacy fcm.googleapis.com/fcm/send was decommissioned 2024-06-20.
  */
 async function sendPushNotification(
   userId: string,
@@ -111,12 +114,11 @@ async function sendPushNotification(
   body: string,
   data?: Record<string, unknown>,
 ): Promise<boolean> {
-  const fcmKey = Deno.env.get('FCM_SERVER_KEY')
-  if (!fcmKey) return false
+  const sa = loadServiceAccount()
+  if (!sa) return false
 
   const supabase = createSupabaseAdmin()
 
-  // Lookup user's active FCM tokens
   const { data: tokens } = await supabase
     .from('push_tokens')
     .select('token')
@@ -129,34 +131,19 @@ async function sendPushNotification(
 
   for (const { token } of tokens) {
     try {
-      const response = await fetch('https://fcm.googleapis.com/fcm/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': `key=${fcmKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          to: token,
-          notification: { title, body },
-          data: data || {},
-        }),
-      })
+      const result = await sendFcmV1(sa, token, title, body, data)
 
-      if (response.ok) {
-        const result = await response.json()
-        if (result.success === 1) {
-          anySuccess = true
-        } else {
-          // Token is invalid — deactivate it
-          await supabase
-            .from('push_tokens')
-            .update({ is_active: false, updated_at: new Date().toISOString() })
-            .eq('user_id', userId)
-            .eq('token', token)
-        }
+      if (result === 'sent') {
+        anySuccess = true
+      } else if (result === 'invalid_token') {
+        await supabase
+          .from('push_tokens')
+          .update({ is_active: false, updated_at: new Date().toISOString() })
+          .eq('user_id', userId)
+          .eq('token', token)
       }
     } catch {
-      // Network error — skip this token
+      // Network/auth error — leave token active, retry on next dispatch
     }
   }
 

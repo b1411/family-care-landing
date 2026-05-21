@@ -66,6 +66,10 @@ const currentStage = computed(() => {
 
 const currentPath = computed(() => childStates[currentStage.value])
 
+// Lifted cleanup state — onUnmounted must register synchronously during setup
+let scrollObserver: IntersectionObserver | null = null
+let scrollHandler: (() => void) | null = null
+
 onMounted(() => {
   if (typeof window === 'undefined' || !gcRef.value) return
 
@@ -76,7 +80,7 @@ onMounted(() => {
   if (gcTitleRef.value) useSplitText(gcTitleRef)
 
   const el = gcRef.value
-  const onScroll = () => {
+  scrollHandler = () => {
     const rect = el.getBoundingClientRect()
     const start = window.innerHeight * 0.7
     const end = -rect.height * 0.3
@@ -84,17 +88,27 @@ onMounted(() => {
     scrollProgress.value = Math.max(0, Math.min(1, p))
   }
 
-  const observer = new IntersectionObserver(
+  scrollObserver = new IntersectionObserver(
     ([entry]) => {
-      if (!entry?.isIntersecting) return
-      window.addEventListener('scroll', onScroll, { passive: true })
-      onScroll()
-      onUnmounted(() => window.removeEventListener('scroll', onScroll))
-      observer.disconnect()
+      if (!entry?.isIntersecting || !scrollHandler) return
+      window.addEventListener('scroll', scrollHandler, { passive: true })
+      scrollHandler()
+      scrollObserver?.disconnect()
     },
     { threshold: 0.05 },
   )
-  observer.observe(el)
+  scrollObserver.observe(el)
+})
+
+onBeforeUnmount(() => {
+  if (scrollHandler) {
+    window.removeEventListener('scroll', scrollHandler)
+    scrollHandler = null
+  }
+  if (scrollObserver) {
+    scrollObserver.disconnect()
+    scrollObserver = null
+  }
 })
 </script>
 

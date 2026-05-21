@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EChartsOption } from 'echarts'
+import type { EChartsOption } from 'echarts/types/dist/shared'
 
 const props = withDefaults(defineProps<{
   option: EChartsOption
@@ -46,8 +46,9 @@ function mergeTheme(opt: EChartsOption): EChartsOption {
 
 onMounted(async () => {
   if (!chartRef.value) return
-  const { init: echartsInit } = await import('echarts')
-  chart = echartsInit(chartRef.value)
+  const { getEcharts } = await import('~/utils/echarts')
+  const echarts = await getEcharts()
+  chart = echarts.init(chartRef.value)
   chart.setOption(mergeTheme(props.option))
 
   if (props.autoresize) {

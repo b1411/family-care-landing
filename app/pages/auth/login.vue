@@ -79,7 +79,7 @@ async function handleLogin() {
             if (v) { stop(); resolve() }
           }, { immediate: true })
           // Safety timeout — don't wait forever
-          setTimeout(() => { stop(); resolve() }, 3000)
+          setTimeout(() => { stop(); resolve() }, 8000)
         })
       }
 

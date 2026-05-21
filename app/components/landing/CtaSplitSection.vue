@@ -60,6 +60,9 @@ const { gsap, ScrollTrigger } = useGsap()
 const sectionRef = ref<HTMLElement | null>(null)
 const gridRef = ref<HTMLElement | null>(null)
 
+// Cleanup registry for mouse listeners + ScrollTrigger
+const cleanups: Array<() => void> = []
+
 onMounted(() => {
   if (!gsap || !ScrollTrigger || !sectionRef.value || !gridRef.value) return
 
@@ -68,7 +71,7 @@ onMounted(() => {
   // Cards entrance
   gsap.set(cards, { opacity: 0, y: 40, scale: 0.95 })
 
-  ScrollTrigger.create({
+  const entranceTrigger = ScrollTrigger.create({
     trigger: sectionRef.value,
     start: 'top 70%',
     once: true,
@@ -83,6 +86,7 @@ onMounted(() => {
       })
     },
   })
+  cleanups.push(() => entranceTrigger.kill())
 
   // Magnetic hover — card follows mouse slightly
   cards.forEach((card) => {
@@ -112,7 +116,16 @@ onMounted(() => {
     }
     htmlCard.addEventListener('mousemove', handleMove)
     htmlCard.addEventListener('mouseleave', handleLeave)
+    cleanups.push(() => {
+      htmlCard.removeEventListener('mousemove', handleMove)
+      htmlCard.removeEventListener('mouseleave', handleLeave)
+    })
   })
+})
+
+onBeforeUnmount(() => {
+  cleanups.forEach((fn) => fn())
+  cleanups.length = 0
 })
 </script>
 

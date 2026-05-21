@@ -62,8 +62,24 @@
       </div>
     </div>
 
-    <AppSharedEmptyState v-if="events.length === 0" icon="lucide:map-pin" title="Нет событий в маршруте" />
+    <AppSharedEmptyState
+      v-if="events.length === 0"
+      icon="lucide:map-pin"
+      title="Маршрут ещё не создан"
+      description="Создайте маршрут — мы автоматически расставим события по датам беременности или возрасту ребёнка."
+      action-label="Создать маршрут"
+      action-icon="lucide:route"
+      @action="showCreate = true"
+    />
     </template>
+
+    <AppSharedJourneyCreateModal
+      v-if="authStore.familyId"
+      :open="showCreate"
+      :family-id="authStore.familyId"
+      @close="showCreate = false"
+      @created="onJourneyCreated"
+    />
   </div>
 </template>
 
@@ -77,6 +93,12 @@ const appData = useAppData()
 const completing = ref<string | null>(null)
 const { success: toastSuccess, error: toastError } = useAppToast()
 const loading = ref(true)
+const showCreate = ref(false)
+
+async function onJourneyCreated() {
+  if (authStore.familyId) await journeyStore.fetchJourneys(authStore.familyId)
+  toastSuccess('Маршрут создан!')
+}
 
 onMounted(async () => {
   try {

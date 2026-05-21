@@ -3,6 +3,7 @@
     id="clinic-problems"
     badge="Проблема"
     title="Что теряет ваша клиника сегодня"
+    accent="теряет"
     alternate
   >
     <!-- Top: Pains with FLIP cards + BurningMoney -->

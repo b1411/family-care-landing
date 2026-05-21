@@ -7,20 +7,63 @@
       <div class="orb orb-3" />
     </div>
 
+    <!-- Phase 15: Pulse waveform (slow medical ECG line) -->
+    <svg
+      class="hero-pulse-line"
+      viewBox="0 0 1600 80"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="pulse-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(139, 126, 200, 0)" />
+          <stop offset="20%" stop-color="rgba(139, 126, 200, 0.5)" />
+          <stop offset="50%" stop-color="rgba(232, 160, 191, 0.55)" />
+          <stop offset="80%" stop-color="rgba(139, 126, 200, 0.5)" />
+          <stop offset="100%" stop-color="rgba(139, 126, 200, 0)" />
+        </linearGradient>
+      </defs>
+      <path
+        class="pulse-path"
+        d="M0 40 L260 40 L290 40 L300 35 L312 48 L322 24 L334 56 L344 40 L380 40 L640 40 L680 40 L692 30 L704 50 L716 18 L728 60 L740 40 L780 40 L1040 40 L1080 40 L1092 36 L1104 46 L1116 22 L1128 58 L1140 40 L1180 40 L1600 40"
+        fill="none"
+        stroke="url(#pulse-grad)"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+
+    <!-- Phase 15: Cursor follower (soft dot with lag) -->
+    <div
+      ref="cursorDotRef"
+      class="hero-cursor"
+      aria-hidden="true"
+    />
+    <div
+      ref="cursorRingRef"
+      class="hero-cursor-ring"
+      aria-hidden="true"
+    />
+
     <div class="hero-inner landing-container">
       <div class="hero-content" ref="heroContentRef">
-        <div ref="heroBadgeRef" class="hero-badge font-heading">
+        <div ref="heroBadgeRef" class="hero-badge t-eyebrow">
           <span class="hero-badge-dot" />
           Для частных клиник педиатрии и акушерства
         </div>
 
-        <h1 ref="heroTitleRef" class="hero-title font-display">
+        <h1 ref="heroTitleRef" class="hero-title t-display-hero">
           UMAI Health
         </h1>
 
-        <p ref="heroSubRef" class="hero-subtitle font-body">
-          Цифровая платформа сопровождения здоровья матери и&nbsp;ребёнка&nbsp;— от&nbsp;беременности до&nbsp;2&nbsp;лет.
-          Объединяет клинику и&nbsp;семью в&nbsp;едином маршруте наблюдения.
+        <p class="hero-tagline">
+          Цифровой маршрут <span class="t-accent-serif-gradient">здоровья</span> семьи —<br>
+          от&nbsp;первой недели беременности до&nbsp;двух лет ребёнка.
+        </p>
+
+        <p ref="heroSubRef" class="hero-subtitle t-lead">
+          Объединяет клинику и&nbsp;семью в&nbsp;едином маршруте наблюдения. White-label под&nbsp;ваш&nbsp;бренд, готовые медицинские протоколы, аналитика для&nbsp;руководителя.
           <span class="hero-typewriter" :class="{ 'typewriter-active': isTyping, 'typewriter-done': isDone }">{{ displayText }}</span>
         </p>
 
@@ -37,11 +80,19 @@
         </div>
 
         <div ref="heroActionsRef" class="hero-actions">
-          <NuxtLink to="/demo" class="hero-cta-primary font-heading btn-shimmer magnetic-btn">
+          <NuxtLink
+            to="/demo"
+            class="hero-cta-primary font-heading btn-shimmer magnetic-btn"
+            aria-label="Открыть демо-версию платформы"
+          >
             Попробовать демо
             <Icon name="lucide:arrow-right" size="18" class="cta-arrow" />
           </NuxtLink>
-          <a href="#contact" class="hero-cta-secondary font-heading magnetic-btn">
+          <a
+            href="#contact"
+            class="hero-cta-secondary font-heading magnetic-btn"
+            aria-label="Перейти к форме обсуждения подключения"
+          >
             Обсудить подключение
             <Icon name="lucide:message-circle" size="18" />
           </a>
@@ -57,6 +108,8 @@
       >
         <!-- Phone wrapper: CSS 3D perspective -->
         <div ref="phoneWrapperRef" class="phone-scene">
+          <!-- Phase 15: breathing aura behind phone -->
+          <div class="phone-aura" aria-hidden="true" />
           <div ref="phoneBodyRef" class="phone-body">
             <!-- Glossy reflection overlay -->
             <div class="phone-gloss" />
@@ -210,6 +263,81 @@
             <span class="float-title">Напоминания</span>
           </div>
         </div>
+
+        <!-- Phase 15: WHO growth curve card -->
+        <div ref="floatingGrowthRef" class="hero-float hero-float--growth" data-speed="0.7">
+          <div class="float-card float-card--growth glass-card">
+            <div class="growth-head">
+              <div class="float-icon float-icon--growth">
+                <Icon name="lucide:baby" size="13" />
+              </div>
+              <div class="growth-meta">
+                <span class="float-title">Рост по ВОЗ</span>
+                <span class="float-desc">Коридор 50–97%</span>
+              </div>
+              <span class="growth-tag font-mono">75%</span>
+            </div>
+            <svg
+              class="growth-chart"
+              viewBox="0 0 132 52"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient id="growth-area" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="rgba(139, 126, 200, 0.22)" />
+                  <stop offset="100%" stop-color="rgba(139, 126, 200, 0)" />
+                </linearGradient>
+              </defs>
+              <!-- 97th percentile (top) -->
+              <path
+                d="M0 14 C 22 11, 44 9, 66 8 S 110 6, 132 5"
+                fill="none"
+                stroke="rgba(139, 126, 200, 0.28)"
+                stroke-width="1"
+                stroke-dasharray="2 3"
+              />
+              <!-- 75th percentile (middle, ideal) -->
+              <path
+                class="growth-line-norm"
+                d="M0 26 C 22 23, 44 21, 66 19 S 110 16, 132 14"
+                fill="none"
+                stroke="rgba(139, 126, 200, 0.45)"
+                stroke-width="1.1"
+              />
+              <!-- 50th percentile (bottom) -->
+              <path
+                d="M0 40 C 22 37, 44 34, 66 31 S 110 27, 132 24"
+                fill="none"
+                stroke="rgba(139, 126, 200, 0.22)"
+                stroke-width="1"
+                stroke-dasharray="2 3"
+              />
+              <!-- Child's actual track -->
+              <path
+                class="growth-line-actual"
+                d="M0 30 C 22 27, 44 24, 66 21 S 110 18, 132 16 L132 52 L0 52 Z"
+                fill="url(#growth-area)"
+                stroke="none"
+              />
+              <path
+                class="growth-line-actual-stroke"
+                d="M0 30 C 22 27, 44 24, 66 21 S 110 18, 132 16"
+                fill="none"
+                stroke="rgb(232, 160, 191)"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+              <!-- Latest measurement dot -->
+              <circle class="growth-dot" cx="132" cy="16" r="2.4" fill="rgb(232, 160, 191)" />
+              <circle class="growth-dot-ring" cx="132" cy="16" r="5" fill="none" stroke="rgba(232, 160, 191, 0.4)" stroke-width="1" />
+            </svg>
+            <div class="growth-foot">
+              <span class="growth-foot-label">12 мес</span>
+              <span class="growth-foot-value font-mono">74 см · 9.4 кг</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -265,6 +393,11 @@ const floatingAdherenceRef = ref<HTMLElement | null>(null)
 const floatingDocRef = ref<HTMLElement | null>(null)
 const floatingVaccRef = ref<HTMLElement | null>(null)
 const floatingAiRef = ref<HTMLElement | null>(null)
+const floatingGrowthRef = ref<HTMLElement | null>(null)
+
+// Phase 15 — cursor follower refs
+const cursorDotRef = ref<HTMLElement | null>(null)
+const cursorRingRef = ref<HTMLElement | null>(null)
 
 // Mouse tracking state for 3D tilt
 const mouseActive = ref(false)
@@ -273,6 +406,8 @@ const currentRotY = ref(0)
 const targetRotX = ref(0)
 const targetRotY = ref(0)
 let lerpRaf: number | null = null
+let cursorCleanup: (() => void) | null = null
+const magneticCleanups: Array<() => void> = []
 
 const MAX_ROT_Y = 8
 const MAX_ROT_X = 5
@@ -356,6 +491,7 @@ onMounted(() => {
     floatingDocRef.value,
     floatingVaccRef.value,
     floatingAiRef.value,
+    floatingGrowthRef.value,
   ].filter(Boolean) as HTMLElement[]
 
   // ---- Master entrance timeline ----
@@ -541,24 +677,80 @@ onMounted(() => {
     }
   }
 
+  // Phase 15 — Cursor follower (desktop only, no reduced motion)
+  if (isDesktop && heroRef.value && cursorDotRef.value && cursorRingRef.value) {
+    const dot = cursorDotRef.value
+    const ring = cursorRingRef.value
+    let mouseX = 0
+    let mouseY = 0
+    let dotX = 0
+    let dotY = 0
+    let ringX = 0
+    let ringY = 0
+    let hovering = false
+    let raf: number | null = null
+
+    const enter = () => { hovering = true; dot.style.opacity = '1'; ring.style.opacity = '1' }
+    const leave = () => { hovering = false; dot.style.opacity = '0'; ring.style.opacity = '0' }
+    const move = (e: MouseEvent) => {
+      const rect = heroRef.value!.getBoundingClientRect()
+      mouseX = e.clientX - rect.left
+      mouseY = e.clientY - rect.top
+      if (!hovering) enter()
+    }
+
+    const tick = () => {
+      // Dot follows tightly, ring lags
+      dotX += (mouseX - dotX) * 0.28
+      dotY += (mouseY - dotY) * 0.28
+      ringX += (mouseX - ringX) * 0.09
+      ringY += (mouseY - ringY) * 0.09
+      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`
+      raf = requestAnimationFrame(tick)
+    }
+
+    heroRef.value.addEventListener('mousemove', move)
+    heroRef.value.addEventListener('mouseenter', enter)
+    heroRef.value.addEventListener('mouseleave', leave)
+    tick()
+    cursorCleanup = () => {
+      if (raf) cancelAnimationFrame(raf)
+      heroRef.value?.removeEventListener('mousemove', move)
+      heroRef.value?.removeEventListener('mouseenter', enter)
+      heroRef.value?.removeEventListener('mouseleave', leave)
+    }
+  }
+
   // Magnetic CTA buttons
   document.querySelectorAll<HTMLElement>('.magnetic-btn').forEach((btn) => {
-    btn.addEventListener('mousemove', (e) => {
+    const onMove = (e: MouseEvent) => {
       const rect = btn.getBoundingClientRect()
       const x = e.clientX - rect.left - rect.width / 2
       const y = e.clientY - rect.top - rect.height / 2
       btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`
-    })
-    btn.addEventListener('mouseleave', () => {
+    }
+    let resetTimer: ReturnType<typeof setTimeout> | null = null
+    const onLeave = () => {
       btn.style.transform = 'translate(0, 0)'
       btn.style.transition = 'transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1)'
-      setTimeout(() => { btn.style.transition = '' }, 400)
+      resetTimer = setTimeout(() => { btn.style.transition = '' }, 400)
+    }
+    btn.addEventListener('mousemove', onMove)
+    btn.addEventListener('mouseleave', onLeave)
+    magneticCleanups.push(() => {
+      btn.removeEventListener('mousemove', onMove)
+      btn.removeEventListener('mouseleave', onLeave)
+      if (resetTimer) clearTimeout(resetTimer)
     })
   })
 })
 
 onBeforeUnmount(() => {
   if (lerpRaf) cancelAnimationFrame(lerpRaf)
+  if (cursorCleanup) cursorCleanup()
+  magneticCleanups.forEach((fn) => fn())
+  magneticCleanups.length = 0
 })
 </script>
 
@@ -682,14 +874,11 @@ onBeforeUnmount(() => {
 }
 
 .hero-title {
-  font-size: var(--text-hero);
-  font-weight: 900;
-  line-height: var(--leading-tight);
   color: var(--color-primary);
-  margin: 0 0 20px;
-  letter-spacing: var(--tracking-tight);
+  margin: 0 0 14px;
   text-indent: 0;
   padding-left: 0;
+  /* Phase 1: rely on .t-display-hero token; remove hardcoded sizing */
 }
 
 /* Gradient text — applied to inner spans created by useSplitText */
@@ -700,10 +889,21 @@ onBeforeUnmount(() => {
   background-clip: text;
 }
 
+/* New: hero-tagline — display + serif accent (mixed-type signature line) */
+.hero-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.4vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: var(--tracking-display);
+  color: var(--color-text-primary);
+  margin: 0 0 24px;
+  max-width: 560px;
+  text-wrap: balance;
+  font-variation-settings: "opsz" var(--bricolage-opt-h3);
+}
+
 .hero-subtitle {
-  font-size: var(--text-body-lg);
-  line-height: var(--leading-normal);
-  color: var(--color-text-secondary);
   margin: 0 0 36px;
   max-width: 520px;
   text-indent: 0;
@@ -1335,6 +1535,233 @@ onBeforeUnmount(() => {
   75% { transform: translateY(-4px) rotateY(-1deg) rotateX(0deg); }
 }
 
+/* ============================================
+   Phase 15 — Pulse waveform (background ECG line)
+   ============================================ */
+.hero-pulse-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  width: 100%;
+  height: 80px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.pulse-path {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: 1600;
+  animation: pulse-trace 9s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(139, 126, 200, 0.35));
+}
+
+@keyframes pulse-trace {
+  0% { stroke-dashoffset: 1600; opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { stroke-dashoffset: -1600; opacity: 0; }
+}
+
+/* ============================================
+   Phase 15 — Cursor follower (soft lavender dot + lagging ring)
+   ============================================ */
+.hero-cursor,
+.hero-cursor-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 50;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
+.hero-cursor {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 126, 200, 0.95) 0%, rgba(139, 126, 200, 0.6) 60%, transparent 100%);
+  box-shadow:
+    0 0 14px rgba(139, 126, 200, 0.55),
+    0 0 28px rgba(232, 160, 191, 0.25);
+  mix-blend-mode: multiply;
+}
+
+.hero-cursor-ring {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 126, 200, 0.35);
+  background: radial-gradient(circle, transparent 60%, rgba(232, 160, 191, 0.08) 100%);
+  backdrop-filter: blur(2px);
+  animation: cursor-ring-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes cursor-ring-pulse {
+  0%, 100% { border-color: rgba(139, 126, 200, 0.35); }
+  50% { border-color: rgba(232, 160, 191, 0.45); }
+}
+
+/* Hide cursor follower on touch */
+@media (hover: none) {
+  .hero-cursor,
+  .hero-cursor-ring { display: none; }
+}
+
+/* ============================================
+   Phase 15 — Phone breathing aura
+   ============================================ */
+.phone-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 380px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(139, 126, 200, 0.18) 0%,
+    rgba(232, 160, 191, 0.12) 35%,
+    transparent 70%
+  );
+  filter: blur(40px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .phone-aura {
+    animation: phone-aura-breathe 4.5s ease-in-out infinite;
+  }
+}
+
+@keyframes phone-aura-breathe {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Phase 15 — Growth curve floating card
+   ============================================ */
+.hero-float--growth {
+  top: 48%;
+  right: -10%;
+}
+
+.float-card--growth {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  min-width: 170px;
+  white-space: normal;
+}
+
+.growth-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.float-icon--growth {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, rgba(139, 126, 200, 0.18), rgba(232, 160, 191, 0.18));
+  color: var(--color-primary);
+}
+
+.growth-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.growth-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: rgba(139, 126, 200, 0.12);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+}
+
+.growth-chart {
+  width: 100%;
+  height: 52px;
+  display: block;
+}
+
+.growth-line-norm {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: growth-norm-draw 2.4s ease-out 1.3s forwards;
+}
+
+.growth-line-actual-stroke {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: growth-norm-draw 2s ease-out 1.6s forwards;
+}
+
+.growth-dot,
+.growth-dot-ring {
+  opacity: 0;
+  animation: growth-dot-pop 0.5s ease-out 3.4s forwards;
+}
+
+.growth-dot-ring {
+  transform-origin: 132px 16px;
+  animation: growth-dot-ring 2.4s ease-out 3.4s infinite;
+}
+
+@keyframes growth-norm-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes growth-dot-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes growth-dot-ring {
+  0% { opacity: 0.6; transform: scale(0.7); }
+  80% { opacity: 0; transform: scale(2.4); }
+  100% { opacity: 0; transform: scale(2.4); }
+}
+
+.growth-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 2px;
+  border-top: 1px solid rgba(139, 126, 200, 0.08);
+}
+
+.growth-foot-label {
+  font-size: 9.5px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.growth-foot-value {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 1024px) {
   .hero-inner {
@@ -1353,6 +1780,10 @@ onBeforeUnmount(() => {
   .hero-float--doc { left: -4%; }
   .hero-float--adherence { left: 0; }
   .hero-float--ai { left: 6%; }
+  .hero-float--growth { right: -2%; top: 52%; }
+  .hero-pulse-line { bottom: 8%; height: 60px; opacity: 0.4; }
+  .hero-cursor,
+  .hero-cursor-ring { display: none; }
 }
 
 @media (max-width: 768px) {
@@ -1369,7 +1800,10 @@ onBeforeUnmount(() => {
   /* Keep only 2 floating cards on mobile */
   .hero-float--doc,
   .hero-float--vacc,
-  .hero-float--ai { display: none; }
+  .hero-float--ai,
+  .hero-float--growth { display: none; }
+  .hero-pulse-line { display: none; }
+  .phone-aura { display: none; }
   .hero-float--notif { top: 2%; right: 0; }
   .hero-float--adherence { bottom: 2%; left: 0; }
 }
