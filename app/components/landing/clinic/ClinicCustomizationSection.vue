@@ -25,48 +25,171 @@
               <!-- LEFT: UMAI default brand -->
               <div class="wl-screen wl-screen--default">
                 <div class="mock" :style="defaultBrandStyle">
+                  <!-- Status bar -->
+                  <div class="mock-statusbar">
+                    <span class="mock-time">9:41</span>
+                    <span class="mock-statusbar-icons">
+                      <Icon name="lucide:signal" size="8" />
+                      <Icon name="lucide:wifi" size="8" />
+                      <Icon name="lucide:battery-full" size="9" />
+                    </span>
+                  </div>
+
+                  <!-- App header -->
                   <header class="mock-head">
                     <div class="mock-logo" :style="{ background: 'var(--brand-accent)' }">
                       <Icon name="lucide:heart" size="11" />
                     </div>
                     <span class="mock-clinic">UMAI Health</span>
-                    <span class="mock-status">●</span>
+                    <span class="mock-bell" aria-hidden="true">
+                      <Icon name="lucide:bell" size="11" />
+                      <span class="mock-bell-dot" :style="{ background: 'var(--brand-accent)' }" />
+                    </span>
                   </header>
+
                   <div class="mock-body">
+                    <!-- Greeting with avatar -->
                     <div class="mock-greeting">
-                      <span class="mock-greet-name">Привет, Айгерим</span>
-                      <span class="mock-greet-sub">{{ defaultFamily.child }} · {{ defaultFamily.age }}</span>
+                      <div class="mock-avatar" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-avatar-initial" :style="{ color: 'var(--brand-accent-text-fallback)' }">А</span>
+                      </div>
+                      <div class="mock-greeting-body">
+                        <span class="mock-greet-name">Привет, {{ defaultFamily.mother }}</span>
+                        <span class="mock-greet-sub">{{ defaultFamily.child }} · {{ defaultFamily.age }}</span>
+                      </div>
                     </div>
+
+                    <!-- Hero adherence card with sparkline -->
                     <div class="mock-card mock-card--big" :style="{ background: 'var(--brand-accent)' }">
-                      <span class="mock-card-lbl">Адхеренс сегодня</span>
+                      <div class="mock-card-head">
+                        <span class="mock-card-lbl">Адхеренс сегодня</span>
+                        <span class="mock-card-trend">
+                          <Icon name="lucide:trending-up" size="10" />
+                          +3%
+                        </span>
+                      </div>
                       <span class="mock-card-val">94<sup>%</sup></span>
+                      <svg class="mock-sparkline" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+                        <polyline points="0,18 15,16 30,14 45,10 60,12 75,8 90,6 105,4 120,3"
+                          fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
                       <div class="mock-card-bar">
                         <span class="mock-card-bar-fill" style="width: 94%;" />
                       </div>
                     </div>
-                    <div class="mock-row">
+
+                    <!-- 3 mini stats row -->
+                    <div class="mock-row mock-row--3">
                       <div class="mock-mini" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-mini-icon" :style="{ color: 'var(--brand-accent-text-fallback)' }">
+                          <Icon name="lucide:flame" size="10" />
+                        </span>
                         <span class="mock-mini-num">14</span>
-                        <span class="mock-mini-lbl">дней streak</span>
+                        <span class="mock-mini-lbl">дней</span>
                       </div>
                       <div class="mock-mini" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-mini-icon" :style="{ color: 'var(--brand-accent-text-fallback)' }">
+                          <Icon name="lucide:route" size="10" />
+                        </span>
                         <span class="mock-mini-num">68<sup>%</sup></span>
                         <span class="mock-mini-lbl">маршрут</span>
                       </div>
-                    </div>
-                    <div class="mock-event">
-                      <span class="mock-event-dot" :style="{ background: 'var(--brand-accent)' }" />
-                      <div class="mock-event-body">
-                        <span class="mock-event-name">УЗИ 2 триместра</span>
-                        <span class="mock-event-when">через 3 дня</span>
+                      <div class="mock-mini" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-mini-icon" :style="{ color: 'var(--brand-accent-text-fallback)' }">
+                          <Icon name="lucide:shield-check" size="10" />
+                        </span>
+                        <span class="mock-mini-num">6/18</span>
+                        <span class="mock-mini-lbl">прививок</span>
                       </div>
                     </div>
+
+                    <!-- Today timeline -->
+                    <div class="mock-section">
+                      <div class="mock-section-head">
+                        <span class="mock-section-title">Сегодня</span>
+                        <span class="mock-section-meta">4 события</span>
+                      </div>
+                      <div class="mock-timeline">
+                        <div class="mock-tl-item mock-tl-item--done">
+                          <span class="mock-tl-time">09:00</span>
+                          <span class="mock-tl-icon mock-tl-icon--done">
+                            <Icon name="lucide:check" size="8" />
+                          </span>
+                          <div class="mock-tl-body">
+                            <span class="mock-tl-name">Витамин D3</span>
+                            <span class="mock-tl-meta">Принято</span>
+                          </div>
+                        </div>
+                        <div class="mock-tl-item mock-tl-item--next">
+                          <span class="mock-tl-time">11:30</span>
+                          <span class="mock-tl-icon" :style="{ background: 'var(--brand-accent)' }">
+                            <Icon name="lucide:calendar-check" size="8" />
+                          </span>
+                          <div class="mock-tl-body">
+                            <span class="mock-tl-name">УЗИ 2&nbsp;триместра</span>
+                            <span class="mock-tl-meta" :style="{ color: 'var(--brand-accent-text-fallback)' }">Через 2&nbsp;часа</span>
+                          </div>
+                        </div>
+                        <div class="mock-tl-item">
+                          <span class="mock-tl-time">14:00</span>
+                          <span class="mock-tl-icon mock-tl-icon--pending">
+                            <Icon name="lucide:phone" size="8" />
+                          </span>
+                          <div class="mock-tl-body">
+                            <span class="mock-tl-name">Звонок Айгуль К.</span>
+                            <span class="mock-tl-meta">Координатор</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Next visit card -->
+                    <div class="mock-visit">
+                      <div class="mock-visit-avatar" :style="{ background: 'var(--brand-accent)' }">
+                        <Icon name="lucide:stethoscope" size="11" />
+                      </div>
+                      <div class="mock-visit-body">
+                        <span class="mock-visit-name">Др. Айгуль Касымова</span>
+                        <span class="mock-visit-meta">Педиатр · завтра 10:30</span>
+                      </div>
+                      <span class="mock-visit-cta" :style="{ background: 'var(--brand-accent-soft)', color: 'var(--brand-accent-text-fallback)' }">
+                        <Icon name="lucide:arrow-right" size="10" />
+                      </span>
+                    </div>
+
+                    <!-- Vaccinations progress strip -->
+                    <div class="mock-vacc">
+                      <div class="mock-vacc-head">
+                        <span class="mock-vacc-title">Календарь прививок</span>
+                        <span class="mock-vacc-pct font-mono">33%</span>
+                      </div>
+                      <div class="mock-vacc-dots">
+                        <span v-for="n in 18" :key="n" class="mock-vacc-dot"
+                          :class="{ 'is-done': n <= 6, 'is-next': n === 7 }"
+                          :style="n <= 6 ? { background: 'var(--brand-accent)' } : {}" />
+                      </div>
+                      <span class="mock-vacc-next">След: АКДС-1 · через 5&nbsp;дней</span>
+                    </div>
                   </div>
+
+                  <!-- Bottom nav with icons -->
                   <nav class="mock-nav">
-                    <span class="mock-nav-item is-active" :style="{ color: 'var(--brand-accent-text-fallback)' }">●</span>
-                    <span class="mock-nav-item">○</span>
-                    <span class="mock-nav-item">○</span>
-                    <span class="mock-nav-item">○</span>
+                    <span class="mock-nav-item is-active" :style="{ color: 'var(--brand-accent-text-fallback)' }">
+                      <Icon name="lucide:route" size="13" />
+                      <span class="mock-nav-lbl">Маршрут</span>
+                    </span>
+                    <span class="mock-nav-item">
+                      <Icon name="lucide:calendar-days" size="13" />
+                      <span class="mock-nav-lbl">Записи</span>
+                    </span>
+                    <span class="mock-nav-item">
+                      <Icon name="lucide:file-text" size="13" />
+                      <span class="mock-nav-lbl">Док-ты</span>
+                    </span>
+                    <span class="mock-nav-item">
+                      <Icon name="lucide:user" size="13" />
+                      <span class="mock-nav-lbl">Профиль</span>
+                    </span>
                   </nav>
                 </div>
               </div>
@@ -74,48 +197,173 @@
               <!-- RIGHT: Active clinic brand (clipped from left to dividerPos) -->
               <div class="wl-screen wl-screen--brand" :style="brandedClipStyle">
                 <div class="mock" :style="activeBrandStyle">
+                  <!-- Status bar -->
+                  <div class="mock-statusbar">
+                    <span class="mock-time">9:41</span>
+                    <span class="mock-statusbar-icons">
+                      <Icon name="lucide:signal" size="8" />
+                      <Icon name="lucide:wifi" size="8" />
+                      <Icon name="lucide:battery-full" size="9" />
+                    </span>
+                  </div>
+
+                  <!-- App header -->
                   <header class="mock-head">
                     <div class="mock-logo" :style="{ background: 'var(--brand-accent)' }">
                       <Icon :name="activeBrand.icon" size="11" />
                     </div>
                     <span class="mock-clinic">{{ activeBrand.name }}</span>
-                    <span class="mock-status">●</span>
+                    <span class="mock-bell" aria-hidden="true">
+                      <Icon name="lucide:bell" size="11" />
+                      <span class="mock-bell-dot" :style="{ background: 'var(--brand-accent)' }" />
+                    </span>
                   </header>
+
                   <div class="mock-body">
+                    <!-- Greeting with avatar -->
                     <div class="mock-greeting">
-                      <span class="mock-greet-name">Привет, {{ activeBrand.family.mother }}</span>
-                      <span class="mock-greet-sub">{{ activeBrand.family.child }} · {{ activeBrand.family.age }}</span>
+                      <div class="mock-avatar" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-avatar-initial" :style="{ color: activeBrand.accentText }">
+                          {{ activeBrand.family.mother.charAt(0) }}
+                        </span>
+                      </div>
+                      <div class="mock-greeting-body">
+                        <span class="mock-greet-name">Привет, {{ activeBrand.family.mother }}</span>
+                        <span class="mock-greet-sub">{{ activeBrand.family.child }} · {{ activeBrand.family.age }}</span>
+                      </div>
                     </div>
+
+                    <!-- Hero adherence card -->
                     <div class="mock-card mock-card--big" :style="{ background: 'var(--brand-accent)' }">
-                      <span class="mock-card-lbl">Адхеренс сегодня</span>
+                      <div class="mock-card-head">
+                        <span class="mock-card-lbl">Адхеренс сегодня</span>
+                        <span class="mock-card-trend">
+                          <Icon name="lucide:trending-up" size="10" />
+                          +3%
+                        </span>
+                      </div>
                       <span class="mock-card-val">94<sup>%</sup></span>
+                      <svg class="mock-sparkline" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+                        <polyline points="0,18 15,16 30,14 45,10 60,12 75,8 90,6 105,4 120,3"
+                          fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
                       <div class="mock-card-bar">
                         <span class="mock-card-bar-fill" style="width: 94%;" />
                       </div>
                     </div>
-                    <div class="mock-row">
+
+                    <!-- 3 mini stats row -->
+                    <div class="mock-row mock-row--3">
                       <div class="mock-mini" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-mini-icon" :style="{ color: activeBrand.accentText }">
+                          <Icon name="lucide:flame" size="10" />
+                        </span>
                         <span class="mock-mini-num">14</span>
-                        <span class="mock-mini-lbl">дней streak</span>
+                        <span class="mock-mini-lbl">дней</span>
                       </div>
                       <div class="mock-mini" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-mini-icon" :style="{ color: activeBrand.accentText }">
+                          <Icon name="lucide:route" size="10" />
+                        </span>
                         <span class="mock-mini-num">68<sup>%</sup></span>
                         <span class="mock-mini-lbl">маршрут</span>
                       </div>
-                    </div>
-                    <div class="mock-event">
-                      <span class="mock-event-dot" :style="{ background: 'var(--brand-accent)' }" />
-                      <div class="mock-event-body">
-                        <span class="mock-event-name">УЗИ 2 триместра</span>
-                        <span class="mock-event-when">через 3 дня</span>
+                      <div class="mock-mini" :style="{ background: 'var(--brand-accent-soft)' }">
+                        <span class="mock-mini-icon" :style="{ color: activeBrand.accentText }">
+                          <Icon name="lucide:shield-check" size="10" />
+                        </span>
+                        <span class="mock-mini-num">6/18</span>
+                        <span class="mock-mini-lbl">прививок</span>
                       </div>
                     </div>
+
+                    <!-- Today timeline -->
+                    <div class="mock-section">
+                      <div class="mock-section-head">
+                        <span class="mock-section-title">Сегодня</span>
+                        <span class="mock-section-meta">4 события</span>
+                      </div>
+                      <div class="mock-timeline">
+                        <div class="mock-tl-item mock-tl-item--done">
+                          <span class="mock-tl-time">09:00</span>
+                          <span class="mock-tl-icon mock-tl-icon--done">
+                            <Icon name="lucide:check" size="8" />
+                          </span>
+                          <div class="mock-tl-body">
+                            <span class="mock-tl-name">Витамин D3</span>
+                            <span class="mock-tl-meta">Принято</span>
+                          </div>
+                        </div>
+                        <div class="mock-tl-item mock-tl-item--next">
+                          <span class="mock-tl-time">11:30</span>
+                          <span class="mock-tl-icon" :style="{ background: 'var(--brand-accent)' }">
+                            <Icon name="lucide:calendar-check" size="8" />
+                          </span>
+                          <div class="mock-tl-body">
+                            <span class="mock-tl-name">УЗИ 2&nbsp;триместра</span>
+                            <span class="mock-tl-meta" :style="{ color: activeBrand.accentText }">Через 2&nbsp;часа</span>
+                          </div>
+                        </div>
+                        <div class="mock-tl-item">
+                          <span class="mock-tl-time">14:00</span>
+                          <span class="mock-tl-icon mock-tl-icon--pending">
+                            <Icon name="lucide:phone" size="8" />
+                          </span>
+                          <div class="mock-tl-body">
+                            <span class="mock-tl-name">Звонок координатора</span>
+                            <span class="mock-tl-meta">{{ activeBrand.name }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Next visit card -->
+                    <div class="mock-visit">
+                      <div class="mock-visit-avatar" :style="{ background: 'var(--brand-accent)' }">
+                        <Icon name="lucide:stethoscope" size="11" />
+                      </div>
+                      <div class="mock-visit-body">
+                        <span class="mock-visit-name">{{ activeBrand.doctor }}</span>
+                        <span class="mock-visit-meta">{{ activeBrand.doctorRole }} · завтра 10:30</span>
+                      </div>
+                      <span class="mock-visit-cta" :style="{ background: 'var(--brand-accent-soft)', color: activeBrand.accentText }">
+                        <Icon name="lucide:arrow-right" size="10" />
+                      </span>
+                    </div>
+
+                    <!-- Vaccinations progress strip -->
+                    <div class="mock-vacc">
+                      <div class="mock-vacc-head">
+                        <span class="mock-vacc-title">Календарь прививок</span>
+                        <span class="mock-vacc-pct font-mono">33%</span>
+                      </div>
+                      <div class="mock-vacc-dots">
+                        <span v-for="n in 18" :key="n" class="mock-vacc-dot"
+                          :class="{ 'is-done': n <= 6, 'is-next': n === 7 }"
+                          :style="n <= 6 ? { background: 'var(--brand-accent)' } : {}" />
+                      </div>
+                      <span class="mock-vacc-next">След: АКДС-1 · через 5&nbsp;дней</span>
+                    </div>
                   </div>
+
+                  <!-- Bottom nav with icons -->
                   <nav class="mock-nav">
-                    <span class="mock-nav-item is-active">●</span>
-                    <span class="mock-nav-item">○</span>
-                    <span class="mock-nav-item">○</span>
-                    <span class="mock-nav-item">○</span>
+                    <span class="mock-nav-item is-active" :style="{ color: activeBrand.accentText }">
+                      <Icon name="lucide:route" size="13" />
+                      <span class="mock-nav-lbl">Маршрут</span>
+                    </span>
+                    <span class="mock-nav-item">
+                      <Icon name="lucide:calendar-days" size="13" />
+                      <span class="mock-nav-lbl">Записи</span>
+                    </span>
+                    <span class="mock-nav-item">
+                      <Icon name="lucide:file-text" size="13" />
+                      <span class="mock-nav-lbl">Док-ты</span>
+                    </span>
+                    <span class="mock-nav-item">
+                      <Icon name="lucide:user" size="13" />
+                      <span class="mock-nav-lbl">Профиль</span>
+                    </span>
                   </nav>
                 </div>
               </div>
@@ -242,7 +490,10 @@ interface Brand {
   icon: string
   accent: string
   accentSoft: string
+  accentText: string                          // solid colour (not gradient) for text/icons
   family: { mother: string; child: string; age: string }
+  doctor: string
+  doctorRole: string
 }
 
 const brandPresets: Brand[] = [
@@ -253,7 +504,10 @@ const brandPresets: Brand[] = [
     icon: 'lucide:heart-pulse',
     accent: 'linear-gradient(135deg, #2A9D8F, #1E7A6E)',
     accentSoft: 'rgba(42, 157, 143, 0.10)',
+    accentText: '#1E7A6E',
     family: { mother: 'Камила Б.', child: 'Тимур', age: '22 неделя' },
+    doctor: 'Др. Сауле Жумабаева',
+    doctorRole: 'Акушер-гинеколог',
   },
   {
     key: 'medpark',
@@ -262,7 +516,10 @@ const brandPresets: Brand[] = [
     icon: 'lucide:building-2',
     accent: 'linear-gradient(135deg, #E63946, #B82B36)',
     accentSoft: 'rgba(230, 57, 70, 0.10)',
+    accentText: '#B82B36',
     family: { mother: 'Дана Н.', child: 'Алиса', age: '3 мес 12 дней' },
+    doctor: 'Др. Айгуль Касымова',
+    doctorRole: 'Педиатр',
   },
   {
     key: 'sunmed',
@@ -271,7 +528,10 @@ const brandPresets: Brand[] = [
     icon: 'lucide:sun',
     accent: 'linear-gradient(135deg, #F4A261, #E76F51)',
     accentSoft: 'rgba(244, 162, 97, 0.10)',
+    accentText: '#C25E3E',
     family: { mother: 'Мадина Е.', child: 'Аян', age: '14 месяцев' },
+    doctor: 'Др. Бакыт Турарбекова',
+    doctorRole: 'Педиатр',
   },
   {
     key: 'kidscare',
@@ -280,7 +540,10 @@ const brandPresets: Brand[] = [
     icon: 'lucide:baby',
     accent: 'linear-gradient(135deg, #457B9D, #2E5F7C)',
     accentSoft: 'rgba(69, 123, 157, 0.10)',
+    accentText: '#2E5F7C',
     family: { mother: 'Жанна Т.', child: 'Дамир', age: '8 месяцев' },
+    doctor: 'Др. Нурлан Бектуров',
+    doctorRole: 'Невролог',
   },
 ]
 
@@ -436,35 +699,64 @@ const brandedClipStyle = computed(() => ({
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
-  padding-top: 38px;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139, 126, 200, 0.04), transparent 60%),
+    #FFFFFF;
+  padding-top: 32px;
+}
+
+/* iOS-style status bar */
+.mock-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px 2px;
+  font-size: 0.52rem;
+  color: var(--color-text-primary);
+}
+
+.mock-time {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.55rem;
+  letter-spacing: -0.01em;
+}
+
+.mock-statusbar-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-text-primary);
 }
 
 .mock-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  border-bottom: 1px solid rgba(75, 50, 130, 0.06);
-  background: rgba(255, 255, 255, 0.7);
+  padding: 8px 14px 10px;
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(8px);
 }
 
 .mock-logo {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 2px 6px -1px rgba(75, 50, 130, 0.22);
 }
 
 .mock-clinic {
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: -0.015em;
   color: var(--color-text-primary);
   flex: 1;
   white-space: nowrap;
@@ -472,10 +764,29 @@ const brandedClipStyle = computed(() => ({
   text-overflow: ellipsis;
 }
 
-.mock-status {
-  color: #5BC0BE;
-  font-size: 0.5rem;
-  filter: drop-shadow(0 0 4px currentColor);
+.mock-bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  color: var(--color-text-secondary);
+  background: rgba(139, 126, 200, 0.06);
+  border: 1px solid rgba(139, 126, 200, 0.08);
+  flex-shrink: 0;
+}
+
+.mock-bell-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  box-shadow: 0 0 4px currentColor;
 }
 
 .mock-body {
@@ -483,15 +794,43 @@ const brandedClipStyle = computed(() => ({
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px;
+  padding: 10px 12px 8px;
   overflow: hidden;
 }
 
+/* Greeting with avatar */
 .mock-greeting {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: 2px;
+}
+
+.mock-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 6px -2px rgba(75, 50, 130, 0.18);
+}
+
+.mock-avatar-initial {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: -0.02em;
+}
+
+.mock-greeting-body {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  padding-bottom: 6px;
+  min-width: 0;
 }
 
 .mock-greet-name {
@@ -499,51 +838,78 @@ const brandedClipStyle = computed(() => ({
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--color-text-primary);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mock-greet-sub {
   font-size: 0.6rem;
   color: var(--color-text-muted);
+  font-weight: 500;
 }
 
+/* ─── Hero adherence card ─── */
 .mock-card--big {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 12px 14px;
-  border-radius: 12px;
+  gap: 4px;
+  padding: 11px 13px 10px;
+  border-radius: 13px;
   color: white;
   overflow: hidden;
-  box-shadow: 0 6px 14px -4px rgba(75, 50, 130, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 6px 18px -6px rgba(75, 50, 130, 0.34);
 }
 
 .mock-card--big::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at top right, rgba(255,255,255,0.20), transparent 50%);
+  background: radial-gradient(ellipse at top right, rgba(255,255,255,0.22), transparent 55%);
   pointer-events: none;
 }
 
-.mock-card-lbl {
+.mock-card-head {
   position: relative;
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.mock-card-lbl {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.85;
+  opacity: 0.92;
+}
+
+.mock-card-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 600;
 }
 
 .mock-card-val {
   position: relative;
   font-family: var(--font-mono);
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1;
+  margin: 1px 0 -2px;
 }
 
 .mock-card-val sup {
@@ -551,19 +917,36 @@ const brandedClipStyle = computed(() => ({
   vertical-align: super;
 }
 
+.mock-sparkline {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  display: block;
+  opacity: 0.95;
+  margin-top: 2px;
+}
+
 .mock-card-bar {
   position: relative;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.20);
+  height: 3px;
+  background: rgba(255, 255, 255, 0.22);
   border-radius: 2px;
   overflow: hidden;
+  margin-top: 2px;
 }
 
 .mock-card-bar-fill {
   display: block;
   height: 100%;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
   border-radius: 2px;
+}
+
+/* ─── Mini stats row (3 cells) ─── */
+.mock-row--3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
 }
 
 .mock-row {
@@ -573,17 +956,27 @@ const brandedClipStyle = computed(() => ({
 }
 
 .mock-mini {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1px;
-  padding: 8px 10px;
-  border-radius: 10px;
+  padding: 8px 9px 7px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.mock-mini-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+  opacity: 0.85;
 }
 
 .mock-mini-num {
   font-family: var(--font-mono);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
@@ -593,68 +986,294 @@ const brandedClipStyle = computed(() => ({
 .mock-mini-num sup { font-size: 0.5em; vertical-align: super; }
 
 .mock-mini-lbl {
-  font-family: var(--font-display);
-  font-size: 0.58rem;
-  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: 0.52rem;
+  font-weight: 600;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  margin-top: 1px;
 }
 
-.mock-event {
-  display: grid;
-  grid-template-columns: 8px 1fr;
-  gap: 8px;
-  align-items: center;
-  padding: 8px 10px;
-  background: rgba(248, 246, 252, 0.7);
-  border-radius: 10px;
-}
-
-.mock-event-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  box-shadow: 0 0 6px currentColor;
-}
-
-.mock-event-body {
+/* ─── Section block (Сегодня) ─── */
+.mock-section {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.mock-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.mock-section-title {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.mock-section-meta {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Timeline rows */
+.mock-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mock-tl-item {
+  display: grid;
+  grid-template-columns: 28px 14px 1fr;
+  gap: 7px;
+  align-items: center;
+  padding: 5px 8px 5px 6px;
+  border-radius: 8px;
+  background: rgba(248, 246, 252, 0.5);
+  border: 1px solid rgba(139, 126, 200, 0.05);
+}
+
+.mock-tl-item--next {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(139, 126, 200, 0.18);
+  box-shadow: 0 2px 6px -2px rgba(139, 126, 200, 0.18);
+}
+
+.mock-tl-item--done .mock-tl-name {
+  text-decoration: line-through;
+  text-decoration-color: rgba(75, 50, 130, 0.25);
+  color: var(--color-text-muted);
+}
+
+.mock-tl-time {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: -0.005em;
+  text-align: left;
+}
+
+.mock-tl-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: rgba(75, 50, 130, 0.25);
+}
+
+.mock-tl-icon--done {
+  background: rgba(91, 192, 190, 0.85);
+  box-shadow: 0 1px 3px -1px rgba(42, 157, 143, 0.5);
+}
+
+.mock-tl-icon--pending {
+  background: rgba(139, 126, 200, 0.18);
+  color: rgba(75, 50, 130, 0.7);
+}
+
+.mock-tl-body {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
-.mock-event-name {
+.mock-tl-name {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: -0.005em;
+  line-height: 1.15;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mock-event-when {
+.mock-tl-meta {
+  font-size: 0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-top: 1px;
+}
+
+/* ─── Next visit card ─── */
+.mock-visit {
+  display: grid;
+  grid-template-columns: 28px 1fr 22px;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 9px 7px 7px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(248,246,252,0.5));
+  border: 1px solid rgba(139, 126, 200, 0.1);
+  box-shadow: 0 2px 6px -2px rgba(139, 126, 200, 0.14);
+}
+
+.mock-visit-avatar {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 6px -2px rgba(75, 50, 130, 0.25);
+}
+
+.mock-visit-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5BC0BE;
+  border: 1.5px solid #fff;
+}
+
+.mock-visit-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mock-visit-name {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mock-visit-meta {
+  font-size: 0.52rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-top: 1px;
+}
+
+.mock-visit-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 126, 200, 0.18);
+  flex-shrink: 0;
+}
+
+/* ─── Vaccinations progress strip ─── */
+.mock-vacc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(248, 246, 252, 0.6);
+  border: 1px solid rgba(139, 126, 200, 0.06);
+}
+
+.mock-vacc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.mock-vacc-title {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.005em;
+}
+
+.mock-vacc-pct {
   font-size: 0.55rem;
+  font-weight: 600;
   color: var(--color-text-muted);
 }
 
+.mock-vacc-dots {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  gap: 1.5px;
+}
+
+.mock-vacc-dot {
+  height: 4px;
+  border-radius: 1px;
+  background: rgba(139, 126, 200, 0.14);
+}
+
+.mock-vacc-dot.is-next {
+  background: rgba(232, 160, 191, 0.6);
+  box-shadow: 0 0 4px rgba(232, 160, 191, 0.6);
+}
+
+.mock-vacc-next {
+  font-size: 0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-top: 1px;
+}
+
+/* ─── Bottom nav (icons + labels) ─── */
 .mock-nav {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 8px 14px 12px;
+  padding: 6px 8px 8px;
   border-top: 1px solid rgba(75, 50, 130, 0.06);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
 }
 
 .mock-nav-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   font-size: 0.5rem;
   color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+.mock-nav-lbl {
+  font-family: var(--font-body);
+  font-size: 0.48rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
 }
 
 .mock-nav-item.is-active {
   color: var(--color-primary);
+}
+
+.mock-nav-item.is-active .iconify {
   filter: drop-shadow(0 0 4px currentColor);
 }
 

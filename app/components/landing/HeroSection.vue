@@ -117,7 +117,7 @@
             <div class="phone-frame">
               <!-- Dynamic Island -->
               <div class="phone-island" />
-              <!-- Screen content -->
+              <!-- Screen content — UMAI Health (premium app mockup) -->
               <div class="phone-screen" ref="phoneScreenRef">
                 <!-- Status bar -->
                 <div class="screen-statusbar">
@@ -128,59 +128,138 @@
                     <Icon name="lucide:battery-full" size="10" />
                   </div>
                 </div>
-                <!-- App header -->
+
+                <!-- App header: clinic mark + week + bell with badge -->
                 <div class="screen-header">
-                  <span class="screen-title font-heading">Мой маршрут</span>
-                  <span ref="weekBadgeRef" class="screen-week font-mono">{{ phoneWeek }} неделя</span>
+                  <span class="screen-logo">
+                    <Icon name="lucide:heart-pulse" size="11" />
+                  </span>
+                  <span class="screen-title">UMAI Health</span>
+                  <span ref="weekBadgeRef" class="screen-week font-mono">{{ phoneWeek }} нед</span>
+                  <span class="screen-bell" aria-hidden="true">
+                    <Icon name="lucide:bell" size="11" />
+                    <span class="screen-bell-dot" />
+                  </span>
                 </div>
-                <!-- Progress -->
-                <div class="screen-progress">
-                  <div class="progress-track">
-                    <div ref="progressFillRef" class="progress-fill" />
+
+                <!-- Greeting with avatar -->
+                <div class="screen-greeting">
+                  <div class="screen-avatar">
+                    <span class="screen-avatar-initial">А</span>
                   </div>
-                  <span class="progress-pct font-mono">68%</span>
-                </div>
-                <!-- Timeline items -->
-                <div class="screen-items">
-                  <div class="s-item">
-                    <div class="s-item-icon s-item-icon--pill">
-                      <Icon name="lucide:pill" size="13" />
-                    </div>
-                    <div class="s-item-body">
-                      <span class="s-item-name">Витамин D3</span>
-                      <span class="s-item-meta">Ежедневно, 08:00</span>
-                    </div>
-                    <span class="s-item-tag s-item-tag--action">Принять</span>
-                  </div>
-                  <div class="s-item">
-                    <div class="s-item-icon s-item-icon--visit">
-                      <Icon name="lucide:calendar" size="13" />
-                    </div>
-                    <div class="s-item-body">
-                      <span class="s-item-name">Педиатр — осмотр</span>
-                      <span class="s-item-meta">Завтра, 10:30</span>
-                    </div>
-                  </div>
-                  <div class="s-item">
-                    <div class="s-item-icon s-item-icon--lab">
-                      <Icon name="lucide:flask-conical" size="13" />
-                    </div>
-                    <div class="s-item-body">
-                      <span class="s-item-name">Анализ крови</span>
-                      <span class="s-item-meta">Результат готов</span>
-                    </div>
-                    <span class="s-item-tag s-item-tag--new">Новый</span>
-                  </div>
-                  <div class="s-item">
-                    <div class="s-item-icon s-item-icon--vaccine">
-                      <Icon name="lucide:shield-check" size="13" />
-                    </div>
-                    <div class="s-item-body">
-                      <span class="s-item-name">АКДС — 1-я доза</span>
-                      <span class="s-item-meta">Через 5 дней</span>
-                    </div>
+                  <div class="screen-greeting-body">
+                    <span class="screen-greet-name">Привет, Айгерим</span>
+                    <span class="screen-greet-sub">Тимур · {{ phoneWeek }} неделя · 2-й&nbsp;триместр</span>
                   </div>
                 </div>
+
+                <!-- Hero adherence card with sparkline + trend -->
+                <div class="screen-hero-card">
+                  <div class="hero-card-head">
+                    <span class="hero-card-lbl">Адхеренс сегодня</span>
+                    <span class="hero-card-trend">
+                      <Icon name="lucide:trending-up" size="10" />
+                      <span>+3%</span>
+                    </span>
+                  </div>
+                  <span class="hero-card-val font-mono">94<sup>%</sup></span>
+                  <svg class="hero-card-spark" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hero-spark-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.32)" />
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0 20 L0 18 L15 16 L30 14 L45 10 L60 12 L75 8 L90 6 L105 4 L120 3 L120 24 L0 24 Z" fill="url(#hero-spark-fill)" />
+                    <polyline points="0,18 15,16 30,14 45,10 60,12 75,8 90,6 105,4 120,3" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <div class="hero-card-bar">
+                    <div ref="progressFillRef" class="hero-card-bar-fill" />
+                  </div>
+                </div>
+
+                <!-- 3 mini stats row -->
+                <div class="screen-stats">
+                  <div class="stat-mini">
+                    <Icon name="lucide:flame" size="10" class="stat-mini-icon stat-mini-icon--fire" />
+                    <span class="stat-mini-num font-mono">14</span>
+                    <span class="stat-mini-lbl">streak</span>
+                  </div>
+                  <div class="stat-mini">
+                    <Icon name="lucide:route" size="10" class="stat-mini-icon stat-mini-icon--route" />
+                    <span class="stat-mini-num font-mono">68<sup>%</sup></span>
+                    <span class="stat-mini-lbl">маршрут</span>
+                  </div>
+                  <div class="stat-mini">
+                    <Icon name="lucide:shield-check" size="10" class="stat-mini-icon stat-mini-icon--shield" />
+                    <span class="stat-mini-num font-mono">6/18</span>
+                    <span class="stat-mini-lbl">прививок</span>
+                  </div>
+                </div>
+
+                <!-- Today's events -->
+                <div class="screen-section">
+                  <div class="screen-section-head">
+                    <span class="screen-section-title">Сегодня</span>
+                    <span class="screen-section-meta font-mono">4 события</span>
+                  </div>
+                  <div class="screen-items">
+                    <div class="s-item s-item--done">
+                      <div class="s-item-icon s-item-icon--pill">
+                        <Icon name="lucide:check" size="10" />
+                      </div>
+                      <div class="s-item-body">
+                        <span class="s-item-name">Витамин D3</span>
+                        <span class="s-item-meta">09:00 · принято</span>
+                      </div>
+                      <span class="s-item-time font-mono">✓</span>
+                    </div>
+                    <div class="s-item s-item--next">
+                      <div class="s-item-icon s-item-icon--visit">
+                        <Icon name="lucide:calendar-check" size="10" />
+                      </div>
+                      <div class="s-item-body">
+                        <span class="s-item-name">Педиатр — Др. Алия К.</span>
+                        <span class="s-item-meta">Завтра 10:30 · Каб.&nbsp;204</span>
+                      </div>
+                      <span class="s-item-tag s-item-tag--action">2&nbsp;ч</span>
+                    </div>
+                    <div class="s-item">
+                      <div class="s-item-icon s-item-icon--lab">
+                        <Icon name="lucide:flask-conical" size="10" />
+                      </div>
+                      <div class="s-item-body">
+                        <span class="s-item-name">Анализ крови</span>
+                        <span class="s-item-meta">Результат готов</span>
+                      </div>
+                      <span class="s-item-tag s-item-tag--new">Нов</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- AI insight callout -->
+                <div class="screen-ai">
+                  <span class="screen-ai-spark">
+                    <Icon name="lucide:sparkles" size="10" />
+                  </span>
+                  <div class="screen-ai-body">
+                    <span class="screen-ai-title">AI&nbsp;разбор</span>
+                    <span class="screen-ai-text">Маршрут идёт хорошо. Завтра — УЗИ 2&nbsp;триместра.</span>
+                  </div>
+                </div>
+
+                <!-- Vaccination strip -->
+                <div class="screen-vacc">
+                  <div class="screen-vacc-head">
+                    <span class="screen-vacc-title">Календарь прививок</span>
+                    <span class="screen-vacc-next">АКДС-1 · 5&nbsp;дн</span>
+                  </div>
+                  <div class="screen-vacc-dots">
+                    <span v-for="n in 18" :key="`v-${n}`" class="screen-vacc-dot"
+                      :class="{ 'is-done': n <= 6, 'is-next': n === 7 }" />
+                  </div>
+                </div>
+
                 <!-- Bottom nav -->
                 <div class="screen-nav">
                   <div class="nav-item nav-item--active">
@@ -193,7 +272,7 @@
                   </div>
                   <div class="nav-item">
                     <Icon name="lucide:file-text" size="14" />
-                    <span>Документы</span>
+                    <span>Док-ты</span>
                   </div>
                   <div class="nav-item">
                     <Icon name="lucide:user" size="14" />
@@ -247,20 +326,30 @@
         </div>
 
         <div ref="floatingVaccRef" class="hero-float hero-float--vacc" data-speed="1.0">
-          <div class="float-card glass-card float-card--compact">
+          <div class="float-card glass-card">
             <div class="float-icon float-icon--shield">
               <Icon name="lucide:shield-check" size="14" />
             </div>
-            <span class="float-title">Прививки 6/18</span>
+            <div class="float-body">
+              <span class="float-title">Прививки 6/18</span>
+              <div class="float-vacc-dots" aria-hidden="true">
+                <span v-for="n in 18" :key="`fv-${n}`" class="float-vacc-dot"
+                  :class="{ 'is-done': n <= 6, 'is-next': n === 7 }" />
+              </div>
+            </div>
           </div>
         </div>
 
         <div ref="floatingAiRef" class="hero-float hero-float--ai" data-speed="0.9">
-          <div class="float-card glass-card float-card--compact">
+          <div class="float-card glass-card">
             <div class="float-icon float-icon--ai">
-              <Icon name="lucide:calendar-check" size="14" />
+              <Icon name="lucide:sparkles" size="14" />
+              <span class="float-icon-pulse" aria-hidden="true" />
             </div>
-            <span class="float-title">Напоминания</span>
+            <div class="float-body">
+              <span class="float-title">AI&nbsp;разбор</span>
+              <span class="float-desc">+3% маршрут ↗</span>
+            </div>
           </div>
         </div>
 
@@ -1254,120 +1343,378 @@ onBeforeUnmount(() => {
   color: var(--color-text-muted);
 }
 
+/* ─── App header: logo + name + week pill + bell ─── */
 .screen-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 4px 16px 8px;
+  gap: 7px;
+  padding: 4px 12px 8px;
+}
+
+.screen-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--gradient-cta);
+  color: white;
+  flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 2px 6px -2px rgba(139, 126, 200, 0.45);
 }
 
 .screen-title {
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 13px;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--color-text-primary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .screen-week {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--color-primary);
   background: var(--color-primary-light);
-  padding: 3px 10px;
+  padding: 3px 8px;
   border-radius: var(--radius-full);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  flex-shrink: 0;
+}
+
+.screen-bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: rgba(139, 126, 200, 0.08);
+  border: 1px solid rgba(139, 126, 200, 0.12);
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.screen-bell-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  border: 1.5px solid var(--color-bg-alt);
+  box-shadow: 0 0 4px var(--color-secondary);
+}
+
+/* ─── Greeting with avatar ─── */
+.screen-greeting {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 9px;
+  align-items: center;
+  padding: 0 12px 8px;
+}
+
+.screen-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 6px -2px rgba(139, 126, 200, 0.32);
+}
+
+.screen-avatar-initial {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.screen-greeting-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.screen-greet-name {
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  line-height: 1.15;
+}
+
+.screen-greet-sub {
+  font-size: 9.5px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-top: 1px;
+}
+
+/* ─── Hero adherence card ─── */
+.screen-hero-card {
+  position: relative;
+  margin: 0 12px 8px;
+  padding: 10px 12px 9px;
+  border-radius: 13px;
+  background: var(--gradient-cta);
+  color: white;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 6px 18px -6px rgba(139, 126, 200, 0.45);
+}
+
+.screen-hero-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top right, rgba(255,255,255,0.18), transparent 55%);
+  pointer-events: none;
+}
+
+.hero-card-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.hero-card-lbl {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+
+.hero-card-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
   font-weight: 600;
 }
 
-.screen-progress {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 16px 10px;
+.hero-card-val {
+  position: relative;
+  display: block;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 4px 0 0;
 }
 
-.progress-track {
-  flex: 1;
-  height: 5px;
-  background: var(--color-border-light);
-  border-radius: 3px;
+.hero-card-val sup {
+  font-size: 0.5em;
+  vertical-align: super;
+}
+
+.hero-card-spark {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  display: block;
+  margin-top: 2px;
+}
+
+.hero-card-bar {
+  position: relative;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 2px;
   overflow: hidden;
+  margin-top: 3px;
 }
 
-.progress-fill {
+.hero-card-bar-fill {
   height: 100%;
-  width: 68%;
-  background: var(--gradient-cta);
-  border-radius: 3px;
+  width: 94%;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 2px;
 }
 
-.progress-pct {
+/* ─── 3 mini stats ─── */
+.screen-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  padding: 0 12px 8px;
+}
+
+.stat-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 7px 8px 6px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 126, 200, 0.08);
+}
+
+.stat-mini-icon { margin-bottom: 2px; }
+.stat-mini-icon--fire { color: #E76F51; }
+.stat-mini-icon--route { color: var(--color-primary); }
+.stat-mini-icon--shield { color: var(--color-mint-dark, #2A8886); }
+
+.stat-mini-num {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+.stat-mini-num sup { font-size: 0.5em; vertical-align: super; }
+
+.stat-mini-lbl {
+  font-family: var(--font-body);
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+/* ─── Section header (Сегодня) ─── */
+.screen-section {
+  padding: 0 12px 6px;
+}
+
+.screen-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.screen-section-title {
+  font-family: var(--font-display);
   font-size: 11px;
-  color: var(--color-primary);
   font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.screen-section-meta {
+  font-size: 8.5px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
 }
 
 /* Screen items */
 .screen-items {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 0 10px 8px;
+  gap: 4px;
 }
 
 .s-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 8px;
-  border-radius: 12px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  gap: 7px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 126, 200, 0.06);
+  box-shadow: 0 1px 2px rgba(139, 126, 200, 0.04);
+}
+
+.s-item--done .s-item-name {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(139, 126, 200, 0.3);
+}
+
+.s-item--next {
+  background: white;
+  border-color: rgba(139, 126, 200, 0.22);
+  box-shadow: 0 3px 10px -3px rgba(139, 126, 200, 0.22);
 }
 
 .s-item-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   color: white;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-.s-item-icon--pill { background: var(--color-primary); }
-.s-item-icon--visit { background: var(--color-secondary); }
-.s-item-icon--lab { background: var(--color-accent-blue); }
-.s-item-icon--vaccine { background: var(--color-success); }
+.s-item-icon--pill { background: linear-gradient(135deg, #5BC0BE, #2A8886); }
+.s-item-icon--visit { background: var(--gradient-cta); }
+.s-item-icon--lab { background: linear-gradient(135deg, #7CB8D4, #4A8AC5); }
+.s-item-icon--vaccine { background: linear-gradient(135deg, #5BC0BE, #1E7A6E); }
 
 .s-item-body {
   display: flex;
   flex-direction: column;
-  gap: var(--card-gap-xxs);
   flex: 1;
   min-width: 0;
 }
 
 .s-item-name {
   display: block;
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 600;
   color: var(--color-text-primary);
-  line-height: 1.3;
+  letter-spacing: -0.005em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .s-item-meta {
   display: block;
-  font-size: 9.5px;
+  font-size: 8.5px;
   color: var(--color-text-muted);
-  line-height: 1.3;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+.s-item-time {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-mint-dark, #2A8886);
+  flex-shrink: 0;
 }
 
 .s-item-tag {
-  font-size: 9px;
-  font-weight: 600;
-  padding: 3px 8px;
+  font-size: 8.5px;
+  font-weight: 700;
+  padding: 3px 7px;
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
+  letter-spacing: -0.005em;
 }
 
 .s-item-tag--action {
@@ -1378,6 +1725,107 @@ onBeforeUnmount(() => {
 .s-item-tag--new {
   background: var(--color-secondary-light);
   color: var(--color-secondary-dark);
+}
+
+/* ─── AI insight callout ─── */
+.screen-ai {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 0 12px 8px;
+  padding: 7px 10px 8px;
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(139, 126, 200, 0.08), rgba(232, 160, 191, 0.08));
+  border: 1px solid rgba(139, 126, 200, 0.14);
+}
+
+.screen-ai-spark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--gradient-cta);
+  color: white;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.screen-ai-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.screen-ai-title {
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 1px;
+}
+
+.screen-ai-text {
+  font-size: 9.5px;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ─── Vaccinations strip ─── */
+.screen-vacc {
+  margin: 0 12px 6px;
+  padding: 7px 10px 8px;
+  border-radius: 10px;
+  background: rgba(248, 246, 252, 0.85);
+  border: 1px solid rgba(139, 126, 200, 0.06);
+}
+
+.screen-vacc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.screen-vacc-title {
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.screen-vacc-next {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  color: var(--color-secondary-dark);
+}
+
+.screen-vacc-dots {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  gap: 2px;
+}
+
+.screen-vacc-dot {
+  height: 4px;
+  border-radius: 1px;
+  background: rgba(139, 126, 200, 0.14);
+}
+
+.screen-vacc-dot.is-done {
+  background: var(--gradient-cta);
+}
+
+.screen-vacc-dot.is-next {
+  background: rgba(232, 160, 191, 0.7);
+  box-shadow: 0 0 4px rgba(232, 160, 191, 0.7);
 }
 
 /* Bottom nav */
@@ -1519,6 +1967,54 @@ onBeforeUnmount(() => {
   height: 100%;
   border-radius: 2px;
   background: var(--gradient-cta);
+}
+
+/* Mini vacc-dots inside floating card */
+.float-vacc-dots {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  gap: 1.5px;
+  width: 64px;
+  margin-top: 3px;
+}
+
+.float-vacc-dot {
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(139, 126, 200, 0.18);
+}
+
+.float-vacc-dot.is-done {
+  background: var(--gradient-cta);
+}
+
+.float-vacc-dot.is-next {
+  background: var(--color-secondary);
+  box-shadow: 0 0 3px var(--color-secondary);
+}
+
+/* AI float — sparkle icon with pulsing aura */
+.float-icon-pulse {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  opacity: 0;
+  z-index: -1;
+}
+
+.float-icon--ai { position: relative; isolation: isolate; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .float-icon--ai .float-icon-pulse {
+    animation: float-ai-pulse 2.4s ease-out infinite;
+  }
+}
+
+@keyframes float-ai-pulse {
+  0% { opacity: 0.55; transform: scale(1); }
+  70% { opacity: 0; transform: scale(1.55); }
+  100% { opacity: 0; transform: scale(1.55); }
 }
 
 /* ---- Idle float animation (CSS fallback) ---- */
