@@ -1,10 +1,10 @@
 <template>
   <LandingUiSectionWrapper
     id="white-label"
-    badge="White-label"
+    badge="Под вашим брендом"
     title="Ваш бренд. Ваше приложение."
     accent="Ваше приложение"
-    subtitle="Семья видит приложение вашей клиники — с вашим логотипом, вашими цветами, вашим доменом. О платформе за кулисами они никогда не узнают."
+    subtitle="Семья видит приложение вашей клиники — логотип, цвета, домен. Платформа за кулисами остаётся незаметной."
   >
     <div class="wl-stage">
       <!-- ─── Drag-divider showcase ─── -->
@@ -62,7 +62,7 @@
                     <!-- Hero adherence card with sparkline -->
                     <div class="mock-card mock-card--big" :style="{ background: 'var(--brand-accent)' }">
                       <div class="mock-card-head">
-                        <span class="mock-card-lbl">Адхеренс сегодня</span>
+                        <span class="mock-card-lbl">Соблюдение сегодня</span>
                         <span class="mock-card-trend">
                           <Icon name="lucide:trending-up" size="10" />
                           +3%
@@ -168,7 +168,7 @@
                           :class="{ 'is-done': n <= 6, 'is-next': n === 7 }"
                           :style="n <= 6 ? { background: 'var(--brand-accent)' } : {}" />
                       </div>
-                      <span class="mock-vacc-next">След: АКДС-1 · через 5&nbsp;дней</span>
+                      <span class="mock-vacc-next">След: АКДС #1 · через 5&nbsp;дней</span>
                     </div>
                   </div>
 
@@ -236,7 +236,7 @@
                     <!-- Hero adherence card -->
                     <div class="mock-card mock-card--big" :style="{ background: 'var(--brand-accent)' }">
                       <div class="mock-card-head">
-                        <span class="mock-card-lbl">Адхеренс сегодня</span>
+                        <span class="mock-card-lbl">Соблюдение сегодня</span>
                         <span class="mock-card-trend">
                           <Icon name="lucide:trending-up" size="10" />
                           +3%
@@ -342,7 +342,7 @@
                           :class="{ 'is-done': n <= 6, 'is-next': n === 7 }"
                           :style="n <= 6 ? { background: 'var(--brand-accent)' } : {}" />
                       </div>
-                      <span class="mock-vacc-next">След: АКДС-1 · через 5&nbsp;дней</span>
+                      <span class="mock-vacc-next">След: АКДС #1 · через 5&nbsp;дней</span>
                     </div>
                   </div>
 
@@ -452,7 +452,7 @@
             <span class="wl-feature-icon"><Icon name="lucide:palette" size="14" /></span>
             <div>
               <span class="wl-feature-title">Логотип и фирменные цвета</span>
-              <span class="wl-feature-meta">RGB · HEX · CSS-переменные</span>
+              <span class="wl-feature-meta">Логотип, палитра, шрифты</span>
             </div>
           </div>
           <div class="wl-feature">
@@ -466,14 +466,14 @@
             <span class="wl-feature-icon"><Icon name="lucide:route" size="14" /></span>
             <div>
               <span class="wl-feature-title">Свои маршруты и протоколы</span>
-              <span class="wl-feature-meta">50+ событий per template</span>
+              <span class="wl-feature-meta">50+ событий в шаблоне</span>
             </div>
           </div>
           <div class="wl-feature">
             <span class="wl-feature-icon"><Icon name="lucide:mail" size="14" /></span>
             <div>
               <span class="wl-feature-title">Шаблоны уведомлений</span>
-              <span class="wl-feature-meta">SMS · push · email</span>
+              <span class="wl-feature-meta">SMS · уведомления · email</span>
             </div>
           </div>
         </div>

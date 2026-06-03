@@ -68,10 +68,11 @@ html.lenis, html.lenis body {
   --color-mint-light: #D6F1F0;
   --color-mint-ultralight: #ECF8F7;
 
-  /* Text */
-  --color-text-primary: #4A4458;
-  --color-text-secondary: #7B7394;
-  --color-text-muted: #A49CB8;
+  /* Text — 2026 contrast pass: near-ink headings, darker body for "expensive" legibility */
+  --color-heading: #211B33;      /* near-ink plum — all headings, high contrast on light */
+  --color-text-primary: #322B45; /* darkened from #4A4458 — body emphasis */
+  --color-text-secondary: #5B5470; /* darkened from #7B7394 — readable body */
+  --color-text-muted: #8B83A0;   /* darkened from #A49CB8 — captions still pass AA */
 
   /* Backgrounds */
   --color-bg: #FEFCFF;
@@ -294,11 +295,14 @@ html.lenis, html.lenis body {
   --leading-normal: 1.6;
   --leading-relaxed: 1.75;
 
-  /* Font families — Warm Editorial Stack (2026 refresh)
-     Fraunces handles both display headings AND accent italics; one expressive
-     variable face replaces the previous two-font display layer. */
-  --font-display: 'Fraunces', 'Bricolage Grotesque', 'Inter', system-ui, -apple-system, sans-serif;
-  --font-accent: 'Fraunces', 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  /* Font families — 2026 contrast refresh.
+     CRITICAL: Fraunces has NO Cyrillic coverage, so on this ~95%-Cyrillic site
+     it silently fell back to Times/Segoe for every heading — the root cause of
+     the "ugly fonts". Inter (full Cyrillic, already loaded) is now the display
+     face: tight tracking + heavy weight give a clean Linear/Stripe grotesk.
+     Fraunces is kept ONLY as a Latin italic accent where Cyrillic isn't used. */
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-accent: 'Fraunces', 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, SF Mono, Menlo, monospace;
 }
@@ -329,6 +333,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   letter-spacing: var(--tracking-snug);
   font-optical-sizing: auto;
+  color: var(--color-heading);
 }
 
 /* A11y: visible focus for keyboard users — TZ §5.2 */
@@ -395,7 +400,7 @@ p {
   line-height: var(--lh-mega);
   letter-spacing: var(--tracking-mega);
   font-variation-settings: "opsz" var(--fraunces-opsz-display), "SOFT" var(--fraunces-soft);
-  color: var(--color-text-primary);
+  color: var(--color-heading);
 }
 
 /* Display Hero — main landing H1 (56-96px) */
@@ -406,7 +411,7 @@ p {
   line-height: var(--lh-display);
   letter-spacing: var(--tracking-display);
   font-variation-settings: "opsz" var(--fraunces-opsz-display), "SOFT" var(--fraunces-soft);
-  color: var(--color-text-primary);
+  color: var(--color-heading);
   text-wrap: pretty;
 }
 
@@ -418,7 +423,7 @@ p {
   line-height: var(--lh-h2);
   letter-spacing: var(--tracking-display);
   font-variation-settings: "opsz" var(--fraunces-opsz-h2), "SOFT" var(--fraunces-soft);
-  color: var(--color-text-primary);
+  color: var(--color-heading);
   text-wrap: pretty;
 }
 
@@ -430,7 +435,7 @@ p {
   line-height: var(--lh-h3);
   letter-spacing: var(--tracking-tight);
   font-variation-settings: "opsz" var(--fraunces-opsz-h3), "SOFT" var(--fraunces-soft);
-  color: var(--color-text-primary);
+  color: var(--color-heading);
   text-wrap: pretty;
 }
 
@@ -442,7 +447,7 @@ p {
   line-height: var(--lh-h4);
   letter-spacing: var(--tracking-snug);
   font-variation-settings: "opsz" var(--fraunces-opsz-h4), "SOFT" var(--fraunces-soft);
-  color: var(--color-text-primary);
+  color: var(--color-heading);
 }
 
 /* Eyebrow — section badge / overline (11-13px UPPERCASE)
@@ -457,28 +462,27 @@ p {
   color: var(--color-primary);
 }
 
-/* Accent serif — italicised highlight word inside displays (Fraunces italic)
-   Lighter weight (400) gives the soft handwritten warmth without competing
-   with the heavier display roman weight (700) around it. */
+/* Accent highlight — was Fraunces italic, but Fraunces has NO Cyrillic, so on
+   Russian accent words ("результаты", "теряет"…) it fell back to ugly Times
+   italic. In Cyrillic the "expensive" accent is colour + weight, not fake
+   serif-italic. Now: same grotesk, heavier, with the brand gradient. */
 .t-accent-serif {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.005em;
-  /* Optical compensation — italic strokes read slightly thinner */
-  font-size: 1.04em;
-  vertical-align: baseline;
-  font-variation-settings: "opsz" 36, "SOFT" 60;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  background: var(--gradient-cta);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Gradient variant for accent serif */
+/* Gradient variant — same Cyrillic-safe grotesk accent (no fake serif). */
 .t-accent-serif-gradient {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.005em;
-  font-size: 1.04em;
-  font-variation-settings: "opsz" 36, "SOFT" 60;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   background: var(--gradient-cta);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -727,18 +731,15 @@ p {
   50% { background-position: 100% 50%; }
 }
 
-/* Animated hero gradient mesh */
+/* Hero gradient mesh — static, refined off-white wash (motion removed for a
+   calmer, more premium field; the drift read as a "cheap template" tell). */
 .hero-gradient-mesh {
-  background: linear-gradient(
-    135deg,
-    #F5F3FA 0%,
-    #FDE8F0 25%,
-    #E4EFF8 50%,
-    #FAF7FD 75%,
-    #F5F3FA 100%
-  );
-  background-size: 400% 400%;
-  animation: mesh-drift 18s ease-in-out infinite;
+  background:
+    radial-gradient(ellipse 64% 46% at 50% -6%, rgba(255, 255, 255, 0.75) 0%, transparent 62%),
+    radial-gradient(ellipse 90% 70% at 80% 10%, rgba(232, 160, 191, 0.18) 0%, transparent 56%),
+    radial-gradient(ellipse 84% 64% at 6% 90%, rgba(168, 200, 232, 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 120% 90% at 50% 122%, rgba(139, 126, 200, 0.10) 0%, transparent 60%),
+    linear-gradient(168deg, #FBF8FE 0%, #FDF6FA 52%, #F5F1FB 100%);
 }
 
 @keyframes mesh-drift {
@@ -1002,6 +1003,8 @@ p {
   overflow: hidden;
 }
 
+/* Badge sheen — fires once on hover instead of looping forever (the
+   perpetual shimmer read as a "cheap template" tell). */
 .section-badge::after {
   content: '';
   position: absolute;
@@ -1010,7 +1013,10 @@ p {
   width: 60%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation: badge-shimmer 3s ease-in-out infinite;
+}
+
+.section-badge:hover::after {
+  animation: badge-shimmer 1.1s ease-out;
 }
 
 @keyframes badge-shimmer {

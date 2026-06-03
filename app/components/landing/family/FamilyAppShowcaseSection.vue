@@ -1,5 +1,5 @@
 <template>
-  <section ref="sectionRef" class="app-showcase landing-section">
+  <section ref="sectionRef" class="app-showcase landing-section section-ink">
     <!-- Ambient background -->
     <div class="showcase-bg" aria-hidden="true">
       <div class="showcase-orb showcase-orb-1" />
@@ -93,7 +93,7 @@
                 <div class="upcoming-row">
                   <span class="upcoming-pill">
                     <Icon name="lucide:shield-check" size="9" />
-                    АКДС-2 · 5&nbsp;дн
+                    АКДС #2 · 5&nbsp;дн
                   </span>
                   <span class="upcoming-pill">
                     <Icon name="lucide:flask-conical" size="9" />
@@ -154,7 +154,7 @@
                   </svg>
                   <div class="rx-hero-body">
                     <span class="rx-hero-pct font-mono">94<sup>%</sup></span>
-                    <span class="rx-hero-lbl">adherence неделя</span>
+                    <span class="rx-hero-lbl">соблюдение за неделю</span>
                   </div>
                 </div>
               </div>
@@ -308,7 +308,7 @@
           </div>
           <div class="mobile-slide">
             <p class="mobile-headline">Ни одного пропуска</p>
-            <p class="mobile-sub">Напоминания + 94% adherence на виду.</p>
+            <p class="mobile-sub">Напоминания + 94% соблюдения на виду.</p>
           </div>
           <div class="mobile-slide">
             <p class="mobile-headline">Всё в одном месте</p>
@@ -1340,5 +1340,38 @@ onBeforeUnmount(() => {
     width: 22px;
     border-radius: 4px;
   }
+}
+
+/* ============================================
+   Dark stage (.section-ink) — phones glow as products.
+   Phone-internal text stays dark (it sits on light screens);
+   only the copy OUTSIDE the phones needs inverting.
+   ============================================ */
+.section-ink .phone-label {
+  color: var(--color-ink-text-primary);
+}
+.section-ink .phone-body {
+  color: var(--color-ink-text-secondary);
+}
+.section-ink .showcase-eyebrow {
+  color: var(--color-secondary);
+}
+/* Dim the ambient orbs on dark — the .section-ink glow already lights
+   the stage; full-strength orbs would muddy the deep plum. */
+.section-ink .showcase-orb {
+  opacity: 0.35;
+}
+
+/* Inactive phones recede; active one lifts with a coloured glow */
+.section-ink .phone-frame {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 24px 64px -16px rgba(0, 0, 0, 0.6);
+}
+.section-ink .phone-col.is-active .phone-frame {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 28px 80px -16px rgba(0, 0, 0, 0.6),
+    0 0 90px -24px rgba(139, 126, 200, 0.5);
 }
 </style>

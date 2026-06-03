@@ -28,7 +28,7 @@
       <button type="submit" class="submit-btn font-heading" :disabled="submitted">
         {{ submitted ? 'Отправлено ✓' : 'Обсудить подключение' }}
       </button>
-      <p class="form-footer">Ответим в течение 1 рабочего дня. Никакого спама.</p>
+      <p class="form-footer">Ответим в течение 1 рабочего дня. Не передаём контакты третьим лицам.</p>
     </form>
   </LandingUiSectionWrapper>
 </template>

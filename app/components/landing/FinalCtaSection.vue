@@ -3,11 +3,11 @@
     <div class="landing-container">
       <div ref="cardRef" class="cta-card landing-card">
         <div class="cta-content">
-          <span class="cta-badge t-eyebrow">Начните сейчас</span>
+          <span class="cta-badge t-eyebrow">Знакомство</span>
           <h2 ref="titleRef" class="cta-title t-display-section">
-            Изучите платформу <span class="t-accent-serif">самостоятельно</span>
+            Посмотрите платформу <span class="t-accent-serif">в действии</span>
           </h2>
-          <p ref="descRef" class="cta-desc t-lead">Попробуйте демо прямо сейчас или оставьте заявку — мы свяжемся и обсудим подключение.</p>
+          <p ref="descRef" class="cta-desc t-lead">Откройте демо с тестовыми данными или оставьте заявку — обсудим подключение.</p>
 
           <form ref="formRef" class="cta-form" @submit.prevent="handleSubmit">
             <div class="form-row">

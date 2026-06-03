@@ -81,7 +81,7 @@ const events = [
   {
     time: '14:00',
     title: 'Результат анализа сохранён',
-    desc: 'Сфотографировала бумажку — привязана к маршруту навсегда.',
+    desc: 'Сфотографировала результат — привязан к маршруту навсегда.',
     color: 'var(--color-accent-blue, #3B82F6)',
     svg: '<rect x="6" y="4" width="16" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M14 16 L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
   },

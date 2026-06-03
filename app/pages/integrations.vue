@@ -114,8 +114,8 @@ const integrations = [
     iconBg: 'rgba(37, 211, 102, 0.1)',
     iconColor: '#25D366',
     status: 'roadmap',
-    statusLabel: 'В roadmap',
-    desc: 'Push-напоминания семье через WhatsApp — привычный канал коммуникации в РК.',
+    statusLabel: 'В планах',
+    desc: 'Напоминания семье через WhatsApp — привычный канал в РК.',
     bullets: [
       'Напоминания о визитах, прививках, приёме витаминов',
       'Подтверждение приёма одним кликом',
@@ -128,7 +128,7 @@ const integrations = [
     iconBg: 'rgba(237, 27, 36, 0.08)',
     iconColor: '#ED1B24',
     status: 'roadmap',
-    statusLabel: 'В roadmap',
+    statusLabel: 'В планах',
     desc: 'Оплата услуг клиники прямо из приложения семьи — Kaspi как основной платёжный канал в Казахстане.',
     bullets: [
       'QR-оплата для разовых визитов',

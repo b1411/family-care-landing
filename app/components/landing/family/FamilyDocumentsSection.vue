@@ -3,7 +3,7 @@
     badge="Документы"
     title="Все документы — в одном месте"
     accent="в одном месте"
-    subtitle="Больше никаких потерянных бумажек и фото в галерее"
+    subtitle="Анализы и выписки не теряются — всё хранится в одном архиве"
     alternate
   >
     <div class="docs-layout">
@@ -92,7 +92,7 @@ const allDocs = [
   ],
   [
     { name: 'БЦЖ — серия 1234', date: '15 Янв 2025', thumbBg: 'var(--color-accent-blue-light)', thumbIcon: 'lucide:syringe' },
-    { name: 'Гепатит B (1-я)', date: '15 Янв 2025', thumbBg: 'var(--color-secondary-light)', thumbIcon: 'lucide:syringe' },
+    { name: 'Гепатит B #1', date: '15 Янв 2025', thumbBg: 'var(--color-secondary-light)', thumbIcon: 'lucide:syringe' },
   ],
 ]
 

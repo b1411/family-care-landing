@@ -33,12 +33,12 @@
         <div class="result-col landing-card col-reminders">
           <h4 class="col-heading font-heading">Напоминаний</h4>
           <p class="col-metric font-display">{{ animatedReminders }}/год</p>
-          <p class="col-detail">push-уведомления семьям автоматически</p>
+          <p class="col-detail">уведомления семьям автоматически</p>
         </div>
         <div class="result-col landing-card col-vaccines">
           <h4 class="col-heading font-heading">Прививок по календарю</h4>
           <p class="col-metric font-display">{{ animatedVaccines }}/год</p>
-          <p class="col-detail">контроль по нац. календарю РК</p>
+          <p class="col-detail">контроль по национальному календарю РК</p>
         </div>
         <div class="result-col landing-card col-time">
           <h4 class="col-heading font-heading">Время координатора</h4>

@@ -61,7 +61,7 @@ const steps = [
   {
     title: 'Обучение',
     dur: 'Шаг 3',
-    desc: 'Обучаем координаторов и врачей. Shadow-режим: мы работаем рядом.',
+    desc: 'Обучаем координаторов и врачей. Первое время работаем рядом — в режиме сопровождения.',
     // People at table
     miniSvg: '<circle cx="8" cy="9" r="2.5" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><circle cx="20" cy="9" r="2.5" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><path d="M4 18 C4 15 6 13 8 13 C10 13 12 15 12 18" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><path d="M16 18 C16 15 18 13 20 13 C22 13 24 15 24 18" stroke="var(--color-primary)" stroke-width="1.5" fill="none"/><line x1="4" y1="21" x2="24" y2="21" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round"/>',
   },

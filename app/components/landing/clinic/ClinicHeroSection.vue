@@ -20,7 +20,7 @@
         </h1>
 
         <p class="hero-body" data-reveal="fade-up" data-reveal-delay="100">
-          UMAI Health — платформа, названная в честь древней покровительницы матерей — превращает разовый визит в&nbsp;2&#8209;летний цифровой маршрут наблюдения. Больше повторных визитов, меньше ручной работы, полная видимость в&nbsp;аналитику.
+          UMAI Health превращает разовый визит в&nbsp;2&#8209;летний цифровой маршрут наблюдения. Больше повторных визитов, меньше ручной работы, прозрачная аналитика для&nbsp;руководителя.
         </p>
 
         <div class="hero-kpis" data-stagger="fade-up">
@@ -54,9 +54,9 @@ const clinicTitleRef = ref<HTMLElement | null>(null)
 
 const kpis = [
   { value: '50+', label: 'Событий в маршруте', color: 'var(--color-primary)' },
-  { value: '3 роли', label: 'Мама · Координатор · Руководитель', color: 'var(--color-secondary)' },
-  { value: 'White-label', label: 'Под брендом клиники', color: 'var(--color-accent-blue)' },
-  { value: 'Real-time', label: 'Аналитика и дашборд', color: 'var(--color-accent-warm)' },
+  { value: '3 роли', label: 'Родитель · Координатор · Руководитель', color: 'var(--color-secondary)' },
+  { value: 'Ваш бренд', label: 'Приложение под брендом клиники', color: 'var(--color-accent-blue)' },
+  { value: 'Онлайн', label: 'Аналитика в реальном времени', color: 'var(--color-accent-warm)' },
 ]
 
 useSplitText(clinicTitleRef, {

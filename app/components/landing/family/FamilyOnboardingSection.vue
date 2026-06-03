@@ -78,7 +78,7 @@
                 <div :class="['welcome-block', { visible: activeStep >= 2 }]">
                   <Icon name="lucide:party-popper" size="20" class="welcome-emoji" />
                   <strong>Добро пожаловать!</strong>
-                  <span class="welcome-sub">Маршрут Алисы — 47 событий</span>
+                  <span class="welcome-sub">Маршрут Алисы — 50+ событий</span>
                 </div>
                 <div class="welcome-events">
                   <div :class="['w-event', { visible: activeStep >= 2 }]" style="transition-delay: 0.15s">
@@ -101,8 +101,8 @@
       </div>
 
       <p class="onboarding-note" data-reveal="fade-up">
-        <span class="note-pill">PWA</span>
-        Работает без App Store. Открывается как сайт — но работает как приложение, даже без интернета.
+        <span class="note-pill">Приложение</span>
+        Не нужно ставить из магазина. Открывается по ссылке — и работает как приложение, даже без интернета.
       </p>
     </div>
   </section>

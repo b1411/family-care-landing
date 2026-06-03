@@ -33,7 +33,7 @@
         </form>
         <div class="cta-pills">
           <span class="cta-pill"><Icon name="lucide:lock" size="14" /> Защищено</span>
-          <span class="cta-pill"><Icon name="lucide:smartphone" size="14" /> Offline</span>
+          <span class="cta-pill"><Icon name="lucide:smartphone" size="14" /> Без интернета</span>
           <span class="cta-pill"><Icon name="lucide:heart" size="14" /> Бесплатно</span>
         </div>
       </div>

@@ -51,12 +51,12 @@ const shackleClosed = ref(false)
 const points = [
   {
     title: 'Данные зашифрованы',
-    desc: 'Никто кроме вас и врача не видит данные вашего ребёнка',
+    desc: 'Никто, кроме вас и врача, не видит данные вашего ребёнка',
     svg: '<path d="M12 2 L3 7 L3 12 Q3 19 12 22 Q21 19 21 12 L21 7 Z" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12 L11 14 L15 10" fill="none" stroke="var(--color-success, #22C55E)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
   },
   {
-    title: 'Ролевой доступ',
-    desc: 'Папа видит то, что вы разрешите',
+    title: 'Доступ для близких',
+    desc: 'Папа или бабушка видят только то, что вы разрешите',
     svg: '<circle cx="9" cy="7" r="3" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><circle cx="16" cy="7" r="3" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><path d="M3 20 Q3 14 9 14 M21 20 Q21 14 16 14" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round"/>',
   },
   {

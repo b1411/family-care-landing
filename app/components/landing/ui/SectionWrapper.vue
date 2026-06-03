@@ -13,7 +13,7 @@
         <span v-if="badge" class="section-badge t-eyebrow" data-reveal="scale-in">{{ badge }}</span>
         <h2 v-if="title" ref="titleRef" class="section-title t-display-section">
           <template v-if="accent">
-            <span>{{ titleBeforeAccent }}</span><span class="t-accent-serif"> {{ accent }}</span><span>{{ titleAfterAccent }}</span>
+            <span>{{ titleBeforeAccent }}</span><span class="t-accent-serif">&#160;{{ accent }}</span><span>{{ titleAfterAccent }}</span>
           </template>
           <template v-else>
             {{ title }}

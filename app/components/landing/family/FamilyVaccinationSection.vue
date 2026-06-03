@@ -7,7 +7,7 @@
           Щит <span class="t-accent-serif">иммунитета</span>, который растёт вместе с&nbsp;ребёнком
         </h2>
         <p class="vax-subtitle t-lead">
-          Все 18 прививок по&nbsp;национальному календарю РК. Напоминания за&nbsp;3&nbsp;дня, история партий и&nbsp;серий, сертификат в&nbsp;один клик.
+          Все 18 прививок по&nbsp;национальному календарю РК. Напоминания за&nbsp;3&nbsp;дня, история партий и&nbsp;серий, сертификат в&nbsp;одно нажатие.
         </p>
       </header>
 
@@ -227,11 +227,11 @@
               </div>
               <div class="vax-feat">
                 <Icon name="lucide:file-check-2" size="13" />
-                <span>Сертификат за 1 клик</span>
+                <span>Сертификат в одно нажатие</span>
               </div>
               <div class="vax-feat">
                 <Icon name="lucide:calendar-check" size="13" />
-                <span>Нацкалендарь РК</span>
+                <span>Национальный календарь РК</span>
               </div>
             </div>
           </aside>
@@ -262,19 +262,19 @@ const vaccines: Vaccine[] = [
   { id: 'pcv1',    name: 'PCV13 #1',           protects: 'Пневмококковая инфекция',                          age: '2 месяца',     type: 'конъюгир.',   status: 'done', dateLabel: '15 мар' },
   { id: 'ipv1',    name: 'ИПВ #1',             protects: 'Полиомиелит, инактивированная',                    age: '2 месяца',     type: 'инактив.',    status: 'done', dateLabel: '15 мар' },
   { id: 'rota1',   name: 'Ротавирус #1',       protects: 'Ротавирусная инфекция',                            age: '2 месяца',     type: 'живая',       status: 'done', dateLabel: '15 мар' },
-  { id: 'pen2',    name: 'Пентавакцина #2',    protects: 'Бустер 5-в-1',                                     age: '3 месяца',     type: 'комбинир.',   status: 'done', dateLabel: '15 апр' },
+  { id: 'pen2',    name: 'Пентавакцина #2',    protects: 'Ревакцинация 5-в-1',                               age: '3 месяца',     type: 'комбинир.',   status: 'done', dateLabel: '15 апр' },
 
   { id: 'pcv2',    name: 'PCV13 #2',           protects: 'Пневмококк, вторая доза',                          age: '4 месяца',     type: 'конъюгир.',   status: 'next', dateLabel: 'через 5 дней' },
 
   { id: 'ipv2',    name: 'ИПВ #2',             protects: 'Полиомиелит, вторая доза',                         age: '4 месяца',     type: 'инактив.',    status: 'upcoming', dateLabel: 'через 5 дней' },
   { id: 'rota2',   name: 'Ротавирус #2',       protects: 'Ротавирусная, вторая доза',                        age: '4 месяца',     type: 'живая',       status: 'upcoming', dateLabel: 'через 5 дней' },
-  { id: 'pen3',    name: 'Пентавакцина #3',    protects: 'Бустер 5-в-1, третья',                             age: '6 месяцев',    type: 'комбинир.',   status: 'upcoming', dateLabel: '15 июл' },
-  { id: 'hbv3',    name: 'Гепатит B #3',       protects: 'Бустер, третья доза',                              age: '6 месяцев',    type: 'инактив.',    status: 'upcoming', dateLabel: '15 июл' },
-  { id: 'pcv3',    name: 'PCV13 #3',           protects: 'Пневмококк, бустер',                               age: '12 месяцев',   type: 'конъюгир.',   status: 'upcoming', dateLabel: 'янв 2027' },
+  { id: 'pen3',    name: 'Пентавакцина #3',    protects: 'Ревакцинация 5-в-1, третья',                       age: '6 месяцев',    type: 'комбинир.',   status: 'upcoming', dateLabel: '15 июл' },
+  { id: 'hbv3',    name: 'Гепатит B #3',       protects: 'Третья доза',                                      age: '6 месяцев',    type: 'инактив.',    status: 'upcoming', dateLabel: '15 июл' },
+  { id: 'pcv3',    name: 'PCV13 #3',           protects: 'Пневмококк, ревакцинация',                         age: '12 месяцев',   type: 'конъюгир.',   status: 'upcoming', dateLabel: 'янв 2027' },
   { id: 'mmr',     name: 'КПК',                protects: 'Корь, паротит, краснуха',                          age: '12 месяцев',   type: 'живая',       status: 'upcoming', dateLabel: 'янв 2027' },
   { id: 'hib',     name: 'Hib',                 protects: 'Гемофильная инфекция b',                           age: '12 месяцев',   type: 'конъюгир.',   status: 'upcoming', dateLabel: 'янв 2027' },
-  { id: 'dtap',    name: 'АКДС бустер',         protects: 'Бустер дифтерия-коклюш-столбняк',                   age: '18 месяцев',   type: 'комбинир.',   status: 'upcoming', dateLabel: 'июл 2027' },
-  { id: 'hav',     name: 'Гепатит A',           protects: 'Профилактика гепатита А',                          age: '18 месяцев',   type: 'инактив.',    status: 'upcoming', dateLabel: 'июл 2027' },
+  { id: 'dtap',    name: 'АКДС, ревакцинация',  protects: 'Ревакцинация: дифтерия, коклюш, столбняк',          age: '18 месяцев',   type: 'комбинир.',   status: 'upcoming', dateLabel: 'июл 2027' },
+  { id: 'hav',     name: 'Гепатит А',           protects: 'Профилактика гепатита А',                          age: '18 месяцев',   type: 'инактив.',    status: 'upcoming', dateLabel: 'июл 2027' },
 ]
 
 // ─── Position vaccines around the shield ───

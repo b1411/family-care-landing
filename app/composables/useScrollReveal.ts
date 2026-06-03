@@ -124,6 +124,30 @@ export function useScrollReveal(routePath?: Ref<string> | (() => string)) {
     })
 
     ScrollTrigger.refresh()
+
+    // Failsafe — if ScrollTrigger silently fails to fire (init race, refresh
+    // miss), no [data-reveal]/[data-stagger] element should stay invisible.
+    // After 2.5s, force-reveal anything still at opacity 0 so a section can
+    // never vanish on a "million-dollar" page.
+    window.setTimeout(() => {
+      document.querySelectorAll<HTMLElement>('[data-reveal], [data-stagger]').forEach((el) => {
+        const stillHidden = parseFloat(getComputedStyle(el).opacity || '1') < 0.05
+        if (!stillHidden) return
+        gsap.set(el, { clearProps: 'all' })
+        el.style.opacity = '1'
+        el.style.transform = 'none'
+        el.style.filter = 'none'
+        el.style.clipPath = 'none'
+        const children = el.hasAttribute('data-stagger')
+          ? Array.from(el.children) as HTMLElement[]
+          : []
+        children.forEach((c) => {
+          gsap.set(c, { clearProps: 'all' })
+          c.style.opacity = '1'
+          c.style.transform = 'none'
+        })
+      })
+    }, 2500)
   }
 
   onMounted(() => init())

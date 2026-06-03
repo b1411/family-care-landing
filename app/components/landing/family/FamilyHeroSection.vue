@@ -11,7 +11,7 @@
       <div class="hero-grid">
         <!-- Text content -->
         <div class="hero-text">
-          <span class="landing-badge badge-secondary" data-reveal="blur-in">ДЛЯ МАМЫ И ПАПЫ</span>
+          <span class="landing-badge badge-secondary" data-reveal="blur-in">ДЛЯ РОДИТЕЛЕЙ</span>
           <h1 ref="familyTitleRef" class="hero-title font-display">
             Один маршрут. Ноль забытых прививок. Спокойные ночи.
           </h1>

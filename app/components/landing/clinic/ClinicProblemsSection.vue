@@ -6,39 +6,7 @@
     accent="теряет"
     alternate
   >
-    <!-- Top: Pains with FLIP cards + BurningMoney -->
-    <div class="problems-layout">
-      <div class="pains-list" data-stagger="fade-up">
-        <div
-          v-for="pain in pains"
-          :key="pain.title"
-          class="pain-card"
-          :class="{ 'is-flipped': flippedCards.has(pain.title) }"
-          @mouseenter="flipCard(pain.title)"
-          @mouseleave="unflipCard(pain.title)"
-        >
-          <!-- Front: problem -->
-          <div class="pain-face pain-front">
-            <Icon :name="pain.icon" size="24" class="pain-icon pain-icon--danger" />
-            <h3 class="pain-title font-heading">{{ pain.title }}</h3>
-            <p class="pain-desc">{{ pain.desc }}</p>
-            <span class="pain-cost font-mono">{{ pain.cost }}</span>
-          </div>
-          <!-- Back: solution -->
-          <div class="pain-face pain-back">
-            <Icon :name="pain.solIcon" size="24" class="pain-icon pain-icon--success" />
-            <h3 class="pain-title font-heading">{{ pain.solution }}</h3>
-            <p class="pain-desc">{{ pain.solDesc }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="burning-visual" data-reveal="fade-left">
-        <LandingSvgBurningMoney />
-      </div>
-    </div>
-
-    <!-- Bottom: Loss Funnel integrated -->
+    <!-- Loss Funnel — the single strong hook -->
     <div class="funnel-section">
       <h3 class="funnel-heading font-heading" data-reveal="fade-up">Воронка потерь: от 100 семей остаётся 5</h3>
 
@@ -75,27 +43,7 @@
       </p>
     </div>
 
-    <!-- Comparison table: Before vs After -->
-    <div class="compare-section">
-      <h3 class="compare-heading font-heading" data-reveal="fade-up">Как меняются метрики с платформой</h3>
-      <div class="compare-table" data-reveal="fade-up">
-        <div class="ct-row ct-header">
-          <div class="ct-metric">Метрика</div>
-          <div class="ct-before">Без платформы</div>
-          <div class="ct-after">С UMAI Health</div>
-        </div>
-        <div v-for="row in compareRows" :key="row.metric" class="ct-row">
-          <div class="ct-metric"><Icon :name="row.icon" size="18" class="ct-icon" /> {{ row.metric }}</div>
-          <div class="ct-before"><span class="ct-val ct-val--bad">{{ row.before }}</span></div>
-          <div class="ct-after">
-            <span class="ct-val ct-val--good">{{ row.after }}</span>
-            <span v-if="row.delta" class="ct-delta">{{ row.delta }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Day of coordinator Dinara -->
+    <!-- Day of coordinator: before vs after — the single concrete proof -->
     <div class="day-section">
       <h3 class="day-heading font-heading" data-reveal="fade-up">День координатора: до и после</h3>
       <div class="day-split" data-reveal="fade-up">
@@ -142,81 +90,12 @@
 </template>
 
 <script setup lang="ts">
-const flippedCards = ref(new Set<string>())
-
-function flipCard(title: string) {
-  flippedCards.value.add(title)
-  flippedCards.value = new Set(flippedCards.value)
-}
-
-function unflipCard(title: string) {
-  flippedCards.value.delete(title)
-  flippedCards.value = new Set(flippedCards.value)
-}
-
-const pains = [
-  {
-    title: 'Путь беременная → педиатрия',
-    desc: 'Большинство семей уходят после родов. Клиника теряет долгосрочный контакт с семьёй.',
-    cost: 'Потеря семей',
-    icon: 'lucide:user-x',
-    solution: 'Автоматический маршрут',
-    solDesc: 'Платформа ведёт семью от беременности через роды в педиатрию — без потерь.',
-    solIcon: 'lucide:route',
-  },
-  {
-    title: 'Контроль назначений',
-    desc: 'Низкое соблюдение назначений без системы. Пациенты пропускают прививки, анализы, витамины.',
-    cost: 'Низкое соблюдение',
-    icon: 'lucide:pill',
-    solution: 'Умные назначения',
-    solDesc: 'Ежедневные напоминания + подтверждения приёма.',
-    solIcon: 'lucide:check-circle',
-  },
-  {
-    title: 'Координация вручную',
-    desc: 'Большая часть времени координатора — обзвон и напоминания. Часы в день на рутину.',
-    cost: 'Потеря времени',
-    icon: 'lucide:phone-off',
-    solution: 'Панель координатора',
-    solDesc: 'Очередь задач с приоритетами. Координатор видит кого и зачем обзвонить.',
-    solIcon: 'lucide:list-checks',
-  },
-  {
-    title: 'Аналитика пациентов',
-    desc: 'Нет данных для решений — удержание, соблюдение назначений, конверсия неизвестны. Решения «на глаз».',
-    cost: 'Решения «на глаз»',
-    icon: 'lucide:eye-off',
-    solution: 'Аналитика',
-    solDesc: 'Удержание, конверсия, NPS — когортная аналитика для управленческих решений.',
-    solIcon: 'lucide:bar-chart-3',
-  },
-  {
-    title: 'Повторные визиты',
-    desc: 'Каждый пропущенный визит — потеря. Клиника реактивна, а не проактивна.',
-    cost: 'Пропущенные визиты',
-    icon: 'lucide:calendar-x',
-    solution: 'Умная запись',
-    solDesc: 'Автозапись из маршрута, напоминания за 24ч и 2ч.',
-    solIcon: 'lucide:calendar-check',
-  },
-]
-
 const funnelSteps = [
   { count: '100', label: 'Семей начинают наблюдение', width: 100, bg: 'var(--gradient-accent)', loss: 45, lossReason: 'уходят в 1 триместре' },
   { count: '55', label: 'Доходят до родов', width: 55, bg: 'linear-gradient(90deg, #E8E4F5, #E8A0BF)', loss: 22, lossReason: 'не возвращаются после выписки' },
   { count: '33', label: 'Остаются после родов', width: 33, bg: 'linear-gradient(90deg, #E8A0BF, #F2C4A0)', loss: 18, lossReason: 'теряются к 6 месяцам ребёнка' },
   { count: '15', label: 'Наблюдаются до года', width: 15, bg: 'linear-gradient(90deg, #F2C4A0, #D4727C)', loss: 10, lossReason: 'уходят после 1 года' },
   { count: '5', label: 'Остаются до 2 лет', width: 8, bg: 'rgba(212,114,124,0.3)' },
-]
-
-const compareRows = [
-  { icon: 'lucide:users', metric: 'Сопровождение семей', before: 'Ручное, несистемное', after: 'Автоматизированный маршрут', delta: '' },
-  { icon: 'lucide:phone', metric: 'Работа координатора', before: 'Обзвоны вслепую', after: 'Приоритизированные задачи', delta: '' },
-  { icon: 'lucide:syringe', metric: 'Вакцинация по графику', before: 'Низкое соблюдение', after: 'Автонапоминания + контроль', delta: '' },
-  { icon: 'lucide:bar-chart-3', metric: 'Видимость в аналитику', before: 'Excel / нет', after: 'Real-time дашборд', delta: '' },
-  { icon: 'lucide:clock', metric: 'Время до первого визита', before: 'Дни', after: 'Часы', delta: '' },
-  { icon: 'lucide:bell', metric: 'Пропущенные визиты', before: 'Часто', after: 'Редко', delta: '' },
 ]
 
 const dayWithout = [
@@ -230,115 +109,18 @@ const dayWithout = [
 
 const dayWith = [
   { time: '08:00', icon: 'lucide:laptop', title: 'Открывает панель', desc: '2 просрочено, 4 сегодня, 8 завтра — всё на экране.', mood: 'good' },
-  { time: '08:15', icon: 'lucide:alert-circle', title: 'Просроченные', desc: 'Айгерим К. — клик → звонок. Записана.', mood: 'good' },
-  { time: '09:00', icon: 'lucide:bell', title: 'Автоуведомления', desc: '12 семей получили push. 9 подтвердили. 0 звонков.', mood: 'good' },
+  { time: '08:15', icon: 'lucide:alert-circle', title: 'Просроченные', desc: 'Айгерим К. — нажатие → звонок. Записана.', mood: 'good' },
+  { time: '09:00', icon: 'lucide:bell', title: 'Автоуведомления', desc: '12 семей получили уведомление. 9 подтвердили. 0 звонков.', mood: 'good' },
   { time: '10:30', icon: 'lucide:message-circle', title: 'Ответ маме', desc: 'Карта за 3 сек. Прививка через 2 недели. Ответ быстрый.', mood: 'good' },
-  { time: '12:00', icon: 'lucide:calendar-check', title: 'Автозапись', desc: 'Клик «Записать» → окно выбрано → готово.', mood: 'good' },
-  { time: '14:00', icon: 'lucide:bar-chart-3', title: 'Дашборд', desc: 'Удержание, визиты, NPS — всё на одном экране. Отчёт за 1 клик.', mood: 'good' },
+  { time: '12:00', icon: 'lucide:calendar-check', title: 'Автозапись', desc: 'Нажатие «Записать» → окно выбрано → готово.', mood: 'good' },
+  { time: '14:00', icon: 'lucide:bar-chart-3', title: 'Дашборд', desc: 'Удержание, визиты, NPS — всё на одном экране. Отчёт в одно нажатие.', mood: 'good' },
 ]
 </script>
 
 <style scoped>
-.problems-layout {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 48px;
-  align-items: center;
-}
-
-.pains-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* FLIP card */
-.pain-card {
-  perspective: 800px;
-  min-height: 120px;
-  cursor: default;
-}
-
-.pain-face {
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  backface-visibility: hidden;
-  transition: transform 0.5s ease;
-}
-
-.pain-front {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
-}
-
-.pain-back {
-  background: var(--color-primary-light);
-  border: 1px solid var(--color-primary);
-  position: absolute;
-  inset: 0;
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.pain-card {
-  position: relative;
-}
-
-.is-flipped .pain-front {
-  transform: rotateY(180deg);
-}
-
-.is-flipped .pain-back {
-  transform: rotateY(0deg);
-}
-
-.pain-icon {
-  margin-bottom: 8px;
-}
-
-.pain-icon--danger {
-  color: var(--color-danger);
-}
-
-.pain-icon--success {
-  color: var(--color-success);
-}
-
-.pain-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin: 0 0 4px;
-}
-
-.pain-desc {
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-.pain-cost {
-  display: inline-block;
-  margin-top: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-danger);
-  letter-spacing: var(--tracking-wide);
-}
-
-.burning-visual {
-  display: flex;
-  justify-content: center;
-}
-
 /* ---- Funnel integrated ---- */
 .funnel-section {
-  margin-top: 64px;
-  padding-top: 48px;
-  border-top: 1px solid var(--color-border-light);
+  margin-top: 0;
 }
 
 .funnel-heading {
@@ -451,12 +233,6 @@ const dayWith = [
   line-height: 150%;
 }
 
-@media (max-width: 900px) {
-  .problems-layout {
-    grid-template-columns: 1fr;
-  }
-  .burning-visual { order: -1; }
-}
 
 @media (max-width: 768px) {
   .loss-card {
@@ -470,69 +246,6 @@ const dayWith = [
   .funnel-count {
     font-size: 18px;
   }
-}
-
-/* ---- Comparison Table ---- */
-.compare-section {
-  margin-top: 64px;
-  padding-top: 48px;
-  border-top: 1px solid var(--color-border-light);
-}
-.compare-heading {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  text-align: center;
-  margin: 0 0 32px;
-}
-.compare-table {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  max-width: 800px;
-  margin: 0 auto;
-}
-.ct-row {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1.2fr;
-}
-.ct-row:not(:last-child) {
-  border-bottom: 1px solid var(--color-border-light);
-}
-.ct-header {
-  background: var(--color-primary-ultralight);
-}
-.ct-header > div {
-  padding: 14px 20px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-secondary);
-}
-.ct-metric,
-.ct-before,
-.ct-after {
-  padding: 14px 20px;
-  font-size: 14px;
-}
-.ct-metric {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-.ct-icon { flex-shrink: 0; color: var(--color-text-secondary); vertical-align: middle; margin-right: 6px; }
-.ct-before { background: rgba(212, 114, 124, 0.04); }
-.ct-after { display: flex; align-items: center; gap: 8px; }
-.ct-val { font-weight: 600; }
-.ct-val--bad { color: var(--color-danger); }
-.ct-val--good { color: var(--color-primary); }
-.ct-delta {
-  font-size: 12px; font-weight: 700; padding: 2px 8px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary-light); color: var(--color-primary);
 }
 
 /* ---- Day in Life ---- */
@@ -592,11 +305,6 @@ const dayWith = [
 .dv-vs { font-size: 18px; color: var(--color-primary); padding: 8px; }
 
 @media (max-width: 900px) {
-  .ct-row { grid-template-columns: 1fr; }
-  .ct-header { display: none; }
-  .ct-metric, .ct-before, .ct-after { padding: 8px 16px; }
-  .ct-before::before { content: 'Без: '; font-size: 11px; color: var(--color-text-muted); }
-  .ct-after::before { content: 'С платформой: '; font-size: 11px; color: var(--color-text-muted); }
   .day-split { grid-template-columns: 1fr; }
   .day-divider { flex-direction: row; padding-top: 0; padding: 16px 0; }
   .dv-line { width: 80px; height: 2px; }

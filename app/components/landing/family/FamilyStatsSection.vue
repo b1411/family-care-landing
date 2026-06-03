@@ -34,8 +34,8 @@ const ringColors = [
 
 const stats = [
   { value: 40, prefix: '', suffix: '+', label: 'Недель беременности', ring: 0.85 },
-  { value: 24, prefix: '', suffix: '', label: 'Месяца жизни малыша', ring: 1 },
-  { value: 18, prefix: '', suffix: '+', label: 'Прививок по нац. календарю', ring: 0.75 },
+  { value: 24, prefix: '', suffix: '', label: 'Месяцев жизни малыша', ring: 1 },
+  { value: 18, prefix: '', suffix: '', label: 'Прививок по календарю РК', ring: 0.75 },
   { value: 50, prefix: '', suffix: '+', label: 'Событий в маршруте', ring: 0.9 },
   { value: 24, prefix: '', suffix: '/7', label: 'Доступ к данным', ring: 1 },
 ]

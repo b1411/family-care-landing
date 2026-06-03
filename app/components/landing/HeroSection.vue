@@ -54,16 +54,11 @@
         </div>
 
         <h1 ref="heroTitleRef" class="hero-title t-display-hero">
-          UMAI Health
+          Цифровой маршрут <span class="hero-title-accent">здоровья&nbsp;семьи</span> — от первой недели беременности до двух лет ребёнка.
         </h1>
 
-        <p class="hero-tagline">
-          Цифровой маршрут <span class="t-accent-serif-gradient">здоровья</span> семьи —<br>
-          от&nbsp;первой недели беременности до&nbsp;двух лет ребёнка.
-        </p>
-
         <p ref="heroSubRef" class="hero-subtitle t-lead">
-          Объединяет клинику и&nbsp;семью в&nbsp;едином маршруте наблюдения. White-label под&nbsp;ваш&nbsp;бренд, готовые медицинские протоколы, аналитика для&nbsp;руководителя.
+          Клиника и&nbsp;семья — в&nbsp;едином маршруте наблюдения. Приложение под&nbsp;вашим&nbsp;брендом, готовые медицинские протоколы, аналитика для&nbsp;руководителя.
           <span class="hero-typewriter" :class="{ 'typewriter-active': isTyping, 'typewriter-done': isDone }">{{ displayText }}</span>
         </p>
 
@@ -156,7 +151,7 @@
                 <!-- Hero adherence card with sparkline + trend -->
                 <div class="screen-hero-card">
                   <div class="hero-card-head">
-                    <span class="hero-card-lbl">Адхеренс сегодня</span>
+                    <span class="hero-card-lbl">Соблюдение сегодня</span>
                     <span class="hero-card-trend">
                       <Icon name="lucide:trending-up" size="10" />
                       <span>+3%</span>
@@ -450,10 +445,10 @@ const heroFeaturesRef = ref<HTMLElement | null>(null)
 const scrollIndicatorRef = ref<HTMLElement | null>(null)
 
 const heroFeatures = [
-  { icon: 'lucide:zap', title: 'Маршрут за 2 секунды', desc: '50+ событий генерируются автоматически' },
-  { icon: 'lucide:users', title: '3 роли', desc: 'Мама, координатор, руководитель — каждый видит своё' },
-  { icon: 'lucide:palette', title: 'White-label', desc: 'Приложение под брендом вашей клиники' },
-  { icon: 'lucide:rocket', title: '0 дней IT', desc: 'Настройка без вашего IT-отдела' },
+  { icon: 'lucide:zap', title: 'Маршрут за 2 секунды', desc: '50+ событий планируются автоматически' },
+  { icon: 'lucide:users', title: '3 роли', desc: 'Родитель, координатор, руководитель — каждый видит своё' },
+  { icon: 'lucide:palette', title: 'Под вашим брендом', desc: 'Приложение с логотипом и цветами клиники' },
+  { icon: 'lucide:rocket', title: 'Без IT-отдела', desc: 'Внедрение и настройку берём на себя' },
 ]
 
 const heroBadgeRef = ref<HTMLElement | null>(null)
@@ -539,15 +534,20 @@ function lerpLoop() {
   lerpRaf = requestAnimationFrame(lerpLoop)
 }
 
-// Split-text reveal for H1
-useSplitText(heroTitleRef, {
-  type: 'words',
-  from: { y: '100%', opacity: 0, rotateX: -45 },
-  stagger: 0.05,
-  duration: 0.9,
-  ease: 'power4.out',
-  scroll: false,
-  delay: 0.2,
+// H1 is now a slogan with an inline gradient accent span — split-text would
+// destroy that markup (it rewrites innerHTML), so use a clean whole-line
+// fade-up instead. Calmer and more "expensive" than per-word rotation anyway.
+onMounted(() => {
+  if (!import.meta.client || !heroTitleRef.value) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const { gsap } = useGsap()
+  gsap.from(heroTitleRef.value, {
+    y: 28,
+    opacity: 0,
+    duration: 0.9,
+    delay: 0.15,
+    ease: 'power3.out',
+  })
 })
 
 // Subtitle — words, gentler
@@ -847,8 +847,8 @@ onBeforeUnmount(() => {
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 80px 0 96px;
-  min-height: 100vh;
+  padding: 132px 0 104px;
+  min-height: min(880px, 92vh);
   display: flex;
   align-items: center;
 }
@@ -870,30 +870,26 @@ onBeforeUnmount(() => {
 }
 
 .orb-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(139, 126, 200, 0.25) 0%, transparent 70%);
-  top: -10%;
-  left: -10%;
-  animation: orb-float-1 20s ease-in-out infinite;
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(circle, rgba(139, 126, 200, 0.16) 0%, transparent 70%);
+  top: -18%;
+  left: -12%;
+  animation: orb-float-1 32s ease-in-out infinite;
 }
 
 .orb-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(232, 160, 191, 0.2) 0%, transparent 70%);
-  top: 30%;
-  right: -15%;
-  animation: orb-float-2 25s ease-in-out infinite;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(232, 160, 191, 0.12) 0%, transparent 70%);
+  top: 20%;
+  right: -16%;
+  animation: orb-float-2 38s ease-in-out infinite;
 }
 
+/* Third orb removed from the motion budget — calmer, more "expensive" field */
 .orb-3 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(168, 200, 232, 0.2) 0%, transparent 70%);
-  bottom: -10%;
-  left: 30%;
-  animation: orb-float-3 22s ease-in-out infinite;
+  display: none;
 }
 
 @keyframes orb-float-1 {
@@ -962,34 +958,62 @@ onBeforeUnmount(() => {
   max-width: 560px;
 }
 
-.hero-title {
-  color: var(--color-primary);
-  margin: 0 0 14px;
-  text-indent: 0;
-  padding-left: 0;
-  /* Phase 1: rely on .t-display-hero token; remove hardcoded sizing */
+/* Compact brand wordmark — small pill above the slogan (no longer a giant
+   serif headline). Clean grotesk = Linear/Stripe restraint. */
+.hero-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 22px;
 }
 
-/* Gradient text — applied to inner spans created by useSplitText */
-.hero-title :deep(span > span) {
+.hero-wordmark-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
   background: var(--gradient-cta);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 4px 12px -3px rgba(139, 126, 200, 0.5);
+  flex-shrink: 0;
+}
+
+.hero-wordmark-text {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-heading);
+}
+
+/* Slogan is now the H1 — sentence scale, ink, tight grotesk.
+   Overrides the oversized .t-display-hero token sizing. */
+.hero-title {
+  color: var(--color-heading);
+  font-family: var(--font-display);
+  font-size: clamp(2.15rem, 3.8vw, 3.5rem);
+  font-weight: 720;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  margin: 0 0 22px;
+  max-width: 640px;
+  text-wrap: balance;
+  text-indent: 0;
+  padding-left: 0;
+  font-variation-settings: normal;
+}
+
+/* Single restrained accent — a richer 3-stop brand gradient on the key phrase only.
+   Deeper plum start adds dimension vs the flat 2-stop; stays legible on light. */
+.hero-title-accent {
+  background: linear-gradient(118deg, #6E5FB3 0%, #8B7EC8 38%, #D47EA5 78%, #E8A0BF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-/* New: hero-tagline — display + serif accent (mixed-type signature line) */
-.hero-tagline {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.4vw, 2.125rem);
-  font-weight: 600;
-  line-height: 1.18;
-  letter-spacing: var(--tracking-display);
-  color: var(--color-text-primary);
-  margin: 0 0 24px;
-  max-width: 560px;
-  text-wrap: balance;
-  font-variation-settings: "opsz" var(--bricolage-opt-h3);
 }
 
 .hero-subtitle {
@@ -1004,15 +1028,20 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 16px 6px 10px;
+  padding: 7px 16px 7px 11px;
   border-radius: var(--radius-full);
-  background: rgba(139, 126, 200, 0.08);
-  border: 1px solid rgba(139, 126, 200, 0.12);
-  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(139, 126, 200, 0.18);
+  color: var(--color-primary-dark);
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 20px;
   letter-spacing: 0.01em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 2px 10px -2px rgba(139, 126, 200, 0.14);
 }
 
 .hero-badge-dot {
@@ -1046,12 +1075,24 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: rgba(139, 126, 200, 0.08);
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(139, 126, 200, 0.16) 0%, rgba(232, 160, 191, 0.12) 100%);
+  border: 1px solid rgba(139, 126, 200, 0.16);
   color: var(--color-primary);
   flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 8px -3px rgba(139, 126, 200, 0.22);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hero-feature:hover .hero-feature-icon {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 6px 16px -4px rgba(139, 126, 200, 0.34);
 }
 
 .hero-feature-text {
@@ -1126,13 +1167,19 @@ onBeforeUnmount(() => {
   font-weight: 600;
   text-decoration: none;
   transition: opacity 0.3s, box-shadow 0.3s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(139, 126, 200, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    0 1px 2px rgba(75, 50, 130, 0.18),
+    0 6px 22px -4px rgba(139, 126, 200, 0.4);
   will-change: transform;
 }
 
 .hero-cta-primary:hover {
-  opacity: 0.95;
-  box-shadow: 0 8px 36px rgba(139, 126, 200, 0.45);
+  opacity: 0.97;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 2px 4px rgba(75, 50, 130, 0.2),
+    0 12px 40px -6px rgba(139, 126, 200, 0.5);
   transform: translateY(-2px);
 }
 
@@ -1142,13 +1189,18 @@ onBeforeUnmount(() => {
   gap: 8px;
   padding: 14px 32px;
   border-radius: var(--radius-full);
-  background: var(--color-surface);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 1px 3px rgba(139, 126, 200, 0.06);
   will-change: transform;
 }
 

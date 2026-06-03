@@ -76,13 +76,13 @@
 
       <div class="modules-more" data-reveal="fade-up">
         <p class="modules-more-list">
-          <span>Care Plan Engine</span><span class="dot-sep">·</span>
+          <span>Маршрут здоровья</span><span class="dot-sep">·</span>
           <span>Умные назначения</span><span class="dot-sep">·</span>
           <span>Панель координатора</span><span class="dot-sep">·</span>
           <span>Аналитика</span><span class="dot-sep">·</span>
           <span>Календарь прививок</span><span class="dot-sep">·</span>
           <span>Документы семьи</span><span class="dot-sep">·</span>
-          <span>White-label брендинг</span><span class="dot-sep">·</span>
+          <span>Брендирование</span><span class="dot-sep">·</span>
           <span>Интеграции и API</span>
         </p>
       </div>
@@ -116,7 +116,7 @@ const modules = [
     iconBg: 'rgba(139, 126, 200, 0.12)',
     iconColor: '#8B7EC8',
     title: 'Маршрут строится сам',
-    label: 'Care Plan Engine',
+    label: 'Маршрут здоровья',
     body: 'Платформа генерирует персональный план для каждой семьи: анализы, осмотры, прививки, назначения. 50+ событий за 2 секунды.',
   },
   {
@@ -125,7 +125,7 @@ const modules = [
     iconColor: '#7CB8D4',
     title: 'Ни одного пропуска',
     label: 'Умные назначения',
-    body: 'Каждое назначение врача → push-напоминание → подтверждение приёма. Контроль соблюдения назначений в реальном времени.',
+    body: 'Каждое назначение врача → напоминание → подтверждение приёма. Контроль соблюдения назначений в реальном времени.',
   },
   {
     icon: 'lucide:list-checks',
@@ -141,7 +141,7 @@ const modules = [
     iconColor: '#E9C46A',
     title: 'Данные → решения',
     label: 'Аналитика',
-    body: 'Удержание по когортам, конверсия из беременности в педиатрию, NPS, загрузка команды — когортная аналитика в реальном времени.',
+    body: 'Удержание по когортам, конверсия из беременности в педиатрию, загрузка команды и NPS — в реальном времени.',
   },
 ]
 

@@ -346,9 +346,9 @@
     <!-- Closing card after the pin ends -->
     <div class="problem-outro landing-container">
       <div class="outro-card">
-        <span class="t-eyebrow">Знакомо?</span>
+        <span class="t-eyebrow">Решение</span>
         <h3 class="t-h3">Платформа решает все три задачи одним маршрутом</h3>
-        <p class="t-body">Ниже — как именно UMAI Health превращает эти три боли в управляемый поток.</p>
+        <p class="t-body">Ниже — как UMAI Health превращает эти три ситуации в управляемый маршрут.</p>
         <a href="#what-is" class="outro-link t-link">
           Что предлагает UMAI Health
           <Icon name="lucide:arrow-down" size="14" />
@@ -407,7 +407,7 @@ const chatPhones: ChatPhone[] = [
     icon: 'lucide:message-circle',
     messages: [
       { side: 'them', text: 'Где результаты УЗИ?', ts: '08:12' },
-      { side: 'me', text: 'Ищу. Перепутала чаты 😔', ts: '08:14' },
+      { side: 'me', text: 'Ищу. Опять перепутала чаты…', ts: '08:14' },
       { side: 'them', text: 'У нас прием через час', tone: 'urgent', ts: '08:15' },
     ],
     typing: true,
@@ -498,7 +498,7 @@ const acts = [
     points: [
       'Координатор обрабатывает в среднем 30 семей вручную',
       'Нет приоритизации — сначала звонят тем, кто и так пришёл бы',
-      'Outreach без статусов = 1 из 5 семей теряется',
+      'Обзвон без статусов = 1 из 5 семей теряется',
     ],
   },
   {

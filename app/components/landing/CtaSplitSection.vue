@@ -15,8 +15,8 @@
               <path d="M32 55 L64 35 L96 20 L128 10" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-dasharray="120" class="trend-line" />
             </svg>
           </div>
-          <h3 class="split-title font-heading">Вы управляете клиникой?</h3>
-          <p class="split-desc">Узнайте, как платформа помогает удерживать семьи после родов и автоматизировать сопровождение</p>
+          <h3 class="split-title font-heading">Вы руководите клиникой?</h3>
+          <p class="split-desc">Как платформа удерживает семьи после родов и снимает ручную работу с координатора</p>
           <span class="split-link font-heading">
             Подробнее
             <Icon name="lucide:arrow-right" size="18" class="split-arrow" />
@@ -42,8 +42,8 @@
               <rect x="40" y="135" width="30" height="3" rx="1.5" fill="var(--color-secondary)" opacity="0.2" />
             </svg>
           </div>
-          <h3 class="split-title font-heading">Вы ждёте малыша?</h3>
-          <p class="split-desc">Узнайте, как приложение поведёт вас по маршруту от зачатия до 2 лет — ничего не забудете</p>
+          <h3 class="split-title font-heading">Вы — родитель?</h3>
+          <p class="split-desc">Как приложение ведёт семью по маршруту от первых недель беременности до 2 лет ребёнка</p>
           <span class="split-link font-heading">
             Подробнее
             <Icon name="lucide:arrow-right" size="18" class="split-arrow" />

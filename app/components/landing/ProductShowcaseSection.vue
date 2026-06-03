@@ -1,5 +1,5 @@
 <template>
-  <section id="product" ref="sectionRef" class="product-showcase-section landing-section">
+  <section id="product" ref="sectionRef" class="product-showcase-section landing-section section-ink">
     <div class="landing-container">
       <div class="section-header">
         <span class="section-badge t-eyebrow" data-reveal="scale-in">Продукт</span>
@@ -127,7 +127,7 @@ useSplitText(titleRef, {
 })
 
 const tabs = [
-  { label: 'Приложение мамы', icon: 'lucide:smartphone' },
+  { label: 'Приложение семьи', icon: 'lucide:smartphone' },
   { label: 'Панель координатора', icon: 'lucide:layout-dashboard' },
   { label: 'Дашборд руководителя', icon: 'lucide:bar-chart-3' },
 ]
@@ -138,16 +138,16 @@ const panels = [
     screenTitle: 'Мой маршрут',
     headerBg: 'var(--color-secondary-light)',
     title: 'Мобильное приложение для семьи',
-    description: 'Мама видит весь маршрут — от текущей недели беременности до следующей прививки. Всё в одном экране, без звонков.',
+    description: 'Семья видит весь маршрут — от текущей недели беременности до следующей прививки. Всё в одном экране, без звонков.',
     features: [
-      'Push-напоминания о витаминах и приёмах',
-      'Все анализы и документы — нашёл за 5 секунд',
-      'Запись к врачу в одно касание',
+      'Напоминания о витаминах и приёмах',
+      'Все анализы и документы — найдёте за 5 секунд',
+      'Запись к врачу в одно нажатие',
       'Календарь прививок с напоминаниями за 3 дня',
     ],
     items: [
-      { icon: 'lucide:pill', label: 'Витамин D3', meta: 'Ежедневно, 08:00', badge: 'Принять', color: '#8B7EC8', callout: 'Push-напоминание каждое утро' },
-      { icon: 'lucide:calendar-check', label: 'Педиатр — осмотр', meta: 'Завтра, 10:30', badge: null, color: '#D47EA5', callout: 'Запись к врачу в одно касание' },
+      { icon: 'lucide:pill', label: 'Витамин D3', meta: 'Ежедневно, 08:00', badge: 'Принять', color: '#8B7EC8', callout: 'Напоминание каждое утро' },
+      { icon: 'lucide:calendar-check', label: 'Педиатр — осмотр', meta: 'Завтра, 10:30', badge: null, color: '#D47EA5', callout: 'Запись к врачу в одно нажатие' },
       { icon: 'lucide:file-text', label: 'Анализ крови', meta: 'Результат готов', badge: 'Новый', color: '#7CB8D4', callout: 'Результаты анализов мгновенно' },
       { icon: 'lucide:shield-check', label: 'АКДС — 1-я доза', meta: 'Через 5 дней', badge: null, color: '#E9C46A', callout: 'Напоминание за 3 дня до прививки' },
       { icon: 'lucide:baby', label: 'Развитие: 4 месяца', meta: 'Переворачивается', badge: null, color: '#8B7EC8', callout: null },
@@ -157,7 +157,7 @@ const panels = [
     device: 'device-desktop',
     screenTitle: 'Панель координатора',
     headerBg: 'var(--color-primary-light)',
-    title: 'Рабочий стол координатора',
+    title: 'Панель координатора',
     description: 'Координатор видит все семьи на одном экране — кто выпал из маршрута, у кого низкое соблюдение, кому пора на визит.',
     features: [
       'Приоритеты: красные флаги наверху',
@@ -176,13 +176,13 @@ const panels = [
     device: 'device-desktop',
     screenTitle: 'Аналитика',
     headerBg: 'var(--color-accent-blue-light)',
-    title: 'Дашборд для руководителя',
+    title: 'Дашборд руководителя',
     description: 'Руководитель видит цифры: удержание семей, конверсия из беременности в педиатрию, загрузка команды. Когортный анализ в реальном времени.',
     features: [
       'Удержание по когортам: месяц → квартал → год',
       'Конверсия: беременность → роды → педиатрия',
       'Загрузка координаторов и время ответа',
-      'NPS и engagement по модулям',
+      'NPS и вовлечённость по модулям',
     ],
     items: [
       { icon: 'lucide:users', label: 'Активных семей', meta: 'За текущий месяц', badge: 'Демо', color: '#8B7EC8', callout: 'Когортный трекинг в реальном времени' },
@@ -689,5 +689,69 @@ onUnmounted(() => {
     font-size: var(--text-xs);
     padding: 8px 14px;
   }
+}
+
+/* ============================================
+   Dark "command-centre" stage (.section-ink)
+   The light device mockups now read as glowing
+   products on a deep plum stage (Linear/Apple look).
+   ============================================ */
+.section-ink .section-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--color-secondary);
+}
+
+/* Tab bar → translucent glass on dark */
+.section-ink .tabs-track {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.section-ink .showcase-tab {
+  color: var(--color-ink-text-secondary);
+}
+.section-ink .showcase-tab:hover {
+  color: var(--color-ink-text-primary);
+}
+.section-ink .showcase-tab.is-active {
+  color: white;
+}
+.section-ink .tab-indicator {
+  background: var(--gradient-cta);
+  box-shadow: 0 4px 16px -2px rgba(139, 126, 200, 0.5);
+}
+
+/* Device frame gets a lifted, glowing presence on dark */
+.section-ink .device-frame {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 24px 70px -12px rgba(0, 0, 0, 0.55),
+    0 0 80px -20px rgba(139, 126, 200, 0.45);
+}
+
+/* Right-column copy */
+.section-ink .showcase-info-title {
+  color: var(--color-ink-text-primary);
+}
+.section-ink .showcase-info-desc {
+  color: var(--color-ink-text-secondary);
+}
+.section-ink .showcase-features li {
+  color: var(--color-ink-text-secondary);
+}
+.section-ink .showcase-features li.is-active-feature {
+  background: rgba(139, 126, 200, 0.18);
+  color: var(--color-ink-text-primary);
+}
+.section-ink .feature-check {
+  color: var(--color-mint);
+}
+.section-ink .showcase-demo-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--color-ink-text-primary);
+}
+.section-ink .showcase-demo-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
 }
 </style>
